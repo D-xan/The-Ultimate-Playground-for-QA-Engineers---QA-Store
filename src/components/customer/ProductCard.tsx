@@ -18,7 +18,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       productId: product.id,
       name: product.name,
       price: product.salePrice || product.price,
-      image: product.images[0],
+      image: product.images ? product.images[0] : product.image,
       quantity: 1,
     });
   };
@@ -32,7 +32,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     >
       <div className="relative aspect-square overflow-hidden rounded-xl bg-slate-100 mb-4">
         <img 
-          src={product.images[0]} 
+          src={product.images ? product.images[0] : product.image} 
           alt={product.name} 
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
