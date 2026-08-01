@@ -20,9 +20,9 @@
 
 @layer base {
   :root {
-    /* Premium light yellow to white gradient */
-    --bg-gradient: linear-gradient(135deg, #ffffff 0%, #fef9c3 50%, #fde047 100%);
-    --bg-card: rgba(255, 255, 255, 0.5);
+    /* Premium light yellow to slate gradient */
+    --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #fef9c3 50%, #fde047 100%);
+    --bg-card: rgba(255, 255, 255, 0.4);
     --text-main: #0f172a;
     --text-muted: #64748b;
     --border: rgba(226, 232, 240, 0.6);

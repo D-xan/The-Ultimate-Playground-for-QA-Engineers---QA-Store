@@ -102,7 +102,7 @@ export default function PracticeLayout() {
   const isLastPage = location.pathname === sidebarLinks[sidebarLinks.length - 1].to;
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden">
+    <div className="flex h-screen bg-slate-100 overflow-hidden">
       {/* Sidebar */}
       <aside className="w-64 bg-slate-900 text-white flex flex-col hidden md:flex">
         <div className="p-6 border-b border-slate-800">

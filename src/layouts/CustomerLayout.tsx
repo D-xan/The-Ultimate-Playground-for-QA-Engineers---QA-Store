@@ -4,7 +4,7 @@ import { CustomerNavbar } from '@/components/customer/CustomerNavbar';
 
 export default function CustomerLayout() {
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 font-sans">
+    <div className="flex min-h-screen flex-col bg-slate-100 font-sans">
       <CustomerNavbar />
       
       <main className="flex-1">
