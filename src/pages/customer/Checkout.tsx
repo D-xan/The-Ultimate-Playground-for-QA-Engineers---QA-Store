@@ -30,7 +30,7 @@ export default function Checkout() {
     resolver: zodResolver(shippingSchema)
   });
 
-  const onSubmitShipping = (data: ShippingFormValues) => {
+  const onSubmitShipping = (_data: ShippingFormValues) => {
     setStep(2);
   };
 

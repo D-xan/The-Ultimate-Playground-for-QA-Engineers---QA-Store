@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { 
-  createColumnHelper, 
+  createColumnHelper,
   flexRender, 
   getCoreRowModel, 
   useReactTable,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState
+  type SortingState
 } from '@tanstack/react-table';
 import { api } from '@/utils/api';
 import { Button } from '@/components/ui/Button';
@@ -57,7 +57,7 @@ export default function AdminProducts() {
     columnHelper.display({
       id: 'actions',
       header: 'Actions',
-      cell: (info) => (
+      cell: (_info) => (
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="h-8 w-8 text-primary">
             <Edit className="h-4 w-4" />
