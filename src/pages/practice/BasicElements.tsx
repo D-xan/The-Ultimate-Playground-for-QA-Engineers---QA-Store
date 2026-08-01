@@ -6,7 +6,50 @@ import { Input } from '@/components/ui/Input';
 export default function BasicElements() {
   const [loading, setLoading] = useState(false);
   const [clickedButton, setClickedButton] = useState<string | null>(null);
-  
+
+  const [inputValues, setInputValues] = useState({
+    text: '', password: '', email: '', number: '', phone: '', url: '', search: ''
+  });
+
+  const [inputErrors, setInputErrors] = useState({
+    text: '', password: '', email: '', number: '', phone: '', url: '', search: ''
+  });
+
+  const validateField = (name: string, value: string) => {
+    let error = '';
+    switch(name) {
+      case 'text':
+        if (value.length > 0 && value.length < 3) error = 'Text must be at least 3 characters';
+        break;
+      case 'password':
+        if (value.length > 0 && value.length < 8) error = 'Password must be at least 8 characters';
+        else if (value.length > 0 && !/[A-Z]/.test(value)) error = 'Password must contain an uppercase letter';
+        break;
+      case 'email':
+        if (value.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = 'Invalid email format (e.g. name@domain.com)';
+        break;
+      case 'number':
+        if (value.length > 0 && (isNaN(Number(value)) || Number(value) < 10 || Number(value) > 100)) error = 'Number must be between 10 and 100';
+        break;
+      case 'phone':
+        if (value.length > 0 && !/^\+?[\d\s-]{10,15}$/.test(value)) error = 'Invalid phone number format (10-15 digits)';
+        break;
+      case 'url':
+        if (value.length > 0 && !/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(value)) error = 'Invalid URL format (e.g. https://example.com)';
+        break;
+      case 'search':
+        if (value.length > 0 && /[^a-zA-Z0-9\s]/.test(value)) error = 'Search cannot contain special characters';
+        break;
+    }
+    setInputErrors(prev => ({ ...prev, [name]: error }));
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setInputValues(prev => ({ ...prev, [name]: value }));
+    validateField(name, value);
+  };
+
   const handleLoadingClick = () => {
     setLoading(true);
     setTimeout(() => setLoading(false), 3000);
@@ -30,26 +73,54 @@ export default function BasicElements() {
         <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">1. Input Fields</h2>
         <div className="mb-4 mt-2"><TaskQuestions tasks={[
   {
-    "title": "Fill out all text and password fields",
-    "description": "Locate the text and password input fields using their ID or standard selectors, and enter some mock data into them.",
+    "title": "Validate text and password fields",
+    "description": "Locate the input fields and trigger their validation errors by typing invalid data. Then, type valid data to clear the errors.",
     "positive": [
-      "Data is correctly typed into the input fields.",
-      "The typed data matches the expected input value."
+      "Typing valid data clears the validation error state.",
+      "The typed data matches the expected input format."
     ],
     "negative": [
-      "Fields remain empty after the test script runs.",
-      "Inputting special characters causes validation errors (if any)."
+      "Typing a short password or malformed email does not trigger an error.",
+      "Fields remain empty after the test script runs."
     ]
   }
 ]} /></div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div><label className="block text-sm mb-1">Textbox</label><Input type="text" placeholder="Standard text input" id="basic-text" /></div>
-          <div><label className="block text-sm mb-1">Password</label><Input type="password" placeholder="Password input" id="basic-password" /></div>
-          <div><label className="block text-sm mb-1">Email</label><Input type="email" placeholder="Email input" id="basic-email" /></div>
-          <div><label className="block text-sm mb-1">Number</label><Input type="number" placeholder="Number input" id="basic-number" /></div>
-          <div><label className="block text-sm mb-1">Phone</label><Input type="tel" placeholder="Phone input" id="basic-phone" /></div>
-          <div><label className="block text-sm mb-1">URL</label><Input type="url" placeholder="URL input" id="basic-url" /></div>
-          <div><label className="block text-sm mb-1">Search</label><Input type="search" placeholder="Search input" id="basic-search" /></div>
+          <div>
+            <label className="block text-sm mb-1">Textbox</label>
+            <Input type="text" name="text" value={inputValues.text} onChange={handleInputChange} placeholder="Standard text input" id="basic-text" className={inputErrors.text ? 'border-red-500 focus-visible:ring-red-500' : ''} />
+            {inputErrors.text && <p className="text-xs text-red-500 mt-1" id="basic-text-error">{inputErrors.text}</p>}
+          </div>
+          <div>
+            <label className="block text-sm mb-1">Password</label>
+            <Input type="password" name="password" value={inputValues.password} onChange={handleInputChange} placeholder="Password input" id="basic-password" className={inputErrors.password ? 'border-red-500 focus-visible:ring-red-500' : ''} />
+            {inputErrors.password && <p className="text-xs text-red-500 mt-1" id="basic-password-error">{inputErrors.password}</p>}
+          </div>
+          <div>
+            <label className="block text-sm mb-1">Email</label>
+            <Input type="email" name="email" value={inputValues.email} onChange={handleInputChange} placeholder="Email input" id="basic-email" className={inputErrors.email ? 'border-red-500 focus-visible:ring-red-500' : ''} />
+            {inputErrors.email && <p className="text-xs text-red-500 mt-1" id="basic-email-error">{inputErrors.email}</p>}
+          </div>
+          <div>
+            <label className="block text-sm mb-1">Number (10-100)</label>
+            <Input type="number" name="number" value={inputValues.number} onChange={handleInputChange} placeholder="Number input" id="basic-number" className={inputErrors.number ? 'border-red-500 focus-visible:ring-red-500' : ''} />
+            {inputErrors.number && <p className="text-xs text-red-500 mt-1" id="basic-number-error">{inputErrors.number}</p>}
+          </div>
+          <div>
+            <label className="block text-sm mb-1">Phone</label>
+            <Input type="tel" name="phone" value={inputValues.phone} onChange={handleInputChange} placeholder="Phone input" id="basic-phone" className={inputErrors.phone ? 'border-red-500 focus-visible:ring-red-500' : ''} />
+            {inputErrors.phone && <p className="text-xs text-red-500 mt-1" id="basic-phone-error">{inputErrors.phone}</p>}
+          </div>
+          <div>
+            <label className="block text-sm mb-1">URL</label>
+            <Input type="url" name="url" value={inputValues.url} onChange={handleInputChange} placeholder="URL input" id="basic-url" className={inputErrors.url ? 'border-red-500 focus-visible:ring-red-500' : ''} />
+            {inputErrors.url && <p className="text-xs text-red-500 mt-1" id="basic-url-error">{inputErrors.url}</p>}
+          </div>
+          <div>
+            <label className="block text-sm mb-1">Search</label>
+            <Input type="search" name="search" value={inputValues.search} onChange={handleInputChange} placeholder="Search input" id="basic-search" className={inputErrors.search ? 'border-red-500 focus-visible:ring-red-500' : ''} />
+            {inputErrors.search && <p className="text-xs text-red-500 mt-1" id="basic-search-error">{inputErrors.search}</p>}
+          </div>
           <div><label className="block text-sm mb-1">Hidden Input (inspect DOM)</label><input type="hidden" value="secret-qa-value" id="basic-hidden" /></div>
           <div><label className="block text-sm mb-1">Readonly Input</label><Input type="text" value="You cannot edit me" readOnly id="basic-readonly" /></div>
           <div><label className="block text-sm mb-1">Disabled Input</label><Input type="text" placeholder="I am disabled" disabled id="basic-disabled" /></div>
