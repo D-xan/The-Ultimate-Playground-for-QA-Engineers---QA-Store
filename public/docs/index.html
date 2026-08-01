@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Automation Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        duo: {
+                            green: '#58cc02',
+                            greenDark: '#58a700',
+                            blue: '#1cb0f6',
+                            blueDark: '#1899d6',
+                            gray: '#e5e5e5',
+                            grayDark: '#afafaf',
+                            text: '#4b4b4b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        body { font-family: 'Nunito', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        .doc-page { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .doc-page.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Duolingo 3D Button Style */
+        .btn-3d {
+            transition: all 0.1s ease;
+            position: relative;
+        }
+        .btn-3d:active:not(:disabled) {
+            transform: translateY(4px);
+            border-bottom-width: 0px !important;
+            margin-top: 4px; /* Compensate for the lost border to prevent layout shift below it */
+            margin-bottom: -4px;
+        }
+
+        /* 3D Card Style for index list */
+        .card-3d {
+            transition: all 0.1s ease;
+        }
+        .card-3d:active {
+            transform: translateY(4px);
+            border-bottom-width: 2px !important;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-bottom-width: 4px;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+        .copy-btn:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+        .code-container { position: relative; }
+
+        /* Custom Scrollbar for Sidebar */
+        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #e5e5e5; border-radius: 6px; }
+        .dark .sidebar-scroll::-webkit-scrollbar-thumb { background: #475569; }
+        
+        /* Fix prism font inside our Nunito body */
+        code[class*="language-"], pre[class*="language-"] {
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+            border-radius: 16px;
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-slate-900 flex h-screen overflow-hidden text-duo-text dark:text-slate-200">
+
+    <!-- Mobile Backdrop -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-slate-900/50 z-40 hidden md:hidden transition-opacity" onclick="toggleMobileMenu()"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="w-72 bg-white dark:bg-slate-800 border-r-2 border-duo-gray dark:border-slate-700 flex flex-col h-full flex-shrink-0 transition-transform duration-300 ease-in-out z-50 fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0">
+        <div class="p-6 pb-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-black text-duo-green tracking-tight cursor-pointer hover:opacity-80" onclick="switchPage('page-0', document.getElementById('nav-index'))">qa docs.</h1>
+                <p class="text-sm font-bold text-slate-400 mt-0.5">Automation Track</p>
+            </div>
+            <button onclick="toggleDarkMode()" class="btn-3d w-10 h-10 rounded-2xl border-2 border-b-4 border-duo-gray dark:border-slate-600 flex items-center justify-center text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700" title="Toggle Dark Mode">
+                <svg class="theme-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="px-6 py-2 relative z-50">
+            <div class="relative">
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 font-bold" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                <input type="text" id="doc-search" placeholder="SEARCH..." autocomplete="off" class="w-full bg-slate-100 dark:bg-slate-900 border-2 border-transparent focus:border-duo-blue dark:focus:border-duo-blue rounded-2xl pl-11 pr-4 py-3 font-bold text-slate-700 dark:text-white placeholder-slate-400 focus:outline-none transition-colors" onkeyup="handleSearch(event)">
+            </div>
+            <!-- Search Results Dropdown -->
+            <div id="search-results" class="absolute left-6 right-6 top-full mt-2 bg-white dark:bg-slate-800 border-2 border-b-4 border-duo-gray dark:border-slate-700 rounded-2xl shadow-xl overflow-hidden hidden max-h-64 overflow-y-auto">
+            </div>
+        </div>
+        
+        <!-- Nav Menu -->
+        <nav class="flex-1 overflow-y-auto sidebar-scroll p-6 space-y-3" id="nav-menu">
+            <button id="nav-index" onclick="switchPage('page-0', this)" class="nav-btn btn-3d w-full flex items-center gap-4 px-4 py-3 font-bold rounded-2xl text-duo-blue bg-blue-50 border-2 border-b-4 border-blue-200 dark:bg-blue-900/30 dark:border-blue-800 text-left">
+                <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-white dark:bg-slate-800 border-2 border-blue-200 dark:border-blue-700 text-duo-blue text-sm">#</div>
+                INDEX
+            </button>
+            <button onclick="switchPage('page-1', this)" class="nav-btn btn-3d w-full flex items-center gap-4 px-4 py-3 font-bold rounded-2xl text-slate-500 hover:bg-slate-50 border-2 border-transparent hover:border-b-4 hover:border-duo-gray dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:border-slate-700 text-left">
+                <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-sm border-2 border-transparent">1</div>
+                STACK INTRO
+            </button>
+            <button onclick="switchPage('page-2', this)" class="nav-btn btn-3d w-full flex items-center gap-4 px-4 py-3 font-bold rounded-2xl text-slate-500 hover:bg-slate-50 border-2 border-transparent hover:border-b-4 hover:border-duo-gray dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:border-slate-700 text-left">
+                <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-sm border-2 border-transparent">2</div>
+                SETUP
+            </button>
+            <button onclick="switchPage('page-3', this)" class="nav-btn btn-3d w-full flex items-center gap-4 px-4 py-3 font-bold rounded-2xl text-slate-500 hover:bg-slate-50 border-2 border-transparent hover:border-b-4 hover:border-duo-gray dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:border-slate-700 text-left">
+                <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-sm border-2 border-transparent">3</div>
+                POM.XML
+            </button>
+            <button onclick="switchPage('page-4', this)" class="nav-btn btn-3d w-full flex items-center gap-4 px-4 py-3 font-bold rounded-2xl text-slate-500 hover:bg-slate-50 border-2 border-transparent hover:border-b-4 hover:border-duo-gray dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:border-slate-700 text-left">
+                <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-sm border-2 border-transparent">4</div>
+                JAVA CODE
+            </button>
+            <button onclick="switchPage('page-5', this)" class="nav-btn btn-3d w-full flex items-center gap-4 px-4 py-3 font-bold rounded-2xl text-slate-500 hover:bg-slate-50 border-2 border-transparent hover:border-b-4 hover:border-duo-gray dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:border-slate-700 text-left">
+                <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-sm border-2 border-transparent">5</div>
+                RUN TESTS
+            </button>
+            <button onclick="switchPage('page-6', this)" class="nav-btn btn-3d w-full flex items-center gap-4 px-4 py-3 font-bold rounded-2xl text-slate-500 hover:bg-slate-50 border-2 border-transparent hover:border-b-4 hover:border-duo-gray dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:border-slate-700 text-left">
+                <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-sm border-2 border-transparent">6</div>
+                CLEAN VS TEST
+            </button>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 h-full overflow-y-auto bg-white dark:bg-slate-900 relative transition-colors z-10">
+        
+        <!-- Mobile Header -->
+        <header class="md:hidden bg-white dark:bg-slate-800 border-b-2 border-duo-gray dark:border-slate-700 px-4 py-3 flex justify-between items-center sticky top-0 z-30">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleMobileMenu()" class="btn-3d w-10 h-10 rounded-xl border-2 border-b-4 border-duo-gray dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                </button>
+                <h1 class="text-xl font-black text-duo-green tracking-tight">qa docs.</h1>
+            </div>
+            <button onclick="toggleDarkMode()" class="btn-3d w-10 h-10 rounded-xl border-2 border-b-4 border-duo-gray dark:border-slate-600 flex items-center justify-center text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700" title="Toggle Dark Mode">
+                <svg class="theme-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Top Progress Bar (Visual Only) -->
+        <div class="w-full h-4 bg-slate-100 dark:bg-slate-800">
+            <div id="progress-bar" class="h-full bg-duo-green rounded-r-full transition-all duration-500 ease-out" style="width: 10%;"></div>
+        </div>
+
+        <div class="max-w-3xl mx-auto py-12 px-8 pb-32">
+            
+            <!-- Page 0: Index -->
+            <div id="page-0" class="doc-page active">
+                <div class="text-center mb-10">
+                    <h1 class="text-4xl md:text-5xl font-black text-slate-800 dark:text-white mb-4">QA Automation</h1>
+                    <p class="text-xl font-bold text-slate-400 dark:text-slate-400">Master building robust frameworks from scratch.</p>
+                </div>
+                
+                <div class="flex flex-col space-y-4">
+                    <!-- List Item 1 -->
+                    <div onclick="switchPage('page-1', document.querySelectorAll('.nav-btn')[1])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
+                        <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-duo-green text-white flex items-center justify-center font-black text-2xl border-b-4 border-duo-greenDark shadow-sm mr-6 group-hover:scale-110 transition-transform">1</div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Introduction to the Stack</h3>
+                            <p class="text-slate-500 dark:text-slate-400 font-bold">Maven (Builder), Selenium (Driver), TestNG (Brain).</p>
+                        </div>
+                    </div>
+
+                    <!-- List Item 2 -->
+                    <div onclick="switchPage('page-2', document.querySelectorAll('.nav-btn')[2])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
+                        <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-duo-blue text-white flex items-center justify-center font-black text-2xl border-b-4 border-duo-blueDark shadow-sm mr-6 group-hover:scale-110 transition-transform">2</div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Manual Project Setup</h3>
+                            <p class="text-slate-500 dark:text-slate-400 font-bold">Create the strict Maven directory structure.</p>
+                        </div>
+                    </div>
+
+                    <!-- List Item 3 -->
+                    <div onclick="switchPage('page-3', document.querySelectorAll('.nav-btn')[3])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
+                        <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-purple-500 text-white flex items-center justify-center font-black text-2xl border-b-4 border-purple-700 shadow-sm mr-6 group-hover:scale-110 transition-transform">3</div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">The POM.xml</h3>
+                            <p class="text-slate-500 dark:text-slate-400 font-bold">Pull down required automation dependencies.</p>
+                        </div>
+                    </div>
+
+                    <!-- List Item 4 -->
+                    <div onclick="switchPage('page-4', document.querySelectorAll('.nav-btn')[4])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
+                        <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-orange-400 text-white flex items-center justify-center font-black text-2xl border-b-4 border-orange-600 shadow-sm mr-6 group-hover:scale-110 transition-transform">4</div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Writing the Java Code</h3>
+                            <p class="text-slate-500 dark:text-slate-400 font-bold">Write your first script using @BeforeMethod & @Test.</p>
+                        </div>
+                    </div>
+
+                    <!-- List Item 5 -->
+                    <div onclick="switchPage('page-5', document.querySelectorAll('.nav-btn')[5])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
+                        <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-pink-500 text-white flex items-center justify-center font-black text-2xl border-b-4 border-pink-700 shadow-sm mr-6 group-hover:scale-110 transition-transform">5</div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Compiling and Running</h3>
+                            <p class="text-slate-500 dark:text-slate-400 font-bold">Execute via terminal and understand reports.</p>
+                        </div>
+                    </div>
+
+                    <!-- List Item 6 -->
+                    <div onclick="switchPage('page-6', document.querySelectorAll('.nav-btn')[6])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
+                        <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-teal-500 text-white flex items-center justify-center font-black text-2xl border-b-4 border-teal-700 shadow-sm mr-6 group-hover:scale-110 transition-transform">6</div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Q&A: mvn test vs clean test</h3>
+                            <p class="text-slate-500 dark:text-slate-400 font-bold">Understanding Maven lifecycles and the target cache.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 1: Introduction -->
+            <div id="page-1" class="doc-page">
+                <h2 class="text-4xl font-black text-slate-800 dark:text-white mb-8">1. Introduction to the Stack</h2>
+                <div class="prose prose-lg prose-slate dark:prose-invert max-w-none space-y-6 font-bold text-slate-600 dark:text-slate-300">
+                    <p>Building an automation framework from scratch is the best way to deeply understand how the tools interact. We will use three primary tools:</p>
+                    
+                    <div class="grid grid-cols-1 gap-6 mt-8">
+                        <div class="p-6 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-800 flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-red-500 flex-shrink-0"></div>
+                            <div>
+                                <h3 class="text-2xl font-black text-slate-800 dark:text-white mb-1 mt-0">Maven</h3>
+                                <p class="text-slate-500">The builder. It handles downloading all external libraries automatically so you don't have to manually manage <code>.jar</code> files.</p>
+                            </div>
+                        </div>
+                        <div class="p-6 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-800 flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-duo-green flex-shrink-0"></div>
+                            <div>
+                                <h3 class="text-2xl font-black text-slate-800 dark:text-white mb-1 mt-0">Selenium</h3>
+                                <p class="text-slate-500">The driver. It provides the commands (like click, type, find) to physically interact with the web browser.</p>
+                            </div>
+                        </div>
+                        <div class="p-6 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-800 flex gap-4">
+                            <div class="w-12 h-12 rounded-full bg-duo-blue flex-shrink-0"></div>
+                            <div>
+                                <h3 class="text-2xl font-black text-slate-800 dark:text-white mb-1 mt-0">TestNG</h3>
+                                <p class="text-slate-500">The brain. It organizes the code into tests, provides assertions (Pass/Fail), and generates reports.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 2: Project Setup -->
+            <div id="page-2" class="doc-page">
+                <h2 class="text-4xl font-black text-slate-800 dark:text-white mb-8">2. Manual Project Setup</h2>
+                <div class="prose prose-lg prose-slate dark:prose-invert max-w-none space-y-6 font-bold text-slate-600 dark:text-slate-300">
+                    <p>To use Maven, we must adhere to its strict folder structure. This separates application source code from testing source code.</p>
+                    
+                    <p>Open your terminal in an empty folder (e.g., <code>qa-framework</code>) and run the following commands to build the skeleton:</p>
+                    
+                    <div class="code-container rounded-2xl overflow-hidden shadow-lg border-2 border-slate-700 my-6">
+                        <button class="copy-btn" onclick="copyCode(this, 'bash-code-1')">COPY</button>
+<pre class="!m-0"><code id="bash-code-1" class="language-bash">mkdir -p src/main/java
+mkdir -p src/test/java</code></pre>
+                    </div>
+
+                    <h3 class="text-2xl font-black text-slate-800 dark:text-white mt-10 mb-4">Why this structure?</h3>
+                    <ul class="list-disc pl-6 space-y-3 text-slate-500">
+                        <li><code>src/main/java</code> is where developers put the actual app code (we will ignore this, since we are only writing tests).</li>
+                        <li><code>src/test/java</code> is where QA engineers put all automation scripts.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Page 3: Dependencies -->
+            <div id="page-3" class="doc-page">
+                <h2 class="text-4xl font-black text-slate-800 dark:text-white mb-8">3. The POM.xml</h2>
+                <div class="prose prose-lg prose-slate dark:prose-invert max-w-none space-y-6 font-bold text-slate-600 dark:text-slate-300">
+                    <p>For Maven to know what to download, it looks for a file named <code>pom.xml</code> (Project Object Model) in the root of your folder.</p>
+                    <p>Create a file named <code>pom.xml</code> in your root folder, and paste this in:</p>
+                    
+                    <div class="code-container rounded-2xl overflow-hidden shadow-lg border-2 border-slate-700 my-6">
+                        <button class="copy-btn" onclick="copyCode(this, 'xml-code')">COPY</button>
+<pre class="!m-0"><code id="xml-code" class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+    
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;com.qastore&lt;/groupId&gt;
+    &lt;artifactId&gt;automation-tests&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+
+    &lt;properties&gt;
+        &lt;maven.compiler.source&gt;21&lt;/maven.compiler.source&gt;
+        &lt;maven.compiler.target&gt;21&lt;/maven.compiler.target&gt;
+    &lt;/properties&gt;
+
+    &lt;dependencies&gt;
+        &lt;!-- 1. Selenium --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.seleniumhq.selenium&lt;/groupId&gt;
+            &lt;artifactId&gt;selenium-java&lt;/artifactId&gt;
+            &lt;version&gt;4.23.0&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;!-- 2. TestNG --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.testng&lt;/groupId&gt;
+            &lt;artifactId&gt;testng&lt;/artifactId&gt;
+            &lt;version&gt;7.10.2&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+        &lt;!-- 3. WebDriverManager --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;io.github.bonigarcia&lt;/groupId&gt;
+            &lt;artifactId&gt;webdrivermanager&lt;/artifactId&gt;
+            &lt;version&gt;5.9.1&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;</code></pre>
+                    </div>
+
+                    <div class="bg-blue-50 dark:bg-blue-900/30 border-2 border-b-8 border-duo-blue p-6 mt-10 rounded-2xl">
+                        <h4 class="font-black text-xl text-duo-blue mb-2">Deep Understanding</h4>
+                        <p class="text-blue-800 dark:text-blue-200">
+                            We include <strong>WebDriverManager</strong> because otherwise, you would have to manually download a <code>chromedriver.exe</code> file every time Google Chrome updates. It manages the binary compatibility for you seamlessly!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 4: Writing the Test -->
+            <div id="page-4" class="doc-page">
+                <h2 class="text-4xl font-black text-slate-800 dark:text-white mb-8">4. Writing the Java Code</h2>
+                <div class="prose prose-lg prose-slate dark:prose-invert max-w-none space-y-6 font-bold text-slate-600 dark:text-slate-300">
+                    <p>Now, let's write the actual Java code. In <code>src/test/java</code>, create a file named <code>BasicTest.java</code>:</p>
+                    
+                    <div class="code-container rounded-2xl overflow-hidden shadow-lg border-2 border-slate-700 my-6">
+                        <button class="copy-btn" onclick="copyCode(this, 'java-code')">COPY</button>
+<pre class="!m-0"><code id="java-code" class="language-java">import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class BasicTest {
+    WebDriver driver;
+
+    // @BeforeMethod runs automatically BEFORE every single @Test
+    @BeforeMethod
+    public void setup() {
+        WebDriverManager.chromedriver().setup(); 
+        driver = new ChromeDriver();             
+    }
+
+    // @Test is the actual script. TestNG looks for this tag to execute it.
+    @Test
+    public void myFirstTest() {
+        // Selenium command
+        driver.get("https://d-xan.github.io/The-Ultimate-Playground-for-QA-Engineers---QA-Store");
+        String pageTitle = driver.getTitle();
+        
+        // TestNG command
+        Assert.assertTrue(pageTitle.contains("QA Store"), "The title did not match!");
+    }
+
+    // @AfterMethod runs automatically AFTER every single @Test, even if it fails
+    @AfterMethod
+    public void teardown() {
+        if(driver != null) {
+            driver.quit(); 
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <h3 class="text-2xl font-black text-slate-800 dark:text-white mt-10 mb-4">Deep Dive on Annotations</h3>
+                    <p class="text-slate-500">
+                        Notice how we separate logic using Annotations (<code>@BeforeMethod</code>, <code>@Test</code>, <code>@AfterMethod</code>). If a test fails halfway through, normal Java code would just crash and leave a ghost Chrome window open forever in your RAM. By using TestNG's <code>@AfterMethod</code>, we guarantee that <code>driver.quit()</code> is executed no matter what happens.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Page 5: Running -->
+            <div id="page-5" class="doc-page">
+                <h2 class="text-4xl font-black text-slate-800 dark:text-white mb-8">5. Compiling and Running</h2>
+                <div class="prose prose-lg prose-slate dark:prose-invert max-w-none space-y-6 font-bold text-slate-600 dark:text-slate-300">
+                    <p>Now that you have your code, open your terminal in the root folder (where <code>pom.xml</code> is) and run:</p>
+                    
+                    <div class="code-container rounded-2xl overflow-hidden shadow-lg border-2 border-slate-700 my-6">
+                        <button class="copy-btn" onclick="copyCode(this, 'bash-code-2')">COPY</button>
+<pre class="!m-0"><code id="bash-code-2" class="language-bash">mvn test</code></pre>
+                    </div>
+
+                    <h3 class="text-2xl font-black text-slate-800 dark:text-white mt-10 mb-4">What happens when you press enter?</h3>
+                    <div class="space-y-4 text-slate-500">
+                        <div class="flex gap-4 items-center bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border-2 border-duo-gray dark:border-slate-700">
+                            <div class="w-8 h-8 rounded-xl bg-duo-gray dark:bg-slate-700 flex items-center justify-center font-black">1</div>
+                            <p class="m-0">Maven reads your <code>pom.xml</code>.</p>
+                        </div>
+                        <div class="flex gap-4 items-center bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border-2 border-duo-gray dark:border-slate-700">
+                            <div class="w-8 h-8 rounded-xl bg-duo-gray dark:bg-slate-700 flex items-center justify-center font-black">2</div>
+                            <p class="m-0">It downloads dependencies from the internet (takes a minute on the first run).</p>
+                        </div>
+                        <div class="flex gap-4 items-center bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border-2 border-duo-gray dark:border-slate-700">
+                            <div class="w-8 h-8 rounded-xl bg-duo-gray dark:bg-slate-700 flex items-center justify-center font-black">3</div>
+                            <p class="m-0">It compiles <code>BasicTest.java</code> into computer-readable bytecode.</p>
+                        </div>
+                        <div class="flex gap-4 items-center bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border-2 border-duo-gray dark:border-slate-700">
+                            <div class="w-8 h-8 rounded-xl bg-duo-gray dark:bg-slate-700 flex items-center justify-center font-black">4</div>
+                            <p class="m-0">It tells TestNG to look for any method with a <code>@Test</code> annotation.</p>
+                        </div>
+                        <div class="flex gap-4 items-center bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border-2 border-duo-gray dark:border-slate-700">
+                            <div class="w-8 h-8 rounded-xl bg-duo-gray dark:bg-slate-700 flex items-center justify-center font-black">5</div>
+                            <p class="m-0">TestNG runs <code>@BeforeMethod</code>, then <code>@Test</code>, then <code>@AfterMethod</code>.</p>
+                        </div>
+                        <div class="flex gap-4 items-center bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border-2 border-duo-gray dark:border-slate-700">
+                            <div class="w-8 h-8 rounded-xl bg-duo-gray dark:bg-slate-700 flex items-center justify-center font-black">6</div>
+                            <p class="m-0">TestNG prints a summary showing Pass, Fail, or Skip.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 6: Maven clean vs test -->
+            <div id="page-6" class="doc-page">
+                <h2 class="text-4xl font-black text-slate-800 dark:text-white mb-8">6. Q&A: mvn test vs clean test</h2>
+                <div class="prose prose-lg prose-slate dark:prose-invert max-w-none space-y-6 font-bold text-slate-600 dark:text-slate-300">
+                    <p>When executing your automation scripts, you will frequently use Maven commands in the terminal. The two most common are <code>mvn test</code> and <code>mvn clean test</code>. Here is the deep technical difference between them.</p>
+                    
+                    <h3 class="text-2xl font-black text-slate-800 dark:text-white mt-10 mb-4">The target/ Directory</h3>
+                    <p>Before understanding the commands, you must understand the <code>target/</code> directory. When Maven compiles your Java code (from <code>.java</code> to computer-readable <code>.class</code> files), it places them in a hidden folder named <code>target/</code>.</p>
+                    
+                    <div class="code-container rounded-2xl overflow-hidden shadow-lg border-2 border-slate-700 my-6">
+                        <button class="copy-btn" onclick="copyCode(this, 'bash-target')">COPY</button>
+<pre class="!m-0"><code id="bash-target" class="language-bash"># The target folder structure
+qa-framework/
+├── pom.xml
+├── src/
+└── target/                  &lt;-- Maven generates this automatically
+    ├── classes/             &lt;-- Compiled app code
+    ├── test-classes/        &lt;-- Compiled QA scripts (BasicTest.class)
+    └── surefire-reports/    &lt;-- Test results (HTML/XML)</code></pre>
+                    </div>
+
+                    <h3 class="text-2xl font-black text-slate-800 dark:text-white mt-10 mb-4">Command 1: mvn test</h3>
+                    <p>This command tells Maven to compile your code and run the tests. However, it is "lazy" to save time.</p>
+                    <ul class="list-disc pl-6 space-y-2 text-slate-500">
+                        <li>It looks at your <code>.java</code> files and compares them to the <code>.class</code> files in <code>target/</code>.</li>
+                        <li>If it thinks the file hasn't changed, it <strong>skips compilation</strong> and uses the old version.</li>
+                        <li><strong>The Danger:</strong> Sometimes Maven gets confused. You might fix a bug in your code, run <code>mvn test</code>, and it still fails because Maven used the old cached version!</li>
+                    </ul>
+
+                    <h3 class="text-2xl font-black text-slate-800 dark:text-white mt-10 mb-4">Command 2: mvn clean test</h3>
+                    <p>This chains two Maven phases together: <code>clean</code> and then <code>test</code>.</p>
+                    <ul class="list-disc pl-6 space-y-2 text-slate-500">
+                        <li><strong>Phase 1 (clean):</strong> It physically deletes the entire <code>target/</code> folder. All old compiled code and reports are destroyed.</li>
+                        <li><strong>Phase 2 (test):</strong> It rebuilds the <code>target/</code> folder completely from scratch and runs the tests.</li>
+                        <li><strong>The Benefit:</strong> It guarantees you are running the absolute latest version of your code. You never have to worry about "ghosts" in the cache.</li>
+                    </ul>
+
+                    <div class="bg-teal-50 dark:bg-teal-900/30 border-2 border-b-8 border-teal-500 p-6 mt-10 rounded-2xl">
+                        <h4 class="font-black text-xl text-teal-600 dark:text-teal-400 mb-2">The Golden Rule</h4>
+                        <p class="text-teal-800 dark:text-teal-200">
+                            Always use <code>mvn clean test</code> if you are running into unexplainable bugs, or right before you push your code to GitHub. It takes a few extra seconds, but guarantees a fresh execution!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation footer -->
+            <div class="mt-16 pt-8 border-t-2 border-duo-gray dark:border-slate-700 flex justify-between items-center" id="footer-nav">
+                <button onclick="prevPage()" id="btn-prev" class="btn-3d px-6 py-3 border-2 border-b-4 border-duo-gray dark:border-slate-600 rounded-2xl text-sm font-black text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors uppercase tracking-wider" disabled>
+                    Previous
+                </button>
+                <button onclick="nextPage()" id="btn-next" class="btn-3d px-8 py-3 bg-duo-green text-white rounded-2xl text-sm font-black border-2 border-b-4 border-duo-greenDark hover:bg-[#60df02] transition-colors uppercase tracking-wider">
+                    Next Section
+                </button>
+            </div>
+            
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script>
+        let currentPageIndex = 0; // 0 is Index
+        const totalPages = 6;
+
+        // Dark Mode Logic
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icons = document.querySelectorAll('.theme-icon');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.theme = 'light';
+                // Switch to Moon Icon
+                icons.forEach(icon => icon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>');
+            } else {
+                html.classList.add('dark');
+                localStorage.theme = 'dark';
+                // Switch to Sun Icon
+                icons.forEach(icon => icon.innerHTML = '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>');
+            }
+        }
+
+        // Initialize Theme
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.querySelectorAll('.theme-icon').forEach(icon => icon.innerHTML = '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>');
+        }
+
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+
+        function updateSidebarUI(pageId) {
+            // Reset all
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn btn-3d w-full flex items-center gap-4 px-4 py-3 font-bold rounded-2xl text-slate-500 hover:bg-slate-50 border-2 border-transparent hover:border-b-4 hover:border-duo-gray dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:border-slate-700 text-left";
+                
+                const box = btn.querySelector('div');
+                if (box.innerText === '#') {
+                    box.className = "flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-sm border-2 border-transparent";
+                } else {
+                    box.className = "flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-sm border-2 border-transparent";
+                }
+            });
+
+            // Set active
+            const activeIndex = parseInt(pageId.split('-')[1]);
+            const activeBtn = document.querySelectorAll('.nav-btn')[activeIndex];
+            
+            activeBtn.className = "nav-btn btn-3d w-full flex items-center gap-4 px-4 py-3 font-bold rounded-2xl text-duo-blue bg-blue-50 border-2 border-b-4 border-blue-200 dark:bg-blue-900/30 dark:border-blue-800 text-left";
+            activeBtn.querySelector('div').className = "flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-white dark:bg-slate-800 border-2 border-blue-200 dark:border-blue-700 text-duo-blue text-sm";
+        }
+
+        function updateProgressBar() {
+            const progress = (currentPageIndex / totalPages) * 100;
+            // minimum width to look good
+            document.getElementById('progress-bar').style.width = Math.max(10, progress) + '%';
+        }
+
+        function switchPage(pageId, clickedBtnElement) {
+            // Hide all pages
+            document.querySelectorAll('.doc-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show target page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update sidebar
+            updateSidebarUI(pageId);
+            
+            // Update current index
+            currentPageIndex = parseInt(pageId.split('-')[1]);
+            
+            // Update footer buttons
+            updateFooterButtons();
+            
+            // Update progress bar
+            updateProgressBar();
+            
+            // Close mobile menu if open
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            if (!sidebar.classList.contains('-translate-x-full') && window.innerWidth < 768) {
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('hidden');
+            }
+            
+            // Scroll to top
+            document.querySelector('main').scrollTop = 0;
+        }
+
+        function nextPage() {
+            if (currentPageIndex < totalPages) {
+                switchPage(`page-${currentPageIndex + 1}`);
+            }
+        }
+
+        function prevPage() {
+            if (currentPageIndex > 0) {
+                switchPage(`page-${currentPageIndex - 1}`);
+            }
+        }
+
+        function updateFooterButtons() {
+            const prevBtn = document.getElementById('btn-prev');
+            const nextBtn = document.getElementById('btn-next');
+
+            if (currentPageIndex === 0) {
+                prevBtn.disabled = true;
+                prevBtn.classList.add('opacity-50', 'pointer-events-none');
+                prevBtn.classList.remove('hover:bg-slate-50', 'dark:hover:bg-slate-800');
+            } else {
+                prevBtn.disabled = false;
+                prevBtn.classList.remove('opacity-50', 'pointer-events-none');
+                prevBtn.classList.add('hover:bg-slate-50', 'dark:hover:bg-slate-800');
+            }
+            
+            if (currentPageIndex === totalPages) {
+                nextBtn.disabled = true;
+                nextBtn.classList.add('opacity-50', 'pointer-events-none');
+                nextBtn.classList.remove('hover:bg-[#60df02]');
+            } else {
+                nextBtn.disabled = false;
+                nextBtn.classList.remove('opacity-50', 'pointer-events-none');
+                nextBtn.classList.add('hover:bg-[#60df02]');
+            }
+        }
+
+        function copyCode(btn, elementId) {
+            const codeText = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                btn.innerText = 'COPIED!';
+                btn.classList.add('bg-duo-green', 'border-duo-greenDark', 'text-white');
+                btn.classList.remove('bg-white/15', 'border-white/20');
+                
+                setTimeout(() => {
+                    btn.innerText = 'COPY';
+                    btn.classList.remove('bg-duo-green', 'border-duo-greenDark', 'text-white');
+                    btn.classList.add('bg-white/15', 'border-white/20');
+                }, 2000);
+            });
+        }
+
+        // Search functionality
+        const searchData = [
+            { id: 'page-1', title: 'Introduction to the Stack', keywords: 'maven selenium testng builder driver brain framework' },
+            { id: 'page-2', title: 'Manual Project Setup', keywords: 'folder structure mkdir src/main/java src/test/java setup skeleton' },
+            { id: 'page-3', title: 'The POM.xml', keywords: 'pom xml dependencies project object model webdrivermanager version compiler' },
+            { id: 'page-4', title: 'Writing the Java Code', keywords: 'java code basictest annotations @test @beforemethod @aftermethod assert driver.get quit' },
+            { id: 'page-5', title: 'Compiling and Running', keywords: 'terminal mvn test execute report passed failed skipped' },
+            { id: 'page-6', title: 'Q&A: mvn test vs clean test', keywords: 'maven target clean test compile run lifecycle class cache ghost' }
+        ];
+
+        function handleSearch(e) {
+            const query = e.target.value.toLowerCase().trim();
+            const resultsContainer = document.getElementById('search-results');
+            
+            if (query.length < 2) {
+                resultsContainer.classList.add('hidden');
+                return;
+            }
+            
+            const results = searchData.filter(item => 
+                item.title.toLowerCase().includes(query) || 
+                item.keywords.toLowerCase().includes(query)
+            );
+            
+            if (results.length > 0) {
+                resultsContainer.innerHTML = results.map(res => `
+                    <div onclick="executeSearchSwitch('${res.id}')" class="p-4 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer border-b-2 border-duo-gray dark:border-slate-700 last:border-0 transition-colors font-bold text-slate-700 dark:text-white">
+                        ${res.title}
+                    </div>
+                `).join('');
+                resultsContainer.classList.remove('hidden');
+            } else {
+                resultsContainer.innerHTML = '<div class="p-4 font-bold text-slate-400 text-center">No results found :(</div>';
+                resultsContainer.classList.remove('hidden');
+            }
+        }
+
+        function executeSearchSwitch(pageId) {
+            document.getElementById('doc-search').value = '';
+            document.getElementById('search-results').classList.add('hidden');
+            switchPage(pageId);
+        }
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function(e) {
+            const searchContainer = document.getElementById('doc-search')?.parentElement?.parentElement;
+            if (searchContainer && !searchContainer.contains(e.target)) {
+                document.getElementById('search-results').classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
