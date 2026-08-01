@@ -39,7 +39,7 @@ export const CustomerNavbar = () => {
           <Link to="/products" className="text-sm font-medium text-slate-600 hover:text-primary transition-colors">Products</Link>
           <Link to="/categories" className="text-sm font-medium text-slate-600 hover:text-primary transition-colors">Categories</Link>
           <Link to="/deals" className="text-sm font-medium text-danger hover:text-danger/80 transition-colors">Deals</Link>
-          <a href="/docs/index.html" className="text-sm font-bold text-primary hover:text-primary/80 transition-colors bg-primary/10 px-3 py-1.5 rounded-full flex items-center gap-1"><Activity className="h-4 w-4"/> QA Docs</a>
+          <a href={`${import.meta.env.BASE_URL}docs/index.html`} className="text-sm font-bold text-primary hover:text-primary/80 transition-colors bg-primary/10 px-3 py-1.5 rounded-full flex items-center gap-1"><Activity className="h-4 w-4"/> QA Docs</a>
         </nav>
 
         {/* Search Bar */}
@@ -156,7 +156,7 @@ export const CustomerNavbar = () => {
               <Link to="/products" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-slate-700 hover:text-primary">Products</Link>
               <Link to="/categories" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-slate-700 hover:text-primary">Categories</Link>
               <Link to="/deals" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-danger hover:text-danger/80">Deals</Link>
-              <a href="/docs/index.html" className="text-sm font-bold text-primary hover:bg-primary/5 p-2 rounded-md flex items-center gap-2 mt-2"><Activity className="h-4 w-4"/> QA Docs</a>
+              <a href={`${import.meta.env.BASE_URL}docs/index.html`} className="text-sm font-bold text-primary hover:bg-primary/5 p-2 rounded-md flex items-center gap-2 mt-2"><Activity className="h-4 w-4"/> QA Docs</a>
             </nav>
           </div>
         </div>
