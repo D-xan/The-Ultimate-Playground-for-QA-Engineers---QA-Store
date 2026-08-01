@@ -15,6 +15,8 @@ export default function BasicElements() {
     text: '', password: '', email: '', number: '', phone: '', url: '', search: ''
   });
 
+  const [sliderValue, setSliderValue] = useState(50);
+
   const validateField = (name: string, value: string) => {
     let error = '';
     switch(name) {
@@ -253,8 +255,19 @@ export default function BasicElements() {
 ]} /></div>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm mb-2">Range Slider (Volume)</label>
-              <input type="range" min="0" max="100" defaultValue="50" className="w-full accent-primary" id="slider-volume" />
+              <div className="flex justify-between mb-2">
+                <label className="block text-sm font-medium">Range Slider (Volume)</label>
+                <span className="text-sm font-bold text-primary" id="slider-value-display">{sliderValue}</span>
+              </div>
+              <input 
+                type="range" 
+                min="0" 
+                max="100" 
+                value={sliderValue} 
+                onChange={(e) => setSliderValue(Number(e.target.value))}
+                className="w-full accent-primary cursor-pointer" 
+                id="slider-volume" 
+              />
             </div>
           </div>
         </div>
