@@ -1,8 +1,8 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { Outlet, NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Type, MousePointer2, List, Mouse, 
-  MessageSquare, AppWindow, Activity, ArrowLeft, Save, ArrowRight, RotateCcw, Trash2, Network
+  MessageSquare, AppWindow, Activity, ArrowLeft, Save, ArrowRight, RotateCcw, Trash2, Network, Menu, X
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
@@ -22,6 +22,7 @@ const sidebarLinks = [
 export default function PracticeLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const savePageState = useCallback(() => {
     const inputs = document.querySelectorAll('input, select, textarea');
@@ -103,15 +104,39 @@ export default function PracticeLayout() {
   const isLastPage = location.pathname === sidebarLinks[sidebarLinks.length - 1].to;
 
   return (
-    <div className="flex h-screen bg-slate-100 overflow-hidden">
+    <div className="flex h-screen bg-slate-100 overflow-hidden relative">
+      {/* Mobile Top Bar */}
+      <div className="md:hidden flex items-center justify-between p-4 bg-white border-b border-border shadow-sm z-20">
+        <div className="flex items-center gap-2">
+          <AppWindow className="h-5 w-5 text-primary" />
+          <span className="font-bold text-slate-900">QA Challenges</span>
+        </div>
+        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-slate-600">
+          {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      </div>
+
+      {/* Overlay for mobile */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-30 md:hidden" 
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 text-white flex flex-col hidden md:flex">
-        <div className="p-6 border-b border-slate-800">
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            <AppWindow className="h-6 w-6 text-primary" />
-            QA Challenges
-          </h2>
-          <p className="text-xs text-slate-400 mt-2">Master your automation scripts</p>
+      <aside className={`w-64 bg-slate-900 text-white flex-col ${isMobileMenuOpen ? 'flex absolute inset-y-0 left-0 z-40' : 'hidden'} md:relative md:flex`}>
+        <div className="p-6 border-b border-slate-800 flex justify-between items-center">
+          <div>
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <AppWindow className="h-6 w-6 text-primary" />
+              QA Challenges
+            </h2>
+            <p className="text-xs text-slate-400 mt-2">Master your automation scripts</p>
+          </div>
+          <button className="md:hidden text-slate-400" onClick={() => setIsMobileMenuOpen(false)}>
+            <X className="h-5 w-5" />
+          </button>
         </div>
         
         <nav className="flex-1 overflow-y-auto py-4">
@@ -127,6 +152,7 @@ export default function PracticeLayout() {
                         : 'text-slate-300 hover:bg-slate-800 hover:text-white'
                     }`
                   }
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.icon}
                   {link.label}
@@ -152,22 +178,22 @@ export default function PracticeLayout() {
         </div>
         
         {/* Bottom Action Bar */}
-        <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-border p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Button variant="outline" onClick={handleResetPage} className="flex items-center gap-2 text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20">
+        <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-border p-3 md:p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
+          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
+            <div className="flex items-center gap-2 md:gap-3 w-full sm:w-auto justify-center sm:justify-start">
+              <Button variant="outline" onClick={handleResetPage} size="sm" className="flex items-center gap-2 text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20 w-full sm:w-auto">
                 <RotateCcw className="w-4 h-4" /> Reset Page
               </Button>
-              <Button variant="outline" onClick={handleResetAll} className="flex items-center gap-2 text-slate-500">
+              <Button variant="outline" onClick={handleResetAll} size="sm" className="flex items-center gap-2 text-slate-500 w-full sm:w-auto">
                 <Trash2 className="w-4 h-4" /> Reset All
               </Button>
             </div>
-            <div className="flex items-center gap-3">
-              <Button onClick={() => { savePageState(); alert('Progress saved!'); }} variant="outline" className="flex items-center gap-2">
+            <div className="flex items-center gap-2 md:gap-3 w-full sm:w-auto justify-center sm:justify-end">
+              <Button onClick={() => { savePageState(); alert('Progress saved!'); }} size="sm" variant="outline" className="flex items-center gap-2 w-full sm:w-auto">
                 <Save className="w-4 h-4" /> Save
               </Button>
               {!isLastPage && (
-                <Button onClick={handleNext} className="flex items-center gap-2">
+                <Button onClick={handleNext} size="sm" className="flex items-center gap-2 w-full sm:w-auto">
                   Save & Next <ArrowRight className="w-4 h-4" />
                 </Button>
               )}

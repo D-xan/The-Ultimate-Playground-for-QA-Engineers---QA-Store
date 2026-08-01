@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/store/useAuth';
 import { useCart } from '@/store/useCart';
 import { useTheme } from '@/store/useTheme';
-import { ShoppingCart, Heart, User, LogOut, Settings, Search, Menu, Package, Activity, Sun, Moon } from 'lucide-react';
+import { ShoppingCart, Heart, User, LogOut, Settings, Search, Menu, X, Package, Activity, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export const CustomerNavbar = () => {
@@ -12,6 +12,7 @@ export const CustomerNavbar = () => {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   const cartCount = items.reduce((acc, i) => acc + i.quantity, 0);
 
@@ -21,8 +22,8 @@ export const CustomerNavbar = () => {
         
         {/* Logo & Mobile Menu */}
         <div className="flex items-center gap-4">
-          <button className="lg:hidden p-2 text-slate-600">
-            <Menu className="h-6 w-6" />
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden p-2 text-slate-600">
+            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
           <Link to="/" className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
@@ -128,6 +129,36 @@ export const CustomerNavbar = () => {
           )}
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden border-t border-border bg-white animate-in slide-in-from-top-2">
+          <div className="container mx-auto px-4 py-4 space-y-4">
+            {/* Mobile Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Search products..." 
+                className="h-10 w-full rounded-full border border-border bg-slate-50 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                    navigate(`/products?search=${encodeURIComponent(e.currentTarget.value.trim())}`);
+                    setIsMobileMenuOpen(false);
+                  }
+                }}
+              />
+            </div>
+            
+            <nav className="flex flex-col space-y-3">
+              <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-slate-700 hover:text-primary">Home</Link>
+              <Link to="/products" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-slate-700 hover:text-primary">Products</Link>
+              <Link to="/categories" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-slate-700 hover:text-primary">Categories</Link>
+              <Link to="/deals" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-medium text-danger hover:text-danger/80">Deals</Link>
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
