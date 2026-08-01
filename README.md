@@ -1,5 +1,7 @@
 # The Ultimate Playground for QA Engineers - QA Store
 
+[![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-success?style=for-the-badge&logo=github)](https://d-xan.github.io/The-Ultimate-Playground-for-QA-Engineers---QA-Store/)
+
 Welcome to the **QA Store Playground**, a comprehensive testing environment designed specifically for Automation Engineers and QA professionals! This repository contains a mock e-commerce application alongside a dedicated set of robust automation challenges to help you practice and hone your testing skills.
 
 ## 🚀 Features
