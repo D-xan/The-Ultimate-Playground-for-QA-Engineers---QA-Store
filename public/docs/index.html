@@ -155,6 +155,14 @@
                 <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-sm border-2 border-transparent">6</div>
                 CLEAN VS TEST
             </button>
+            <button onclick="switchPage('page-7', this)" class="nav-btn btn-3d w-full flex items-center gap-4 px-4 py-3 font-bold rounded-2xl text-slate-500 hover:bg-slate-50 border-2 border-transparent hover:border-b-4 hover:border-duo-gray dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:border-slate-700 text-left">
+                <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-sm border-2 border-transparent">7</div>
+                PAGE OBJECT MODEL
+            </button>
+            <button onclick="switchPage('page-8', this)" class="nav-btn btn-3d w-full flex items-center gap-4 px-4 py-3 font-bold rounded-2xl text-slate-500 hover:bg-slate-50 border-2 border-transparent hover:border-b-4 hover:border-duo-gray dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:border-slate-700 text-left">
+                <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-sm border-2 border-transparent">8</div>
+                E2E TESTING
+            </button>
         </nav>
     </aside>
 
@@ -242,6 +250,24 @@
                         <div class="flex-1">
                             <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Q&A: mvn test vs clean test</h3>
                             <p class="text-slate-500 dark:text-slate-400 font-bold">Understanding Maven lifecycles and the target cache.</p>
+                        </div>
+                    </div>
+
+                    <!-- List Item 7 -->
+                    <div onclick="switchPage('page-7', document.querySelectorAll('.nav-btn')[7])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
+                        <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-indigo-500 text-white flex items-center justify-center font-black text-2xl border-b-4 border-indigo-700 shadow-sm mr-6 group-hover:scale-110 transition-transform">7</div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Page Object Model (POM)</h3>
+                            <p class="text-slate-500 dark:text-slate-400 font-bold">Organizing code to represent pages instead of messy scripts.</p>
+                        </div>
+                    </div>
+
+                    <!-- List Item 8 -->
+                    <div onclick="switchPage('page-8', document.querySelectorAll('.nav-btn')[8])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
+                        <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-rose-500 text-white flex items-center justify-center font-black text-2xl border-b-4 border-rose-700 shadow-sm mr-6 group-hover:scale-110 transition-transform">8</div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Step-by-Step E2E Test</h3>
+                            <p class="text-slate-500 dark:text-slate-400 font-bold">Write a complete end-to-end shopping cart checkout flow.</p>
                         </div>
                     </div>
                 </div>
@@ -501,6 +527,129 @@ qa-framework/
                 </div>
             </div>
 
+            <!-- Page 7: Page Object Model -->
+            <div id="page-7" class="doc-page">
+                <h2 class="text-4xl font-black text-slate-800 dark:text-white mb-8">7. Page Object Model (POM)</h2>
+                <div class="prose prose-lg prose-slate dark:prose-invert max-w-none space-y-6 font-bold text-slate-600 dark:text-slate-300">
+                    <p>In the real world, tests get huge. If you put all your button clicks inside your test script, it becomes impossible to read and maintain. Instead, we use the <strong>Page Object Model</strong>.</p>
+                    <p><strong>The Rule:</strong> For every physical page in your web app, you create one Java class to represent it.</p>
+                    
+                    <h3 class="text-2xl font-black text-slate-800 dark:text-white mt-10 mb-4">Structure</h3>
+                    <p>Inside <code>src/test/java/com/qastore</code>, create a folder named <code>pages</code>. This keeps your test scripts separated from your page blueprints.</p>
+                    
+                    <div class="code-container rounded-2xl overflow-hidden shadow-lg border-2 border-slate-700 my-6">
+                        <button class="copy-btn" onclick="copyCode(this, 'java-pom-code')">COPY</button>
+<pre class="!m-0"><code id="java-pom-code" class="language-java">package com.qastore.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class LoginPage {
+    private WebDriver driver;
+
+    // 1. Locators (How to find elements on the page)
+    private By usernameInput = By.cssSelector("input[type='email']");
+    private By passwordInput = By.cssSelector("input[type='password']");
+    private By loginButton = By.xpath("//button[text()='Sign In']");
+
+    // 2. Constructor (Hooking up the driver)
+    public LoginPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    // 3. Actions (What can a user do on this page?)
+    public void enterUsername(String username) {
+        driver.findElement(usernameInput).sendKeys(username);
+    }
+
+    public void enterPassword(String password) {
+        driver.findElement(passwordInput).sendKeys(password);
+    }
+
+    public void clickLogin() {
+        driver.findElement(loginButton).click();
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="bg-indigo-50 dark:bg-indigo-900/30 border-2 border-b-8 border-indigo-500 p-6 mt-10 rounded-2xl">
+                        <h4 class="font-black text-xl text-indigo-600 dark:text-indigo-400 mb-2">Why do this?</h4>
+                        <p class="text-indigo-800 dark:text-indigo-200">
+                            If the developers change the login button from <code>Sign In</code> to <code>Login Now</code>, you only have to update <strong>one line</strong> in the <code>LoginPage.java</code> class, and all 50 tests that use it will instantly be fixed!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 8: E2E Test -->
+            <div id="page-8" class="doc-page">
+                <h2 class="text-4xl font-black text-slate-800 dark:text-white mb-8">8. Step-by-Step E2E Test</h2>
+                <div class="prose prose-lg prose-slate dark:prose-invert max-w-none space-y-6 font-bold text-slate-600 dark:text-slate-300">
+                    <p>Let's write a complete End-to-End (E2E) test. This simulates a real user going to the store, logging in, and checking out.</p>
+                    
+                    <h3 class="text-2xl font-black text-slate-800 dark:text-white mt-10 mb-4">The Test Script</h3>
+                    <p>Create a file named <code>CheckoutE2ETest.java</code> inside <code>src/test/java/com/qastore/</code>.</p>
+                    
+                    <div class="code-container rounded-2xl overflow-hidden shadow-lg border-2 border-slate-700 my-6">
+                        <button class="copy-btn" onclick="copyCode(this, 'java-e2e-code')">COPY</button>
+<pre class="!m-0"><code id="java-e2e-code" class="language-java">package com.qastore;
+
+import com.qastore.pages.LoginPage;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class CheckoutE2ETest {
+    private WebDriver driver;
+    private LoginPage loginPage;
+
+    @BeforeMethod
+    public void setup() {
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        
+        // Initialize the page objects
+        loginPage = new LoginPage(driver);
+    }
+
+    @Test
+    public void testFullCheckoutFlow() throws InterruptedException {
+        // Step 1: Go to the Login Page
+        driver.get("https://d-xan.github.io/The-Ultimate-Playground-for-QA-Engineers---QA-Store/#/login");
+
+        // Step 2: Use the Page Object to interact
+        loginPage.enterUsername("test@example.com");
+        loginPage.enterPassword("password123");
+        loginPage.clickLogin();
+
+        // Pause so we can visually see the login happen (Not recommended for real frameworks!)
+        Thread.sleep(3000); 
+
+        // In a complete framework, you would now have a HomePage object to click "Add to Cart",
+        // and a CartPage object to click "Checkout".
+        System.out.println("E2E Test executed successfully!");
+    }
+
+    @AfterMethod
+    public void teardown() {
+        if(driver != null) {
+            driver.quit();
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="bg-rose-50 dark:bg-rose-900/30 border-2 border-b-8 border-rose-500 p-6 mt-10 rounded-2xl">
+                        <h4 class="font-black text-xl text-rose-600 dark:text-rose-400 mb-2">You're an Automation Engineer!</h4>
+                        <p class="text-rose-800 dark:text-rose-200">
+                            You've officially created a professional Maven architecture, implemented the Page Object Model, and written an E2E test. Next time you run <code>mvn test</code>, watch the magic unfold!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Navigation footer -->
             <div class="mt-16 pt-8 border-t-2 border-duo-gray dark:border-slate-700 flex justify-between items-center" id="footer-nav">
                 <button onclick="prevPage()" id="btn-prev" class="btn-3d px-6 py-3 border-2 border-b-4 border-duo-gray dark:border-slate-600 rounded-2xl text-sm font-black text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors uppercase tracking-wider" disabled>
@@ -520,7 +669,7 @@ qa-framework/
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
     <script>
         let currentPageIndex = 0; // 0 is Index
-        const totalPages = 6;
+        const totalPages = 8;
 
         // Dark Mode Logic
         function toggleDarkMode() {
@@ -672,7 +821,9 @@ qa-framework/
             { id: 'page-3', title: 'The POM.xml', keywords: 'pom xml dependencies project object model webdrivermanager version compiler' },
             { id: 'page-4', title: 'Writing the Java Code', keywords: 'java code basictest annotations @test @beforemethod @aftermethod assert driver.get quit' },
             { id: 'page-5', title: 'Compiling and Running', keywords: 'terminal mvn test execute report passed failed skipped' },
-            { id: 'page-6', title: 'Q&A: mvn test vs clean test', keywords: 'maven target clean test compile run lifecycle class cache ghost' }
+            { id: 'page-6', title: 'Q&A: mvn test vs clean test', keywords: 'maven target clean test compile run lifecycle class cache ghost' },
+            { id: 'page-7', title: 'Page Object Model (POM)', keywords: 'page object model pom locators by cssselector xpath constructor architecture java files folder test code' },
+            { id: 'page-8', title: 'Step-by-Step E2E Test', keywords: 'e2e end to end checkout full flow test loginpage script step by step beginner write tests file layout' }
         ];
 
         function handleSearch(e) {
