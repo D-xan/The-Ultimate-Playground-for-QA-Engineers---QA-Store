@@ -3,159 +3,252 @@ import { TaskQuestions } from '@/components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
 
 export default function ApiInterception() {
-  const [userData, setUserData] = useState<{name?: string, error?: string} | null>(null);
-  const [orderStatus, setOrderStatus] = useState<{status: 'success' | 'error', message: string} | null>(null);
-  const [loadingUser, setLoadingUser] = useState(false);
-  const [loadingOrder, setLoadingOrder] = useState(false);
+  const [method, setMethod] = useState('GET');
+  const [url, setUrl] = useState('https://jsonplaceholder.typicode.com/posts/1');
+  const [requestBody, setRequestBody] = useState('{\n  "title": "foo",\n  "body": "bar",\n  "userId": 1\n}');
+  const [activeReqTab, setActiveReqTab] = useState('body');
+  
+  const [response, setResponse] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
-  const fetchUser = async () => {
-    setLoadingUser(true);
-    setUserData(null);
+  const handleSend = async () => {
+    setLoading(true);
+    setResponse(null);
+    const startTime = performance.now();
+    
     try {
-      // Using a real public API so it doesn't 404 by default
-      const res = await fetch('https://jsonplaceholder.typicode.com/users/1');
-      const data = await res.json();
-      setUserData({ name: data.name });
-    } catch (e) {
-      setUserData({ error: 'Network Failure' });
+      const options: RequestInit = {
+        method,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      
+      if (method !== 'GET' && method !== 'HEAD' && requestBody) {
+        // Simple validation to ensure it doesn't crash on bad JSON if they type junk
+        try {
+          JSON.parse(requestBody);
+          options.body = requestBody;
+        } catch(e) {
+          options.body = requestBody; // Send as text if not valid JSON
+        }
+      }
+      
+      const res = await fetch(url, options);
+      const endTime = performance.now();
+      
+      let data;
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        data = await res.text();
+      }
+      
+      setResponse({
+        status: res.status,
+        statusText: res.statusText,
+        time: Math.round(endTime - startTime),
+        data
+      });
+    } catch (e: any) {
+      const endTime = performance.now();
+      setResponse({
+        error: true,
+        message: e.message || 'Network connection aborted or failed',
+        time: Math.round(endTime - startTime)
+      });
     } finally {
-      setLoadingUser(false);
+      setLoading(false);
     }
   };
 
-  const submitOrder = async () => {
-    setLoadingOrder(true);
-    setOrderStatus(null);
-    try {
-      const res = await fetch('https://jsonplaceholder.typicode.com/posts', {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-        },
-        body: JSON.stringify({ item: 'Laptop', price: 999 }),
-      });
-      
-      if (!res.ok) {
-        setOrderStatus({ status: 'error', message: `Server Error: ${res.status}` });
-      } else {
-        setOrderStatus({ status: 'success', message: 'Order submitted successfully!' });
-      }
-    } catch (e) {
-      setOrderStatus({ status: 'error', message: 'Network connection aborted' });
-    } finally {
-      setLoadingOrder(false);
-    }
+  const getStatusColor = (status: number) => {
+    if (status >= 200 && status < 300) return 'text-green-600 bg-green-50 border-green-200';
+    if (status >= 300 && status < 400) return 'text-blue-600 bg-blue-50 border-blue-200';
+    if (status >= 400 && status < 500) return 'text-amber-600 bg-amber-50 border-amber-200';
+    if (status >= 500) return 'text-red-600 bg-red-50 border-red-200';
+    return 'text-slate-600 bg-slate-50 border-slate-200';
   };
 
   return (
-    <div className="space-y-12 pb-12">
+    <div className="space-y-8 pb-12">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Network & API Interception</h1>
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">API Testing & Network Interception</h1>
         <p className="text-slate-500">
-          Modern UI automation tools (like Playwright and Cypress) can intercept network requests directly from the browser. 
-          Practice mocking API responses, simulating server errors, and aborting requests.
+          A fully functional mini-API client. Use your automation tool (Playwright, Cypress, Selenium CDPs) to intercept these requests, modify payloads, and simulate all HTTP methods and error codes!
         </p>
       </div>
 
-      <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">1. Mocking API Responses</h2>
-        <div className="mb-4 mt-2">
-          <TaskQuestions tasks={[
-            {
-              "title": "Intercept and mock the GET request",
-              "description": "Intercept the GET request to `https://jsonplaceholder.typicode.com/users/1`. Instead of letting the real response through, return a mock JSON object with `{ \"name\": \"QA Automation Master\" }`.",
-              "positive": [
-                "The UI displays 'Name: QA Automation Master' instead of 'Leanne Graham'."
-              ],
-              "negative": [
-                "The script fails to intercept the request and the real name is shown."
-              ]
-            }
-          ]} />
-        </div>
-        
-        <div className="flex flex-col items-start gap-4 p-4 border border-slate-200 rounded-lg bg-slate-50">
-          <Button onClick={fetchUser} disabled={loadingUser} id="btn-fetch-user">
-            {loadingUser ? 'Fetching...' : 'Fetch User Data'}
-          </Button>
+      <div className="mb-4">
+        <TaskQuestions tasks={[
+          {
+            "title": "Mock a GET Request (200 OK)",
+            "description": "Send a GET request to any URL. Intercept it and return a 200 status code with a custom JSON body `{ \"message\": \"Intercepted!\" }`.",
+            "positive": [
+              "The response body displays your custom JSON.",
+              "The status code displays as 200 OK."
+            ],
+            "negative": [
+              "The original response from the server is displayed."
+            ]
+          },
+          {
+            "title": "Simulate Error Codes (404 & 500)",
+            "description": "Send a request and intercept it to force a 404 Not Found, and then a 500 Internal Server Error.",
+            "positive": [
+              "The status badge turns amber for 404 and red for 500.",
+              "The UI accurately reflects the mocked status codes."
+            ],
+            "negative": [
+              "The request passes through to the real API and returns a 200 or 201."
+            ]
+          },
+          {
+            "title": "Modify Request Payload (POST/PUT)",
+            "description": "Set the Method to POST. Enter `{\"role\": \"user\"}` in the body. Intercept the request outbound, change the role to `\"admin\"`, and let it hit a mock server (e.g. `https://jsonplaceholder.typicode.com/posts`).",
+            "positive": [
+              "The response from the server echoes back the modified `\"role\": \"admin\"` body.",
+              "The assertion verifies the payload was mutated mid-flight."
+            ],
+            "negative": [
+              "The server echoes back the original `\"role\": \"user\"` payload."
+            ]
+          }
+        ]} />
+      </div>
+
+      {/* Postman-like UI */}
+      <div className="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden flex flex-col h-[700px]">
+        {/* Top URL Bar */}
+        <div className="p-4 border-b border-slate-200 bg-slate-50 flex gap-2">
+          <select 
+            className="px-4 py-2 bg-slate-100 border border-slate-300 rounded-md font-semibold text-slate-700 outline-none focus:ring-2 focus:ring-primary/50 w-32"
+            value={method}
+            onChange={(e) => setMethod(e.target.value)}
+            id="api-method-select"
+          >
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="PATCH">PATCH</option>
+            <option value="DELETE">DELETE</option>
+          </select>
           
-          <div className="min-h-[60px] w-full bg-white p-4 rounded-md border border-slate-200" id="user-data-display">
-            {userData ? (
-              userData.error ? (
-                <span className="text-red-500">{userData.error}</span>
+          <input 
+            type="text" 
+            className="flex-1 px-4 py-2 border border-slate-300 rounded-md font-mono text-sm outline-none focus:ring-2 focus:ring-primary/50"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="Enter request URL"
+            id="api-url-input"
+          />
+          
+          <Button 
+            onClick={handleSend} 
+            disabled={loading} 
+            className="px-8 bg-blue-600 hover:bg-blue-700 text-white font-bold"
+            id="api-send-btn"
+          >
+            {loading ? 'Sending...' : 'Send'}
+          </Button>
+        </div>
+
+        {/* Workspace Split */}
+        <div className="flex flex-col flex-1 overflow-hidden">
+          
+          {/* Request Section */}
+          <div className="flex-1 flex flex-col border-b border-slate-200 min-h-[200px]">
+            <div className="flex border-b border-slate-200 bg-slate-50 px-2">
+              <button 
+                className={`px-4 py-2 text-sm font-medium border-b-2 ${activeReqTab === 'params' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-600 hover:text-slate-900'}`}
+                onClick={() => setActiveReqTab('params')}
+              >
+                Params
+              </button>
+              <button 
+                className={`px-4 py-2 text-sm font-medium border-b-2 ${activeReqTab === 'headers' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-600 hover:text-slate-900'}`}
+                onClick={() => setActiveReqTab('headers')}
+              >
+                Headers
+              </button>
+              <button 
+                className={`px-4 py-2 text-sm font-medium border-b-2 ${activeReqTab === 'body' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-600 hover:text-slate-900'}`}
+                onClick={() => setActiveReqTab('body')}
+                id="tab-body"
+              >
+                Body
+              </button>
+            </div>
+            
+            <div className="flex-1 p-0 bg-white relative">
+              {activeReqTab === 'body' && (
+                <textarea
+                  className="w-full h-full p-4 font-mono text-sm text-slate-800 resize-none outline-none"
+                  value={requestBody}
+                  onChange={(e) => setRequestBody(e.target.value)}
+                  disabled={method === 'GET' || method === 'HEAD'}
+                  placeholder={method === 'GET' ? "Body is not supported for GET requests." : "Enter JSON body here..."}
+                  id="api-body-textarea"
+                  spellCheck={false}
+                />
+              )}
+              {activeReqTab !== 'body' && (
+                <div className="p-4 text-slate-400 italic flex items-center justify-center h-full">
+                  (Simulated UI: Use your automation tool to inject headers/params at the network layer)
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Response Section */}
+          <div className="flex-1 flex flex-col bg-slate-50 min-h-[250px]">
+            <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-2">
+              <div className="font-semibold text-sm text-slate-700">Response</div>
+              
+              {response && !response.error && (
+                <div className="flex gap-4 text-xs font-mono">
+                  <span className={`px-2 py-1 rounded border ${getStatusColor(response.status)}`} id="api-status">
+                    Status: {response.status} {response.statusText}
+                  </span>
+                  <span className="px-2 py-1 rounded border border-slate-200 text-slate-600" id="api-time">
+                    Time: {response.time}ms
+                  </span>
+                </div>
+              )}
+              {response && response.error && (
+                <div className="flex gap-4 text-xs font-mono">
+                  <span className="px-2 py-1 rounded border border-red-200 bg-red-50 text-red-600" id="api-status-error">
+                    Network Error
+                  </span>
+                  <span className="px-2 py-1 rounded border border-slate-200 text-slate-600" id="api-time">
+                    Time: {response.time}ms
+                  </span>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex-1 p-4 overflow-auto bg-[#1e1e1e] text-[#d4d4d4]" id="api-response-body">
+              {!response ? (
+                <div className="h-full flex items-center justify-center text-slate-500 italic font-sans">
+                  Hit Send to get a response
+                </div>
+              ) : response.error ? (
+                <div className="text-red-400 font-mono text-sm">
+                  {response.message}
+                </div>
               ) : (
-                <span className="text-slate-900 font-medium">Name: {userData.name}</span>
-              )
-            ) : (
-              <span className="text-slate-400 italic">Click the button to fetch data...</span>
-            )}
+                <pre className="font-mono text-sm whitespace-pre-wrap break-all">
+                  {typeof response.data === 'object' 
+                    ? JSON.stringify(response.data, null, 2) 
+                    : response.data}
+                </pre>
+              )}
+            </div>
           </div>
-        </div>
-      </section>
-
-      <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">2. Simulating Server Errors (500)</h2>
-        <div className="mb-4 mt-2">
-          <TaskQuestions tasks={[
-            {
-              "title": "Simulate a 500 Internal Server Error",
-              "description": "Intercept the POST request to `https://jsonplaceholder.typicode.com/posts` and force it to return a 500 status code to verify the frontend error handling.",
-              "positive": [
-                "The UI correctly handles the error and displays 'Server Error: 500'."
-              ],
-              "negative": [
-                "The script lets the request pass normally and 'Order submitted successfully!' is shown."
-              ]
-            }
-          ]} />
-        </div>
-        
-        <div className="flex flex-col items-start gap-4 p-4 border border-slate-200 rounded-lg bg-slate-50">
-          <Button onClick={submitOrder} disabled={loadingOrder} id="btn-submit-order" className="bg-amber-500 hover:bg-amber-600">
-            {loadingOrder ? 'Submitting...' : 'Submit Order'}
-          </Button>
           
-          <div className="min-h-[60px] w-full bg-white p-4 rounded-md border border-slate-200 flex items-center" id="order-status-display">
-            {orderStatus ? (
-              <div className={`flex items-center gap-2 font-medium ${orderStatus.status === 'error' ? 'text-red-600' : 'text-green-600'}`}>
-                {orderStatus.status === 'error' ? (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                )}
-                {orderStatus.message}
-              </div>
-            ) : (
-              <span className="text-slate-400 italic">No order submitted yet.</span>
-            )}
-          </div>
         </div>
-      </section>
-      
-      <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">3. Aborting Network Requests</h2>
-        <div className="mb-4 mt-2">
-          <TaskQuestions tasks={[
-            {
-              "title": "Abort the request to simulate a network failure",
-              "description": "Intercept the POST request to `https://jsonplaceholder.typicode.com/posts` when clicking the Submit button below, and abort/fail the network request entirely (simulating an offline state or blocked request).",
-              "positive": [
-                "The UI catches the exception and displays 'Network connection aborted'."
-              ],
-              "negative": [
-                "The request succeeds or returns a standard 500 error instead of a hard network abort."
-              ]
-            }
-          ]} />
-        </div>
-        
-        <div className="p-4 border-l-4 border-primary bg-primary/10 rounded-r-lg">
-          <p className="text-sm font-medium text-slate-800">
-            💡 Use the exact same <strong>Submit Order</strong> button from Challenge #2. The frontend logic catches hard network failures (like CORS or aborted requests) differently than server HTTP status codes!
-          </p>
-        </div>
-      </section>
-
+      </div>
     </div>
   );
 }
