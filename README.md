@@ -61,9 +61,21 @@ npm run dev
 The application will be available at `http://localhost:5173`.
 
 ## 💡 How to Use for Automation Training
-1. Start the application locally.
-2. Point your favorite automation framework (Selenium, Playwright, Cypress, WebdriverIO) to the local server.
+
+You have two options for running your automation scripts against this playground:
+
+**Option 1: Test against the Live URL (Recommended for quick start)**
+1. Point your automation framework (Selenium, Playwright, Cypress, WebdriverIO) directly to the live environment:
+   👉 `https://d-xan.github.io/The-Ultimate-Playground-for-QA-Engineers---QA-Store/`
+2. Navigate to the `/practice` route (or click "Start Practicing" from the homepage).
+
+**Option 2: Test Locally (Recommended for modifying the app)**
+1. Start the application locally via `npm run dev`.
+2. Point your automation framework to `http://localhost:5173`.
 3. Navigate to the `/practice` route.
-4. Expand the task descriptions and write your scripts to successfully execute both the **Positive** and **Negative** test cases outlined for each feature.
+
+### 📝 Approaching the Challenges
+1. Expand the task descriptions on any practice page.
+2. Write your scripts to successfully execute both the **Positive** and **Negative** test cases outlined for each feature.
 
 Happy Testing! 🐛🔨
