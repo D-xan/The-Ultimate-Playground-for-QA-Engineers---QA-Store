@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 import { Outlet, NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Type, MousePointer2, List, Mouse, 
-  MessageSquare, AppWindow, Activity, ArrowLeft, Save, ArrowRight, RotateCcw, Trash2
+  MessageSquare, AppWindow, Activity, ArrowLeft, Save, ArrowRight, RotateCcw, Trash2, Network
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
@@ -16,6 +16,7 @@ const sidebarLinks = [
   { to: '/practice/dynamic', label: 'Dynamic & Waits', icon: <Activity className="h-4 w-4" /> },
   { to: '/practice/pagination-test', label: 'Store Pagination', icon: <List className="h-4 w-4" /> },
   { to: '/practice/lazy-load', label: 'Store Lazy Loading', icon: <MousePointer2 className="h-4 w-4" /> },
+  { to: '/practice/api-interception', label: 'API Interception', icon: <Network className="h-4 w-4" /> },
 ];
 
 export default function PracticeLayout() {
