@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+/* Force Tailwind v4 to use class-based dark mode instead of OS preference */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #eab308; /* Yellow 500 */
+  --color-primary-hover: #ca8a04; /* Yellow 600 */
+  --color-accent: #f59e0b; /* Amber 500 */
+  --color-danger: #ef4444;
+  --color-warning: #f97316;
+  --color-success: #22c55e;
+  
+  --color-bg-main: #ffffff;
+  --color-bg-card: rgba(255, 255, 255, 0.8);
+  --color-text-main: #0f172a;
+  --color-text-muted: #64748b;
+  --color-border: rgba(226, 232, 240, 0.8);
+}
+
+@layer base {
+  :root {
+    /* Premium light yellow to white gradient */
+    --bg-gradient: linear-gradient(135deg, #ffffff 0%, #fef9c3 50%, #fde047 100%);
+    --bg-card: rgba(255, 255, 255, 0.5);
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: rgba(226, 232, 240, 0.6);
+  }
+
+  html.dark {
+    /* Deep rich dark to golden yellow gradient */
+    --bg-gradient: linear-gradient(135deg, #020617 0%, #171717 40%, #713f12 100%);
+    --bg-card: rgba(15, 23, 42, 0.6);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: rgba(51, 65, 85, 0.8);
+  }
+
+  body {
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text-main);
+    transition: background 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+  }
+
+  /* Global Overrides for elegant Glassmorphism & Dark Mode across all components */
+  [class*="bg-white"] {
+    background-color: var(--bg-card) !important;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+  
+  html.dark [class*="bg-slate-50"], html.dark [class*="bg-slate-100"] {
+    background-color: rgba(2, 6, 23, 0.4) !important;
+  }
+  
+  html.dark [class*="text-slate-900"], html.dark [class*="text-slate-800"] {
+    color: #ffffff !important;
+  }
+  
+  html.dark [class*="text-slate-700"], html.dark [class*="text-slate-600"] {
+    color: #f1f5f9 !important;
+  }
+  
+  html.dark [class*="text-slate-500"], html.dark [class*="text-slate-400"], html.dark [class*="text-muted"] {
+    color: #94a3b8 !important;
+  }
+  
+  html.dark [class*="border-border"], html.dark [class*="border-slate-200"], html.dark [class*="border-slate-300"] {
+    border-color: rgba(71, 85, 105, 0.6) !important;
+  }
+
+  html.dark input, html.dark textarea, html.dark select {
+    background-color: rgba(15, 23, 42, 0.8) !important;
+    color: #ffffff !important;
+    border-color: rgba(71, 85, 105, 0.6) !important;
+  }
+  
+  html.dark input::placeholder {
+    color: #94a3b8 !important;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
