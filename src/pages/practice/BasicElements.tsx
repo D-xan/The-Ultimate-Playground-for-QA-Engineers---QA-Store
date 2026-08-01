@@ -5,10 +5,16 @@ import { Input } from '@/components/ui/Input';
 
 export default function BasicElements() {
   const [loading, setLoading] = useState(false);
+  const [clickedButton, setClickedButton] = useState<string | null>(null);
   
   const handleLoadingClick = () => {
     setLoading(true);
     setTimeout(() => setLoading(false), 3000);
+  };
+
+  const handleClick = (name: string) => {
+    setClickedButton(name);
+    setTimeout(() => setClickedButton(null), 3000);
   };
 
   return (
@@ -77,18 +83,25 @@ export default function BasicElements() {
   }
 ]} /></div>
         <div className="flex flex-wrap gap-4 items-center">
-          <Button id="btn-normal">Normal Button</Button>
-          <Button type="submit" variant="outline" id="btn-submit">Submit Button</Button>
-          <Button type="reset" variant="outline" id="btn-reset">Reset Button</Button>
+          <Button id="btn-normal" onClick={() => handleClick('Normal Button')}>Normal Button</Button>
+          <Button type="submit" variant="outline" id="btn-submit" onClick={() => handleClick('Submit Button')}>Submit Button</Button>
+          <Button type="reset" variant="outline" id="btn-reset" onClick={() => handleClick('Reset Button')}>Reset Button</Button>
           <Button disabled id="btn-disabled">Disabled Button</Button>
           <Button onClick={handleLoadingClick} disabled={loading} id="btn-loading">
             {loading ? 'Loading...' : 'AJAX/Loading Button'}
           </Button>
           
-          <button className="h-12 w-12 rounded-full bg-primary text-white shadow-lg flex items-center justify-center hover:scale-105 transition-transform" id="btn-fab">
+          <button className="h-12 w-12 rounded-full bg-primary text-white shadow-lg flex items-center justify-center hover:scale-105 transition-transform" id="btn-fab" onClick={() => handleClick('FAB (+)')}>
             +
           </button>
         </div>
+        
+        {clickedButton && (
+          <div className="mt-4 p-3 bg-green-50 text-green-700 text-sm font-medium rounded-lg border border-green-200 flex items-center gap-2 animate-in fade-in slide-in-from-top-2" id="button-message">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+            Successfully clicked: <strong>{clickedButton}</strong>
+          </div>
+        )}
       </section>
 
       {/* Checkboxes & Radios */}
