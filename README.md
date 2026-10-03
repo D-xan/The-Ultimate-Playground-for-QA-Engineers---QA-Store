@@ -11,20 +11,42 @@ Welcome to the **QA Store Playground**, a comprehensive testing environment desi
 - **Admin Dashboard**: Manage inventory, view statistics, and interact with complex data tables.
 
 ### 🧪 QA Practice Challenges (The Playground)
-Access the dedicated `/practice` route to find 9 structured automation challenges designed to mimic real-world scenarios:
+Access the dedicated `/practice` route to find 23 automation challenges designed to mimic real-world scenarios:
 
-1. **Basic Elements**: Automate standard inputs, checkboxes, radio buttons, and sliders.
-2. **Advanced Inputs**: Handle searchable autocomplete dropdowns, file uploads, date/time pickers, and color pickers.
-3. **Tables & Lists**: Automate dynamic data tables, sorting, and filtering.
-4. **Mouse & Keyboard**: Perform advanced interactions like Drag-and-Drop, Hovers, Double Clicks, and Right Clicks.
-5. **Popups & Dialogs**: Handle native JavaScript alerts, confirms, prompts, and custom HTML modals.
-6. **Frames & Shadow DOM**: Switch contexts into iframes and penetrate open Shadow DOMs.
-7. **Dynamic & Waits**: Master explicit waits by handling dynamic elements and loading progress bars.
-8. **Store Pagination**: Automate navigating and verifying paginated tables.
-9. **Store Lazy Loading**: Automate scrolling interactions to trigger and verify lazy-loaded DOM elements.
+1. **Basic Elements**: Interact with inputs, buttons, and forms.
+2. **Advanced Inputs**: Handle date pickers, range sliders, and uploads.
+3. **Tables & Lists**: Extract data from dynamic data grids.
+4. **Mouse & Keyboard**: Drag-and-drop, hover, right-click, and hotkeys.
+5. **Popups & Dialogs**: Manage alerts, confirm prompts, and modals.
+6. **Frames & Shadow DOM**: Switching contexts into iframes and shadow roots.
+7. **Dynamic & Waits**: Handle elements appearing asynchronously.
+8. **Store Pagination**: Navigate multiple pages of products.
+9. **Store Lazy Loading**: Scroll to trigger dynamic content fetching.
+10. **API Interception**: Mock and modify network requests directly.
+11. **Progress Bar**: Test waits on a dynamic progress bar.
+12. **Click Traps**: Covered, moving and delayed elements that break naive clicks.
+13. **Locator Traps**: Dynamic IDs, shuffled classes, hidden spaces and shifting layouts.
+14. **Deep DOM**: Nested iframes, closed shadow roots and shadow DOM inside frames.
+15. **Flaky Page**: Random failures, random delays and re-rendered elements.
+16. **Real-World Widgets**: OTP boxes, tag inputs and star ratings.
+17. **Windows & Tabs**: New tabs, popups that close themselves and windows found by title.
+18. **Sortable Lists**: HTML5 drag and drop, press-and-hold sorting and a Kanban board.
+19. **Virtual Table**: 10,000 rows with only a few in the DOM: scroll to find and sort to pick.
+20. **Auth Flows**: Two-step login, sessions that expire mid-task and remembered logins.
+21. **Canvas & Charts**: Click a moving canvas target, draw a stroke and read chart tooltips.
+22. **Accessibility Lab**: Find planted axe violations, assert a clean scan and finish a form by keyboard.
+23. **Bug Hunt**: Find six real bugs planted in the QA Store.
+
+**🧰 Free tools**
+
+- **Test Data Generator**: Unlimited fake users, orders and cards as CSV, JSON or SQL.
+- **API Playground**: Mock REST API with auth, status codes, delays and rate limits.
+- **Interview Kit**: 60+ QA and SDET interview questions with answers and flashcards.
+- **Certificate**: Finish every challenge and download your certificate.
 
 **🔥 Built-in Persistence & Task Tracking**
 - Every challenge page includes a detailed list of **Positive & Negative Test Cases** directly alongside the target elements.
+- Newer challenges show a pass/fail result on the page, a hint for each task, and reference solutions in Playwright, Selenium Java, Selenium Python and Cypress.
 - **Save & Next** functionality preserves your local state via `localStorage`, so your progress remains even if you refresh the page.
 
 ## 🛠️ Technology Stack

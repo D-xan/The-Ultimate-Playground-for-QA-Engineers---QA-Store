@@ -1,6 +1,6 @@
 # Tier 2/3 Challenges Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Ship six new practice pages (Windows & Tabs, Sortable Lists, Virtual Table, Auth Flows, Canvas & Charts, Accessibility Lab), each live on GitHub Pages before the next starts.
 
@@ -38,7 +38,7 @@
 **Interfaces:**
 - Produces: `type WindowMessage = { type: 'qa-approve'; code: string } | { type: 'qa-delayed' } | { type: 'qa-pick'; window: string }`; `parseWindowMessage(e: { origin: string; data: unknown }, expectedOrigin: string): WindowMessage | null`; `SECRET_KEY = 'qa-windows-secret'`.
 
-- [ ] **Step 1: Failing unit test** — `src/utils/windowMessages.test.ts`:
+- [x] **Step 1: Failing unit test** — `src/utils/windowMessages.test.ts`:
 
 ```ts
 import { describe, it, expect } from 'vitest';
@@ -61,7 +61,7 @@ describe('parseWindowMessage', () => {
 });
 ```
 
-- [ ] **Step 2: Failing e2e** — `e2e/windows.spec.ts`:
+- [x] **Step 2: Failing e2e** — `e2e/windows.spec.ts`:
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -125,14 +125,14 @@ test('a popup opened directly says it has no opener', async ({ page }) => {
 });
 ```
 
-- [ ] **Step 3:** Run `npx vitest run src/utils/windowMessages.test.ts && npx playwright test e2e/windows.spec.ts` — Expected: FAIL (module/route missing).
-- [ ] **Step 4: Implement.**
+- [x] **Step 3:** Run `npx vitest run src/utils/windowMessages.test.ts && npx playwright test e2e/windows.spec.ts` — Expected: FAIL (module/route missing).
+- [x] **Step 4: Implement.**
   - `windowMessages.ts`: validate `e.origin === expectedOrigin`, `data` is a non-null object, `type` is one of the three, `code`/`window` is a non-empty string where required; otherwise `null`.
   - `WindowsTabs.tsx`: on mount write a random word from a fixed list (`['falcon','harbor','ember','quartz','meadow','cobalt']`) to `localStorage[SECRET_KEY]`; `#open-tab` = `<a target="_blank" rel="noopener" href="#/popup/secret">`; `#open-popup` → `window.open('#/popup/approve', 'approve', 'width=480,height=600')`; `#open-delayed` → `window.open('#/popup/delayed', 'delayed', 'width=480,height=600')`; `#open-a/b/c` → `window.open('#/popup/pick?w=A|B|C', '_blank')`. One `message` listener using `parseWindowMessage(e, window.location.origin)` sets `#approval-code` + `result-popup`, `result-delayed`, and `result-pick` (success only when `window === 'B'`). Four sections + Solutions (number 5).
   - `PopupPage.tsx` (no layout): reads `kind` param. `secret` shows `#tab-secret` from localStorage. `approve`/`delayed`/`pick`: if `!window.opener` render `<p id="no-opener">Open this page from the Windows & Tabs challenge.</p>`. `approve`: random 6-char `[A-Z0-9]` code; `#approve-btn` posts `{type:'qa-approve',code}` to `window.opener` with `targetOrigin = location.origin`, then `window.close()`. `delayed`: `Loading…` then after `1000 + Math.random()*2000` ms render `#delayed-confirm` posting `qa-delayed`. `pick`: `document.title = 'Window ' + w`; `#pick-me` enabled only for `B`, posts `{type:'qa-pick', window: w}`.
-- [ ] **Step 5:** Solutions `src/data/solutions/windows.ts` — Java: `getWindowHandle`, `getWindowHandles` loop + `switchTo().window`, title match, switch back after popup closes; Python: same with `driver.window_handles`; Cypress: remove `target` / stub `window.open` and `cy.visit` the child, with a comment that Cypress cannot drive a second tab and the parent result will not turn green. Register in `index.ts`.
-- [ ] **Step 6:** `npx playwright test e2e/windows.spec.ts --repeat-each 5` → all pass; full `npx vitest run`, `npx playwright test`, `npm run build` pass.
-- [ ] **Step 7:** Commit `feat: Windows & Tabs challenge page`, ship loop (Global Constraints).
+- [x] **Step 5:** Solutions `src/data/solutions/windows.ts` — Java: `getWindowHandle`, `getWindowHandles` loop + `switchTo().window`, title match, switch back after popup closes; Python: same with `driver.window_handles`; Cypress: remove `target` / stub `window.open` and `cy.visit` the child, with a comment that Cypress cannot drive a second tab and the parent result will not turn green. Register in `index.ts`.
+- [x] **Step 6:** `npx playwright test e2e/windows.spec.ts --repeat-each 5` → all pass; full `npx vitest run`, `npx playwright test`, `npm run build` pass.
+- [x] **Step 7:** Commit `feat: Windows & Tabs challenge page`, ship loop (Global Constraints).
 
 ### Task 2: Sortable Lists (`sortable`)
 
@@ -143,7 +143,7 @@ test('a popup opened directly says it has no opener', async ({ page }) => {
 **Interfaces:**
 - Produces: `moveItem<T>(list: T[], from: number, to: number): T[]` (returns a new array; item ends at index `to`); `HOLD_DELAY_MS = 250`; `HOLD_TOLERANCE_PX = 5`.
 
-- [ ] **Step 1: Failing unit test** — `src/utils/reorder.test.ts`:
+- [x] **Step 1: Failing unit test** — `src/utils/reorder.test.ts`:
 
 ```ts
 import { describe, it, expect } from 'vitest';
@@ -163,7 +163,7 @@ describe('moveItem', () => {
 });
 ```
 
-- [ ] **Step 2: Failing e2e** — `e2e/sortable.spec.ts`:
+- [x] **Step 2: Failing e2e** — `e2e/sortable.spec.ts`:
 
 ```ts
 import { test, expect, type Page, type Locator } from '@playwright/test';
@@ -232,11 +232,11 @@ test('reset restores the start order', async ({ page }) => {
 });
 ```
 
-- [ ] **Step 3:** Run both — Expected: FAIL.
-- [ ] **Step 4: Implement.** Start orders: HTML5 `['Step 3','Step 1','Step 5','Step 2','Step 4']`; hold `['C','A','E','B','D']`; kanban todo `['Write tests','Fix bug #42','Update docs']`, progress `['Review PR']`, done `['Set up CI']`. HTML5 list: `draggable`, `dragstart` stores the index in `dataTransfer`, `dragover` `preventDefault`, `drop` on an item → `moveItem(list, from, overIndex)`. Hold list: `pointerdown` → `setPointerCapture`, start a `HOLD_DELAY_MS` timer; a `pointermove` beyond `HOLD_TOLERANCE_PX` before the timer fires cancels; after it fires, moves set `overIndex` from the item rect containing `clientY` (highlight it); `pointerup` → `moveItem`; `touch-action: none` on items. Kanban: cards draggable, columns are drop zones (append to column). Results: html5 / hold success when sorted; kanban success when done ⊇ {Set up CI, Write tests}, progress = {Review PR, Fix bug #42}, todo = {Update docs}. `#reset-html5`, `#reset-hold`, `#reset-kanban`. Solutions number 4.
-- [ ] **Step 5:** Solutions: Java/Python HTML5 via a JS `DataTransfer` dispatch snippet (explain `Actions.dragAndDrop` does not fire HTML5 events), hold list via `clickAndHold().pause(Duration.ofMillis(300)).moveToElement(target).release()` / `ActionChains.click_and_hold().pause(0.3)`; Cypress: `trigger('dragstart', { dataTransfer })` + `trigger('drop', …)` for HTML5, `trigger('pointerdown')`, `cy.wait(300)`, `trigger('pointermove', …)` for hold.
-- [ ] **Step 6:** `--repeat-each 5` green; full suite + build.
-- [ ] **Step 7:** Commit `feat: Sortable Lists challenge page`, ship loop.
+- [x] **Step 3:** Run both — Expected: FAIL.
+- [x] **Step 4: Implement.** Start orders: HTML5 `['Step 3','Step 1','Step 5','Step 2','Step 4']`; hold `['C','A','E','B','D']`; kanban todo `['Write tests','Fix bug #42','Update docs']`, progress `['Review PR']`, done `['Set up CI']`. HTML5 list: `draggable`, `dragstart` stores the index in `dataTransfer`, `dragover` `preventDefault`, `drop` on an item → `moveItem(list, from, overIndex)`. Hold list: `pointerdown` → `setPointerCapture`, start a `HOLD_DELAY_MS` timer; a `pointermove` beyond `HOLD_TOLERANCE_PX` before the timer fires cancels; after it fires, moves set `overIndex` from the item rect containing `clientY` (highlight it); `pointerup` → `moveItem`; `touch-action: none` on items. Kanban: cards draggable, columns are drop zones (append to column). Results: html5 / hold success when sorted; kanban success when done ⊇ {Set up CI, Write tests}, progress = {Review PR, Fix bug #42}, todo = {Update docs}. `#reset-html5`, `#reset-hold`, `#reset-kanban`. Solutions number 4.
+- [x] **Step 5:** Solutions: Java/Python HTML5 via a JS `DataTransfer` dispatch snippet (explain `Actions.dragAndDrop` does not fire HTML5 events), hold list via `clickAndHold().pause(Duration.ofMillis(300)).moveToElement(target).release()` / `ActionChains.click_and_hold().pause(0.3)`; Cypress: `trigger('dragstart', { dataTransfer })` + `trigger('drop', …)` for HTML5, `trigger('pointerdown')`, `cy.wait(300)`, `trigger('pointermove', …)` for hold.
+- [x] **Step 6:** `--repeat-each 5` green; full suite + build.
+- [x] **Step 7:** Commit `feat: Sortable Lists challenge page`, ship loop.
 
 ### Task 3: Virtual Table (`virtual-table`)
 
@@ -247,7 +247,7 @@ test('reset restores the start order', async ({ page }) => {
 **Interfaces:**
 - Produces: `interface VirtualRow { id: number; name: string; email: string; score: number }`; `makeRows(count?: number): VirtualRow[]` (default 10000, seeded); `ROW_HEIGHT = 40`; `VIEWPORT_HEIGHT = 400`.
 
-- [ ] **Step 1: Failing unit test** — `src/data/virtualRows.test.ts`:
+- [x] **Step 1: Failing unit test** — `src/data/virtualRows.test.ts`:
 
 ```ts
 import { describe, it, expect } from 'vitest';
@@ -276,7 +276,7 @@ describe('makeRows', () => {
 });
 ```
 
-- [ ] **Step 2: Failing e2e** — `e2e/virtual-table.spec.ts`:
+- [x] **Step 2: Failing e2e** — `e2e/virtual-table.spec.ts`:
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -316,11 +316,11 @@ test('the last row renders at the bottom', async ({ page }) => {
 });
 ```
 
-- [ ] **Step 3:** Run both — FAIL.
-- [ ] **Step 4: Implement.** `virtualRows.ts`: mulberry32 PRNG seeded `20261003`; 40 first names × 40 last names; `email = \`${first}.${last}${id}@example.test\`.toLowerCase()`; `score = Math.floor(rand() * 100000)`; after generating, if the max is not unique or its id ≤ 100, set row 6481's score to `100000` (guarantees the unit test). Page: header row (`#sort-score` is a `<button role="columnheader" aria-sort="none|descending|ascending">`, click cycles desc → asc), `#virtual-grid` `role="grid"` `aria-rowcount=10000`, `height: VIEWPORT_HEIGHT`, `overflow-y: auto`, inner spacer `rows.length * ROW_HEIGHT`; render rows `[first-5, last+5]` absolutely positioned at `index * ROW_HEIGHT`, each `role="row"` `data-row-id` `aria-rowindex={index+2}` with a `Select` button. Columns ID / Name / Email / Score; on phones hide Email via `hidden sm:block` but keep `#selected-email`. Selecting sets `#selected-email` and latches `result-find` (id 7342) / `result-sort` (top score id). Solutions number 3.
-- [ ] **Step 5:** Solutions: Java `((JavascriptExecutor) driver).executeScript("arguments[0].scrollTop = arguments[1]", grid, 7341 * 40)` then wait for the row; Python same; Cypress `cy.get('#virtual-grid').scrollTo(0, 7341 * 40)`. Also show the scroll-until-present loop in a comment.
-- [ ] **Step 6:** `--repeat-each 5`; full suite + build.
-- [ ] **Step 7:** Commit `feat: Virtual Table challenge page`, ship loop.
+- [x] **Step 3:** Run both — FAIL.
+- [x] **Step 4: Implement.** `virtualRows.ts`: mulberry32 PRNG seeded `20261003`; 40 first names × 40 last names; `email = \`${first}.${last}${id}@example.test\`.toLowerCase()`; `score = Math.floor(rand() * 100000)`; after generating, if the max is not unique or its id ≤ 100, set row 6481's score to `100000` (guarantees the unit test). Page: header row (`#sort-score` is a `<button role="columnheader" aria-sort="none|descending|ascending">`, click cycles desc → asc), `#virtual-grid` `role="grid"` `aria-rowcount=10000`, `height: VIEWPORT_HEIGHT`, `overflow-y: auto`, inner spacer `rows.length * ROW_HEIGHT`; render rows `[first-5, last+5]` absolutely positioned at `index * ROW_HEIGHT`, each `role="row"` `data-row-id` `aria-rowindex={index+2}` with a `Select` button. Columns ID / Name / Email / Score; on phones hide Email via `hidden sm:block` but keep `#selected-email`. Selecting sets `#selected-email` and latches `result-find` (id 7342) / `result-sort` (top score id). Solutions number 3.
+- [x] **Step 5:** Solutions: Java `((JavascriptExecutor) driver).executeScript("arguments[0].scrollTop = arguments[1]", grid, 7341 * 40)` then wait for the row; Python same; Cypress `cy.get('#virtual-grid').scrollTo(0, 7341 * 40)`. Also show the scroll-until-present loop in a comment.
+- [x] **Step 6:** `--repeat-each 5`; full suite + build.
+- [x] **Step 7:** Commit `feat: Virtual Table challenge page`, ship loop.
 
 ### Task 4: Auth Flows (`auth-flows`)
 
@@ -331,7 +331,7 @@ test('the last row renders at the bottom', async ({ page }) => {
 **Interfaces:**
 - Produces: `DEMO_USER = { email: 'tester@qa.test', password: 'Passw0rd!' }`; `checkCredentials(email: string, password: string): boolean` (email trimmed, case-insensitive); `makeOtp(rand?: () => number): string` (6 digits, zero-padded); `otpValid(issuedAt: number, now: number, ttlMs = 60_000): boolean`; `encodeSession(user: string, now: number, ttlMs = 3_600_000): string`; `decodeSession(token: string | null | undefined, now: number): { user: string; exp: number } | null`; `SESSION_KEY = 'qa-auth-session'`; `SESSION_COOKIE = 'qa_session'`; `ELEVATED_MS = 8000`; `PROCESSING_MS = 9000`.
 
-- [ ] **Step 1: Failing unit test** — `src/utils/mockAuth.test.ts`:
+- [x] **Step 1: Failing unit test** — `src/utils/mockAuth.test.ts`:
 
 ```ts
 import { describe, it, expect } from 'vitest';
@@ -361,7 +361,7 @@ describe('mockAuth', () => {
 });
 ```
 
-- [ ] **Step 2: Failing e2e** — `e2e/auth-flows.spec.ts`:
+- [x] **Step 2: Failing e2e** — `e2e/auth-flows.spec.ts`:
 
 ```ts
 import { test, expect, type Page } from '@playwright/test';
@@ -446,11 +446,11 @@ test('a corrupt stored session falls back to login', async ({ page }) => {
 });
 ```
 
-- [ ] **Step 3:** Run both — FAIL.
-- [ ] **Step 4: Implement.** `mockAuth.ts` per Interfaces (`encodeSession` = `btoa(JSON.stringify({ user, exp }))`; `decodeSession` wraps `atob`/`JSON.parse` in try/catch and requires `typeof user === 'string' && typeof exp === 'number' && exp > now`). Page phases `login | otp | in`. Login: show credentials, `#login-error` on bad credentials; on success the `#inbox` panel shows "No new mail" then after 1500 ms an email with `#inbox-code`. `#auth-otp`/`#auth-verify`; `#otp-error` for wrong or expired code. On success: if `#remember-me` was checked, write `localStorage[SESSION_KEY]` and `document.cookie = \`${SESSION_COOKIE}=${token}; path=/; max-age=3600; SameSite=Lax\``; latch `result-2fa`. On mount, `decodeSession(localStorage[SESSION_KEY], Date.now())` → phase `in`, show `#session-restored`, latch `result-remember`; invalid → remove the key. `#auth-logout` clears both and returns to login. Wizard (`#start-wizard`, visible only when `in`): `elevatedUntil = now + ELEVATED_MS`; step 2 shows `#wizard-processing` and keeps `#wizard-next` disabled for `PROCESSING_MS`; any Next/Finish click when `Date.now() > elevatedUntil` opens `#session-expired-modal` (`role="dialog"`) instead; `#reauth-password` + `#reauth-submit` with the right password resets `elevatedUntil` and closes it (`#reauth-error` otherwise). `#wizard-finish` on step 3 latches `result-session` only if the modal was passed at least once. Three sections + Solutions (number 4).
-- [ ] **Step 5:** Solutions: Java/Python read `#inbox-code` with an explicit wait, handle the modal with a wait-then-branch helper, and save/restore cookies + localStorage via `executeScript`; Cypress uses `cy.session()` for the remember-me part.
-- [ ] **Step 6:** `--repeat-each 5`; full suite + build.
-- [ ] **Step 7:** Commit `feat: Auth Flows challenge page`, ship loop.
+- [x] **Step 3:** Run both — FAIL.
+- [x] **Step 4: Implement.** `mockAuth.ts` per Interfaces (`encodeSession` = `btoa(JSON.stringify({ user, exp }))`; `decodeSession` wraps `atob`/`JSON.parse` in try/catch and requires `typeof user === 'string' && typeof exp === 'number' && exp > now`). Page phases `login | otp | in`. Login: show credentials, `#login-error` on bad credentials; on success the `#inbox` panel shows "No new mail" then after 1500 ms an email with `#inbox-code`. `#auth-otp`/`#auth-verify`; `#otp-error` for wrong or expired code. On success: if `#remember-me` was checked, write `localStorage[SESSION_KEY]` and `document.cookie = \`${SESSION_COOKIE}=${token}; path=/; max-age=3600; SameSite=Lax\``; latch `result-2fa`. On mount, `decodeSession(localStorage[SESSION_KEY], Date.now())` → phase `in`, show `#session-restored`, latch `result-remember`; invalid → remove the key. `#auth-logout` clears both and returns to login. Wizard (`#start-wizard`, visible only when `in`): `elevatedUntil = now + ELEVATED_MS`; step 2 shows `#wizard-processing` and keeps `#wizard-next` disabled for `PROCESSING_MS`; any Next/Finish click when `Date.now() > elevatedUntil` opens `#session-expired-modal` (`role="dialog"`) instead; `#reauth-password` + `#reauth-submit` with the right password resets `elevatedUntil` and closes it (`#reauth-error` otherwise). `#wizard-finish` on step 3 latches `result-session` only if the modal was passed at least once. Three sections + Solutions (number 4).
+- [x] **Step 5:** Solutions: Java/Python read `#inbox-code` with an explicit wait, handle the modal with a wait-then-branch helper, and save/restore cookies + localStorage via `executeScript`; Cypress uses `cy.session()` for the remember-me part.
+- [x] **Step 6:** `--repeat-each 5`; full suite + build.
+- [x] **Step 7:** Commit `feat: Auth Flows challenge page`, ship loop.
 
 ### Task 5: Canvas & Charts (`canvas`)
 
@@ -461,7 +461,7 @@ test('a corrupt stored session falls back to login', async ({ page }) => {
 **Interfaces:**
 - Produces: `TARGET_W = 600`, `TARGET_H = 300`, `TARGET_R = 30`; `targetAt(tSeconds: number): { x: number; y: number }` (drawing coordinates); `isHit(p: {x:number;y:number}, t: {x:number;y:number}, r: number): boolean`; `SALES: { month: string; value: number }[]` (12 entries, unique max `Aug`); `window.qaCanvas.target(): { x: number; y: number; r: number }` in displayed CSS pixels.
 
-- [ ] **Step 1: Failing unit test** — `src/utils/canvasMath.test.ts`:
+- [x] **Step 1: Failing unit test** — `src/utils/canvasMath.test.ts`:
 
 ```ts
 import { describe, it, expect } from 'vitest';
@@ -495,7 +495,7 @@ describe('canvasMath', () => {
 });
 ```
 
-- [ ] **Step 2: Failing e2e** — `e2e/canvas.spec.ts`:
+- [x] **Step 2: Failing e2e** — `e2e/canvas.spec.ts`:
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -556,11 +556,11 @@ test('find the peak month from the tooltips', async ({ page }) => {
 });
 ```
 
-- [ ] **Step 3:** Run both — FAIL.
-- [ ] **Step 4: Implement.** `canvasMath.ts`: `targetAt(t) = { x: 300 + 220 * Math.sin(t * 0.2), y: 150 + 100 * Math.sin(t * 0.33 + 1) }` (peak speed ≈ 54 px/s; bounds 80–520 × 50–250); `isHit` = `hypot ≤ r`; `SALES` Jan 3120, Feb 2890, Mar 4210, Apr 3980, May 4560, Jun 5120, Jul 6030, Aug 7940, Sep 6410, Oct 5280, Nov 4870, Dec 6650. Target canvas: `width=600 height=300` (×`devicePixelRatio` backing store), CSS `w-full max-w-[600px] h-auto`; `requestAnimationFrame` draws the circle at `targetAt(elapsed)`; `pointerdown` maps client → drawing coords via `rect.width / TARGET_W`, `isHit` → `#canvas-hits` else `#canvas-misses`; 3 hits latches `result-target`; expose `window.qaCanvas = { target: () => scaled position + r }` on mount, delete on unmount. Draw canvas 600×200, start box x 20–100, end box x 500–580, y 60–140 (drawing coords): stroke = pointerdown → pointerup with `pointermove` count; success when it starts in start box, ends in end box and had ≥ 5 moves, otherwise `failure` "Draw one continuous line from the left box to the right box"; Clear button `#clear-draw`. Chart: SVG `viewBox="0 0 600 260"` `w-full`, `<rect data-month>` with `onMouseEnter` setting `#chart-tooltip` to `"Aug: 7,940"` (`toLocaleString('en-US')`), month labels under bars, no values in the DOM until hover; `#peak-month` accepts `aug`/`august` case-insensitively. Three sections + Solutions (number 4).
-- [ ] **Step 5:** Solutions: Java/Python `executeScript("return window.qaCanvas.target()")` + `Actions.moveToElement(canvas, dx, dy)` (Selenium 4 offsets are from the element centre — subtract half the size), stroke via `clickAndHold` + several `moveByOffset`; Cypress `cy.window().then(w => w.qaCanvas.target())` + `trigger('pointerdown', x, y)`.
-- [ ] **Step 6:** `--repeat-each 5`; full suite + build.
-- [ ] **Step 7:** Commit `feat: Canvas & Charts challenge page`, ship loop.
+- [x] **Step 3:** Run both — FAIL.
+- [x] **Step 4: Implement.** `canvasMath.ts`: `targetAt(t) = { x: 300 + 220 * Math.sin(t * 0.2), y: 150 + 100 * Math.sin(t * 0.33 + 1) }` (peak speed ≈ 54 px/s; bounds 80–520 × 50–250); `isHit` = `hypot ≤ r`; `SALES` Jan 3120, Feb 2890, Mar 4210, Apr 3980, May 4560, Jun 5120, Jul 6030, Aug 7940, Sep 6410, Oct 5280, Nov 4870, Dec 6650. Target canvas: `width=600 height=300` (×`devicePixelRatio` backing store), CSS `w-full max-w-[600px] h-auto`; `requestAnimationFrame` draws the circle at `targetAt(elapsed)`; `pointerdown` maps client → drawing coords via `rect.width / TARGET_W`, `isHit` → `#canvas-hits` else `#canvas-misses`; 3 hits latches `result-target`; expose `window.qaCanvas = { target: () => scaled position + r }` on mount, delete on unmount. Draw canvas 600×200, start box x 20–100, end box x 500–580, y 60–140 (drawing coords): stroke = pointerdown → pointerup with `pointermove` count; success when it starts in start box, ends in end box and had ≥ 5 moves, otherwise `failure` "Draw one continuous line from the left box to the right box"; Clear button `#clear-draw`. Chart: SVG `viewBox="0 0 600 260"` `w-full`, `<rect data-month>` with `onMouseEnter` setting `#chart-tooltip` to `"Aug: 7,940"` (`toLocaleString('en-US')`), month labels under bars, no values in the DOM until hover; `#peak-month` accepts `aug`/`august` case-insensitively. Three sections + Solutions (number 4).
+- [x] **Step 5:** Solutions: Java/Python `executeScript("return window.qaCanvas.target()")` + `Actions.moveToElement(canvas, dx, dy)` (Selenium 4 offsets are from the element centre — subtract half the size), stroke via `clickAndHold` + several `moveByOffset`; Cypress `cy.window().then(w => w.qaCanvas.target())` + `trigger('pointerdown', x, y)`.
+- [x] **Step 6:** `--repeat-each 5`; full suite + build.
+- [x] **Step 7:** Commit `feat: Canvas & Charts challenge page`, ship loop.
 
 ### Task 6: Accessibility Lab (`a11y`)
 
@@ -571,8 +571,8 @@ test('find the peak month from the tooltips', async ({ page }) => {
 **Interfaces:**
 - Produces: `PLANTED = ['image-alt', 'label', 'color-contrast', 'button-name', 'link-name']`, `DECOYS = ['heading-order', 'list', 'aria-allowed-attr']` exported from the page module's sibling `src/data/a11yRules.ts`.
 
-- [ ] **Step 1:** `npm i -D @axe-core/playwright`.
-- [ ] **Step 2: Failing e2e** — `e2e/a11y.spec.ts`:
+- [x] **Step 1:** `npm i -D @axe-core/playwright`.
+- [x] **Step 2: Failing e2e** — `e2e/a11y.spec.ts`:
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -651,12 +651,12 @@ test('using the mouse fails the keyboard challenge', async ({ page }) => {
 });
 ```
 
-- [ ] **Step 3:** Run — FAIL.
-- [ ] **Step 4: Implement.** `src/data/a11yRules.ts` exports `PLANTED`, `DECOYS`. `#a11y-broken`: an `<img src="…og-image.jpg">` with no `alt`; an `<input id="broken-email">` with no label; a paragraph `#broken-low-contrast` in `#b0b0b0` on white; an icon-only `<button>` with no name; an `<a href="#">` wrapping only an icon. Nothing else that axe's `wcag2a`/`wcag2aa` rules flag (iterate with the e2e until the set is exact). `#a11y-fixed`: same controls with `alt`, `<label>`, `#475569` text, `aria-label`s. Checklist `#a11y-checklist`: checkboxes `#rule-<id>` for `PLANTED` + `DECOYS` in a fixed mixed order; `#check-a11y` → success only for exactly `PLANTED`. Keyboard section `#keyboard-form` (`data-mouse-used`): `#kb-name`; `#kb-tool` `role="listbox"` `tabIndex=0` with options Playwright/Selenium/Cypress/WebdriverIO (`role="option"`, `aria-selected`; ArrowDown/ArrowUp move selection, starting with Playwright selected); `#kb-terms` checkbox; `#kb-submit` opens `#kb-dialog` (`role="dialog" aria-modal="true"`) only when all are filled (else `#kb-error`), initial focus on `#kb-confirm`, Tab/Shift+Tab cycle between `#kb-cancel` and `#kb-confirm`, `Escape`/Cancel close and refocus `#kb-submit`, Confirm submits → `result-keyboard` success unless `data-mouse-used="true"`, then failure "Mouse used — reset and try again with only the keyboard". A `pointerdown` listener on the section sets mouse-used; `#kb-reset` clears everything (Reset itself is clicked, so it clears the flag *after* handling). Three sections + Solutions (number 4).
-- [ ] **Step 5:** Solutions: Java `com.deque.html.axe-core:selenium` `new AxeBuilder().include("#a11y-broken")`; Python `axe-selenium-python`; Cypress `cypress-axe` `cy.injectAxe(); cy.checkA11y('#a11y-fixed')`. Keyboard part with `sendKeys(Keys.TAB)` / `cy.realPress` note (Cypress needs `cypress-real-events` for real Tab).
-- [ ] **Step 6:** `--repeat-each 5`; full suite + build.
-- [ ] **Step 7:** Commit `feat: Accessibility Lab challenge page`, ship loop.
+- [x] **Step 3:** Run — FAIL.
+- [x] **Step 4: Implement.** `src/data/a11yRules.ts` exports `PLANTED`, `DECOYS`. `#a11y-broken`: an `<img src="…og-image.jpg">` with no `alt`; an `<input id="broken-email">` with no label; a paragraph `#broken-low-contrast` in `#b0b0b0` on white; an icon-only `<button>` with no name; an `<a href="#">` wrapping only an icon. Nothing else that axe's `wcag2a`/`wcag2aa` rules flag (iterate with the e2e until the set is exact). `#a11y-fixed`: same controls with `alt`, `<label>`, `#475569` text, `aria-label`s. Checklist `#a11y-checklist`: checkboxes `#rule-<id>` for `PLANTED` + `DECOYS` in a fixed mixed order; `#check-a11y` → success only for exactly `PLANTED`. Keyboard section `#keyboard-form` (`data-mouse-used`): `#kb-name`; `#kb-tool` `role="listbox"` `tabIndex=0` with options Playwright/Selenium/Cypress/WebdriverIO (`role="option"`, `aria-selected`; ArrowDown/ArrowUp move selection, starting with Playwright selected); `#kb-terms` checkbox; `#kb-submit` opens `#kb-dialog` (`role="dialog" aria-modal="true"`) only when all are filled (else `#kb-error`), initial focus on `#kb-confirm`, Tab/Shift+Tab cycle between `#kb-cancel` and `#kb-confirm`, `Escape`/Cancel close and refocus `#kb-submit`, Confirm submits → `result-keyboard` success unless `data-mouse-used="true"`, then failure "Mouse used — reset and try again with only the keyboard". A `pointerdown` listener on the section sets mouse-used; `#kb-reset` clears everything (Reset itself is clicked, so it clears the flag *after* handling). Three sections + Solutions (number 4).
+- [x] **Step 5:** Solutions: Java `com.deque.html.axe-core:selenium` `new AxeBuilder().include("#a11y-broken")`; Python `axe-selenium-python`; Cypress `cypress-axe` `cy.injectAxe(); cy.checkA11y('#a11y-fixed')`. Keyboard part with `sendKeys(Keys.TAB)` / `cy.realPress` note (Cypress needs `cypress-real-events` for real Tab).
+- [x] **Step 6:** `--repeat-each 5`; full suite + build.
+- [x] **Step 7:** Commit `feat: Accessibility Lab challenge page`, ship loop.
 
 ### Task 7: Wrap-up
 
-- [ ] Tick this plan's checkboxes, update `README.md`'s challenge list with the six pages, commit `docs: tier 2/3 challenges done`, ship loop.
+- [x] Tick this plan's checkboxes, update `README.md`'s challenge list with the six pages, commit `docs: tier 2/3 challenges done`, ship loop.
