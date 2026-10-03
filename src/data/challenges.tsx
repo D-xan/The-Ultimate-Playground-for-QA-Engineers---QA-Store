@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Type, MousePointer2, List, Mouse, MessageSquare, AppWindow, Activity, Network, MousePointerClick, ScanSearch, Layers, Shuffle } from 'lucide-react';
+import { Type, MousePointer2, List, Mouse, MessageSquare, AppWindow, Activity, Network, MousePointerClick, ScanSearch, Layers, Shuffle, Puzzle } from 'lucide-react';
 
 export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced';
 
@@ -27,6 +27,7 @@ export const challenges: Challenge[] = [
   { id: 'locator-traps', label: 'Locator Traps', desc: 'Dynamic IDs, shuffled classes, hidden spaces and shifting layouts', icon: ScanSearch, difficulty: 'Intermediate' },
   { id: 'deep-dom', label: 'Deep DOM', desc: 'Nested iframes, closed shadow roots and shadow DOM inside frames', icon: Layers, difficulty: 'Advanced' },
   { id: 'flaky', label: 'Flaky Page', desc: 'Random failures, random delays and re-rendered elements', icon: Shuffle, difficulty: 'Advanced' },
+  { id: 'widgets', label: 'Real-World Widgets', desc: 'OTP boxes, tag inputs and star ratings', icon: Puzzle, difficulty: 'Intermediate' },
 ];
 
 export const challengePath = (c: Challenge) => `/practice/${c.id}`;
