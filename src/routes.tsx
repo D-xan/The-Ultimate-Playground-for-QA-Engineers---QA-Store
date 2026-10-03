@@ -38,6 +38,7 @@ const ProgressBarChallenge = React.lazy(() => import('./pages/practice/ProgressB
 const ClickTraps = React.lazy(() => import('./pages/practice/ClickTraps'));
 const LocatorTraps = React.lazy(() => import('./pages/practice/LocatorTraps'));
 const DeepDom = React.lazy(() => import('./pages/practice/DeepDom'));
+const FlakyPage = React.lazy(() => import('./pages/practice/FlakyPage'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 // Role based protection
@@ -73,6 +74,7 @@ export const AppRoutes = () => {
             <Route path="click-traps" element={<ClickTraps />} />
             <Route path="locator-traps" element={<LocatorTraps />} />
             <Route path="deep-dom" element={<DeepDom />} />
+            <Route path="flaky" element={<FlakyPage />} />
           </Route>
 
           {/* Customer Application */}
