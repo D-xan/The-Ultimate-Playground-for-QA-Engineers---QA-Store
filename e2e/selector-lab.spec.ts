@@ -41,3 +41,63 @@ test('closing the lab removes highlights', async ({ page }) => {
   await page.locator('#selector-lab-toggle').click();
   await expect(page.locator('[data-selector-lab-match]')).toHaveCount(0);
 });
+
+test('own toggle and panel are excluded from results', async ({ page }) => {
+  await page.goto('/#/practice/progress-bar');
+  await page.locator('#selector-lab-toggle').click();
+  await page.locator('#selector-input').fill('button');
+  await expect(page.locator('#start-button')).toHaveAttribute('data-selector-lab-match', '');
+  await expect(page.locator('#selector-lab-toggle')).not.toHaveAttribute('data-selector-lab-match', '');
+  const expected = await page.locator('main button:not(#selector-lab-toggle)').count()
+    - await page.locator('[data-testid="selector-lab"] button').count();
+  await expect(page.locator('#selector-count')).toHaveText(`${expected} matches`);
+});
+
+test('shadow-in-frame match gets a visible outline', async ({ page }) => {
+  await page.goto('/#/practice/deep-dom');
+  await page.locator('#selector-lab-toggle').click();
+  await page.locator('#selector-input').fill('#shadow-frame-button');
+  await expect(page.locator('#selector-count')).toHaveText('1 match');
+  const style = await page.frameLocator('#shadow-frame').locator('#shadow-frame-button').evaluate((el) => getComputedStyle(el).outlineStyle);
+  expect(style).not.toBe('none');
+});
+
+test('pierce shadow off hides shadow matches', async ({ page }) => {
+  await page.goto('/#/practice/deep-dom');
+  await page.locator('#selector-lab-toggle').click();
+  await page.locator('#selector-input').fill('#shadow-frame-button');
+  await expect(page.locator('#selector-count')).toHaveText('1 match');
+  await page.locator('#pierce-shadow').uncheck();
+  await expect(page.locator('#selector-count')).toHaveText('0 matches');
+});
+
+test('XPath is scoped to frame bodies', async ({ page }) => {
+  await page.goto('/#/practice/deep-dom');
+  await page.locator('#selector-lab-toggle').click();
+  await page.locator('#selector-input').fill('//button[@id="deep-button"]');
+  await expect(page.locator('#selector-count')).toHaveText('1 match');
+  await page.locator('#selector-input').fill('//html');
+  await expect(page.locator('#selector-count')).toHaveText('0 matches');
+  await page.waitForTimeout(500);
+  await expect(page.locator('#selector-count')).toHaveText('0 matches');
+});
+
+test('finds elements in nested frames', async ({ page }) => {
+  await page.goto('/#/practice/deep-dom');
+  await page.locator('#selector-lab-toggle').click();
+  await page.locator('#selector-input').fill('#deep-button');
+  await expect(page.locator('#selector-count')).toHaveText('1 match');
+});
+
+test('route change leaves no stale highlights', async ({ page }) => {
+  await page.goto('/#/practice/progress-bar');
+  await page.locator('#selector-lab-toggle').click();
+  await page.locator('#selector-input').fill('button');
+  await expect(page.locator('[data-selector-lab-match]').first()).toBeAttached();
+  await page.locator('[data-testid="nav-click-traps"]').click();
+  await expect(page.locator('#start-button')).toHaveCount(0);
+  await expect(page.locator('h1')).toBeVisible();
+  // old page's elements are gone; any marker must belong to a button on the new page
+  await expect(page.locator('[data-selector-lab-match]:not(button)')).toHaveCount(0);
+  await expect(page.locator('#selector-lab-toggle')).not.toHaveAttribute('data-selector-lab-match', '');
+});

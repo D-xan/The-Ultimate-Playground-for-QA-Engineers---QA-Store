@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Crosshair, X } from 'lucide-react';
-import { detectKind, findMatches } from '@/tools/selectorEngine';
+import { collectFrames, detectKind, findMatches, isShadowRoot } from '@/tools/selectorEngine';
 
 const ATTR = 'data-selector-lab-match';
 const STYLE_ATTR = 'data-selector-lab-style';
@@ -22,15 +22,18 @@ function isWithin(el: Node, ancestor: Node): boolean {
   return false;
 }
 
-function ensureStyle(el: Element) {
+/** Make the outline rule apply where the global stylesheet can't reach (frames, shadow roots). */
+function ensureStyle(el: Element, styles: Set<Element>) {
   const root = el.getRootNode();
-  if (el.ownerDocument === document && !(root instanceof ShadowRoot)) return; // global stylesheet covers it
-  const host: ParentNode = root instanceof ShadowRoot ? root : el.ownerDocument.head;
+  const inShadow = isShadowRoot(root);
+  if (el.ownerDocument === document && !inShadow) return;
+  const host: ParentNode = inShadow ? root : el.ownerDocument.head;
   if (host.querySelector(`style[${STYLE_ATTR}]`)) return;
   const style = el.ownerDocument.createElement('style');
   style.setAttribute(STYLE_ATTR, '');
   style.textContent = RULE;
   host.appendChild(style);
+  styles.add(style);
 }
 
 export default function SelectorLab() {
@@ -40,13 +43,17 @@ export default function SelectorLab() {
   const [debounced, setDebounced] = useState('');
   const [pierceShadow, setPierceShadow] = useState(true);
   const [includeFrames, setIncludeFrames] = useState(true);
-  const [result, setResult] = useState<{ count: number; error?: string; items: Element[]; sig: string }>({ count: 0, items: [], sig: '' });
-  const panelRef = useRef<HTMLDivElement>(null);
+  const [result, setResult] = useState<{ count: number; error?: string; items: Element[] }>({ count: 0, items: [] });
+  const uiRef = useRef<HTMLDivElement>(null);
+  const styles = useRef<Set<Element>>(new Set());
+  const watched = useRef<WeakSet<Element>>(new WeakSet());
   const marked = useRef<Set<Element>>(new Set());
 
   const clear = useCallback(() => {
     marked.current.forEach((el) => el.removeAttribute(ATTR));
     marked.current.clear();
+    styles.current.forEach((st) => st.remove());
+    styles.current.clear();
   }, []);
 
   useEffect(() => {
@@ -54,38 +61,59 @@ export default function SelectorLab() {
     return () => clearTimeout(t);
   }, [query]);
 
+  const runRef = useRef<() => void>(() => {});
+
   const run = useCallback(() => {
     const root = document.querySelector('main');
-    const panel = panelRef.current;
+    const ui = uiRef.current;
     if (!root || !debounced.trim()) {
       clear();
-      setResult((r) => (r.sig === '' ? r : { count: 0, items: [], sig: '' }));
+      setResult((r) => (r.items.length === 0 && r.count === 0 && !r.error ? r : { count: 0, items: [] }));
       return;
     }
     const res = findMatches(root, debounced, { pierceShadow, includeFrames });
     const items = res.elements.filter((el) => {
-      if (el.ownerDocument !== document) return true; // frame documents are searched via their iframe
-      return isWithin(el, root) && !(panel && isWithin(el, panel));
+      if (el.ownerDocument !== document) return true; // frame content, already scoped to the iframe body
+      return isWithin(el, root) && !(ui && isWithin(el, ui));
     });
     const next = new Set(items);
     marked.current.forEach((el) => { if (!next.has(el)) el.removeAttribute(ATTR); });
-    items.forEach((el) => { ensureStyle(el); el.setAttribute(ATTR, ''); });
+    items.forEach((el) => {
+      ensureStyle(el, styles.current);
+      if (!el.hasAttribute(ATTR)) el.setAttribute(ATTR, '');
+    });
     marked.current = next;
-    const sig = `${items.length}|${res.error ?? ''}|${items.map((e) => describe(e)).slice(0, 20).join('~')}`;
-    setResult((r) => (r.sig === sig ? r : { count: items.length, error: res.error, items: items.slice(0, 20), sig }));
+    // re-run when an iframe (at any depth) finishes loading; load events do not bubble
+    if (includeFrames) {
+      collectFrames(root).forEach((f) => {
+        if (watched.current.has(f)) return;
+        watched.current.add(f);
+        f.addEventListener('load', () => runRef.current());
+      });
+    }
+    const top = items.slice(0, 20);
+    setResult((r) =>
+      r.count === items.length && r.error === res.error && r.items.length === top.length && r.items.every((e, i) => e === top[i])
+        ? r
+        : { count: items.length, error: res.error, items: top },
+    );
   }, [debounced, pierceShadow, includeFrames, clear]);
+  runRef.current = run;
 
-  // search while open: on change, route change, and a short poll for late-loading frames
+  // search while open: on query/option change and route change; then on structural changes of <main>
   useEffect(() => {
     if (!open) { clear(); return; }
-    clear();
     run();
-    const poll = setInterval(run, 500);
-    const onLoad = (e: Event) => { if (e.target instanceof HTMLIFrameElement) run(); };
-    document.addEventListener('load', onLoad, true);
+    const main = document.querySelector('main');
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const observer = new MutationObserver(() => {
+      clearTimeout(timer);
+      timer = setTimeout(() => runRef.current(), 150);
+    });
+    if (main) observer.observe(main, { childList: true, subtree: true });
     return () => {
-      clearInterval(poll);
-      document.removeEventListener('load', onLoad, true);
+      observer.disconnect();
+      clearTimeout(timer);
       clear();
     };
   }, [open, run, clear, location.pathname]);
@@ -93,7 +121,7 @@ export default function SelectorLab() {
   const kind = detectKind(query);
 
   return (
-    <>
+    <div ref={uiRef}>
       <button
         id="selector-lab-toggle"
         type="button"
@@ -105,7 +133,6 @@ export default function SelectorLab() {
       </button>
       {open && (
         <div
-          ref={panelRef}
           data-testid="selector-lab"
           className="fixed right-6 top-20 bottom-40 z-50 w-96 max-w-[calc(100vw-2rem)] flex flex-col gap-3 rounded-2xl border border-border bg-white p-4 shadow-2xl"
         >
@@ -151,6 +178,6 @@ export default function SelectorLab() {
           </ul>
         </div>
       )}
-    </>
+    </div>
   );
 }
