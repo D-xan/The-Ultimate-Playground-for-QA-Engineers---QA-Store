@@ -79,3 +79,12 @@ test('a corrupt stored session falls back to login', async ({ page }) => {
   await page.reload();
   await expect(page.locator('#auth-login')).toBeVisible();
 });
+
+test('after logging out of a restored session, a fresh login is not "restored"', async ({ page }) => {
+  await login(page, true);
+  await page.reload();
+  await expect(page.locator('#session-restored')).toBeVisible();
+  await page.locator('#auth-logout').click();
+  await login(page);
+  await expect(page.locator('#session-restored')).toBeHidden();
+});

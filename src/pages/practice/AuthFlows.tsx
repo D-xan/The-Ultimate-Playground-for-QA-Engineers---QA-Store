@@ -31,11 +31,13 @@ function storeSession(token: string | null) {
 }
 
 export default function AuthFlows() {
-  const [restored] = useState(() => {
+  const [restoredOnLoad] = useState(() => {
     const session = decodeSession(readStoredSession(), Date.now());
     if (!session && readStoredSession() !== null) storeSession(null);
     return session !== null;
   });
+  /** True while the current dashboard came from storage; a logout ends it, the result stays earned. */
+  const [restored, setRestored] = useState(restoredOnLoad);
   const [phase, setPhase] = useState<Phase>(restored ? 'in' : 'login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -91,6 +93,7 @@ export default function AuthFlows() {
 
   const logout = () => {
     storeSession(null);
+    setRestored(false);
     setPhase('login');
     setStep(0);
     setPassword('');
@@ -236,7 +239,7 @@ export default function AuthFlows() {
             hint: "Log in once with Remember me ticked, save the cookies and localStorage, and load the page in a new browser context that starts with them."
           }
         ]} /></div>
-        <ChallengeResult testId="result-remember" state={restored ? 'success' : 'pending'} message={restored ? 'Session restored from storage' : 'Load this page with a saved session'} />
+        <ChallengeResult testId="result-remember" state={restoredOnLoad ? 'success' : 'pending'} message={restoredOnLoad ? 'Session restored from storage' : 'Load this page with a saved session'} />
       </section>
 
       {expiredOpen && (
