@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Type, MousePointer2, List, Mouse, MessageSquare, AppWindow, Activity, Network, MousePointerClick, ScanSearch, Layers, Shuffle, Puzzle, Database, Server, GraduationCap, Award, Bug, ExternalLink, GripVertical, Rows3 } from 'lucide-react';
+import { Type, MousePointer2, List, Mouse, MessageSquare, AppWindow, Activity, Network, MousePointerClick, ScanSearch, Layers, Shuffle, Puzzle, Database, Server, GraduationCap, Award, Bug, ExternalLink, GripVertical, Rows3, KeyRound } from 'lucide-react';
 
 export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced';
 
@@ -32,6 +32,7 @@ export const challenges: Challenge[] = [
   { id: 'windows', label: 'Windows & Tabs', desc: 'New tabs, popups that close themselves and windows found by title', icon: ExternalLink, difficulty: 'Advanced' },
   { id: 'sortable', label: 'Sortable Lists', desc: 'HTML5 drag and drop, press-and-hold sorting and a Kanban board', icon: GripVertical, difficulty: 'Advanced' },
   { id: 'virtual-table', label: 'Virtual Table', desc: '10,000 rows with only a few in the DOM: scroll to find and sort to pick', icon: Rows3, difficulty: 'Advanced' },
+  { id: 'auth-flows', label: 'Auth Flows', desc: 'Two-step login, sessions that expire mid-task and remembered logins', icon: KeyRound, difficulty: 'Advanced' },
   { id: 'bug-hunt', label: 'Bug Hunt', desc: 'Find six real bugs planted in the QA Store', icon: Bug, difficulty: 'Advanced' },
   { id: 'data-generator', label: 'Test Data Generator', desc: 'Unlimited fake users, orders and cards as CSV, JSON or SQL', icon: Database, difficulty: 'Beginner', kind: 'tool' },
   { id: 'api-playground', label: 'API Playground', desc: 'Mock REST API with auth, status codes, delays and rate limits', icon: Server, difficulty: 'Intermediate', kind: 'tool' },
