@@ -18,6 +18,7 @@ class DeepDomTest {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         driver.get("https://qa.randomly.online/#/practice/deep-dom");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
     @AfterEach
@@ -90,6 +91,7 @@ URL = "https://qa.randomly.online/#/practice/deep-dom"
 def driver():
     driver = webdriver.Chrome()
     driver.get(URL)
+    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "main h1")))
     yield driver
     driver.quit()
 

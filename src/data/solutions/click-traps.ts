@@ -17,6 +17,7 @@ class ClickTrapsTest {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         driver.get("https://qa.randomly.online/#/practice/click-traps");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
     @AfterEach
@@ -42,7 +43,8 @@ class ClickTrapsTest {
     @Test
     void movingButtonIsClickedOnlyAfterItStops() {
         driver.findElement(By.id("start-animation")).click();
-        // Explicit wait on the 'animating' class instead of a sleep.
+        // Wait for the animation to begin, then for it to end: explicit waits instead of sleeps.
+        wait.until(ExpectedConditions.attributeContains(By.id("moving-button"), "class", "animating"));
         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.not(
             ExpectedConditions.attributeContains(By.id("moving-button"), "class", "animating")));
         driver.findElement(By.id("moving-button")).click();
@@ -94,6 +96,7 @@ URL = "https://qa.randomly.online/#/practice/click-traps"
 def driver():
     driver = webdriver.Chrome()
     driver.get(URL)
+    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "main h1")))
     yield driver
     driver.quit()
 
@@ -122,6 +125,9 @@ def test_covered_button_can_be_clicked_only_after_the_cover_is_dismissed(driver)
 
 def test_moving_button_is_clicked_only_after_it_stops(driver):
     driver.find_element(By.ID, "start-animation").click()
+    WebDriverWait(driver, 5).until(
+        lambda d: "animating" in d.find_element(By.ID, "moving-button").get_attribute("class")
+    )
     wait_until_stopped(driver)
     driver.find_element(By.ID, "moving-button").click()
     assert_state(driver, "result-moving", "success")

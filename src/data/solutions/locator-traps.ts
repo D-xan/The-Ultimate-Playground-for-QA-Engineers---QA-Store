@@ -18,6 +18,7 @@ class LocatorTrapsTest {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         driver.get("https://qa.randomly.online/#/practice/locator-traps");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
     @AfterEach
@@ -53,7 +54,7 @@ class LocatorTrapsTest {
         assertEquals(0, exact.size());
         // Map U+00A0 to a normal space first, then compare.
         driver.findElement(By.xpath(
-            "//div[@id='nbsp-section']//button[normalize-space(translate(., ' ', ' '))='Click Me']"))
+            "//div[@id='nbsp-section']//button[normalize-space(translate(., '\u00A0', ' '))='Click Me']"))
             .click();
         assertState("result-nbsp", "success");
     }
@@ -69,6 +70,7 @@ class LocatorTrapsTest {
   seleniumPython: String.raw`import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 URL = "https://qa.randomly.online/#/practice/locator-traps"
@@ -78,6 +80,7 @@ URL = "https://qa.randomly.online/#/practice/locator-traps"
 def driver():
     driver = webdriver.Chrome()
     driver.get(URL)
+    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "main h1")))
     yield driver
     driver.quit()
 
@@ -109,7 +112,7 @@ def test_text_with_a_non_breaking_space_defeats_exact_xpath_text(driver):
     # Map U+00A0 to a normal space first, then compare.
     driver.find_element(
         By.XPATH,
-        "//div[@id='nbsp-section']//button[normalize-space(translate(., ' ', ' '))='Click Me']",
+        "//div[@id='nbsp-section']//button[normalize-space(translate(., '\u00A0', ' '))='Click Me']",
     ).click()
     assert_state(driver, "result-nbsp", "success")
 
