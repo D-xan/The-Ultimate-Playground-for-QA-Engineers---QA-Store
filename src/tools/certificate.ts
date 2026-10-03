@@ -1,3 +1,8 @@
+export function localDateISO(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
 export async function certificateId(name: string, dateISO: string, challengeIds: string[]): Promise<string> {
   const payload = `${name.trim()}|${dateISO}|${[...challengeIds].sort().join(',')}`;
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(payload));

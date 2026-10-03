@@ -5,7 +5,7 @@ import { HintAccordion } from '@/components/ui/HintAccordion';
 import { practiceChallenges } from '@/data/challenges';
 import { isPageComplete } from '@/store/progressLogic';
 import { useProgressStore } from '@/store/useProgressStore';
-import { certificateId, drawCertificate, linkedInUrl } from '@/tools/certificate';
+import { certificateId, drawCertificate, linkedInUrl, localDateISO } from '@/tools/certificate';
 
 interface Issued { name: string; issued: Date; dateLabel: string; certId: string; count: number }
 
@@ -23,7 +23,7 @@ export default function Certificate() {
     if (!trimmed) return;
     try {
       const issued = new Date();
-      const dateISO = issued.toISOString().slice(0, 10);
+      const dateISO = localDateISO(issued);
       const certId = await certificateId(trimmed, dateISO, practiceChallenges.map((c) => c.id));
       const dateLabel = issued.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
       setCert({ name: trimmed, issued, dateLabel, certId, count: practiceChallenges.length });
