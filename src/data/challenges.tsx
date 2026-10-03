@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Type, MousePointer2, List, Mouse, MessageSquare, AppWindow, Activity, Network, MousePointerClick, ScanSearch, Layers, Shuffle, Puzzle, Database, Server, GraduationCap, Award, Bug, ExternalLink, GripVertical, Rows3, KeyRound, PenTool } from 'lucide-react';
+import { Type, MousePointer2, List, Mouse, MessageSquare, AppWindow, Activity, Network, MousePointerClick, ScanSearch, Layers, Shuffle, Puzzle, Database, Server, GraduationCap, Award, Bug, ExternalLink, GripVertical, Rows3, KeyRound, PenTool, Accessibility } from 'lucide-react';
 
 export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced';
 
@@ -34,6 +34,7 @@ export const challenges: Challenge[] = [
   { id: 'virtual-table', label: 'Virtual Table', desc: '10,000 rows with only a few in the DOM: scroll to find and sort to pick', icon: Rows3, difficulty: 'Advanced' },
   { id: 'auth-flows', label: 'Auth Flows', desc: 'Two-step login, sessions that expire mid-task and remembered logins', icon: KeyRound, difficulty: 'Advanced' },
   { id: 'canvas', label: 'Canvas & Charts', desc: 'Click a moving canvas target, draw a stroke and read chart tooltips', icon: PenTool, difficulty: 'Advanced' },
+  { id: 'a11y', label: 'Accessibility Lab', desc: 'Find planted axe violations, assert a clean scan and finish a form by keyboard', icon: Accessibility, difficulty: 'Intermediate' },
   { id: 'bug-hunt', label: 'Bug Hunt', desc: 'Find six real bugs planted in the QA Store', icon: Bug, difficulty: 'Advanced' },
   { id: 'data-generator', label: 'Test Data Generator', desc: 'Unlimited fake users, orders and cards as CSV, JSON or SQL', icon: Database, difficulty: 'Beginner', kind: 'tool' },
   { id: 'api-playground', label: 'API Playground', desc: 'Mock REST API with auth, status codes, delays and rate limits', icon: Server, difficulty: 'Intermediate', kind: 'tool' },
