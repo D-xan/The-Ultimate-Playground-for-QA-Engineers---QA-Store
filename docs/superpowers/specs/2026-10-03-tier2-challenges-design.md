@@ -18,7 +18,7 @@ Child pages live on a bare route `/popup/:kind` (outside `PracticeLayout`, no si
 
 1. **New tab** — `#open-tab` is `<a target="_blank" href="#/popup/secret">`. On mount the parent writes a fresh secret word to `localStorage['qa-windows-secret']`; the child shows it in `#tab-secret`. Typing it into `#tab-secret-input` + `#check-secret` → `result-tab` success.
 2. **Popup that reports back and closes** — `#open-popup` calls `window.open('#/popup/approve', 'approve', 'width=480,height=600')`. Child `#approve-btn` sends `postMessage({ type: 'qa-approve', code })` to `window.opener` (same origin only) and calls `window.close()`. Parent shows the code in `#approval-code` → `result-popup` success. Lesson: the handle you switched to disappears.
-3. **Delayed popup** — `#open-delayed` opens `#/popup/delayed` after 1–3 s (random; that is the lesson). Child `#delayed-confirm` posts `qa-delayed` → `result-delayed`.
+3. **Slow popup** — `#open-delayed` opens `#/popup/delayed` at once (a delayed `window.open` would be blocked by real browsers' popup blockers), but the child shows `Loading…` and only renders `#delayed-confirm` after 1–3 s (random; that is the lesson). Clicking it posts `qa-delayed` → `result-delayed`.
 4. **Pick the right window** — three buttons `#open-a/b/c` each open `#/popup/pick?w=A|B|C` in a new tab whose `document.title` is `Window A/B/C`. Only the child titled `Window B` has `#pick-me` enabled; clicking it posts `qa-pick` → `result-pick`. Lesson: find a window by title, not by order.
 
 Child pages without an `opener` (e.g. Cypress visiting them directly) show `#no-opener` text instead of failing. Cypress solution stubs `window.open` / removes `target` and says plainly which parts Cypress cannot do.
@@ -50,7 +50,9 @@ Self-contained mock auth (not the store login). Credentials shown on the page: `
 
 ## 5. Canvas & Charts — `canvas` (Advanced, icon `PenTool`)
 
-1. **Moving target** — `#target-canvas` (600×300 CSS px) draws a circle (r = 30) moving at ≤ 60 px/s. `window.qaCanvas.target()` returns `{ x, y, r }` in CSS pixels relative to the canvas (a test hook, as real canvas apps expose). 3 hits → `result-target`; hits/misses in `#canvas-hits`/`#canvas-misses`. Lesson: click by coordinates, nothing in the DOM.
+Both canvases have a fixed drawing size but are displayed at `width: 100%; max-width` of that size, so they shrink on phones (the layout suite checks 375 px). All coordinates exposed to tests are CSS pixels relative to the canvas's displayed box.
+
+1. **Moving target** — `#target-canvas` (600×300 drawing size) draws a circle (r = 30) moving at ≤ 60 px/s. `window.qaCanvas.target()` returns `{ x, y, r }` in CSS pixels relative to the canvas (a test hook, as real canvas apps expose). 3 hits → `result-target`; hits/misses in `#canvas-hits`/`#canvas-misses`. Lesson: click by coordinates, nothing in the DOM.
 2. **Draw a line** — `#draw-canvas` with a "start" box on the left and "end" box on the right; a pointer stroke that starts in one and ends in the other, staying inside the canvas → `result-draw`. Lesson: `mouse.move` with `steps`.
 3. **Chart tooltip** — `#sales-chart` SVG with 12 bars (`[data-month]`, no values in the DOM). Hovering a bar shows `#chart-tooltip` "Mar: 4,210". Type the peak month into `#peak-month` + `#check-peak` → `result-chart`.
 
