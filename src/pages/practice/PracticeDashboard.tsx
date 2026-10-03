@@ -1,26 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useProgressStore } from '../../store/useProgressStore';
-import { 
-  Type, MousePointer2, List, Mouse, 
-  MessageSquare, AppWindow, Activity, Network,
-  CheckCircle2, Circle, ArrowRight, Star
-} from 'lucide-react';
+import { AppWindow, Activity, Network, CheckCircle2, ArrowRight } from 'lucide-react';
+import { challenges, challengePath } from '@/data/challenges';
 import { Button } from '@/components/ui/Button';
 
-const challenges = [
-  { id: 'basic', to: '/practice/basic', label: 'Basic Elements', desc: 'Interact with inputs, buttons, and forms', icon: <Type className="h-5 w-5" />, difficulty: 'Beginner' },
-  { id: 'advanced', to: '/practice/advanced', label: 'Advanced Inputs', desc: 'Handle date pickers, range sliders, and uploads', icon: <MousePointer2 className="h-5 w-5" />, difficulty: 'Intermediate' },
-  { id: 'tables', to: '/practice/tables', label: 'Tables & Lists', desc: 'Extract data from dynamic data grids', icon: <List className="h-5 w-5" />, difficulty: 'Intermediate' },
-  { id: 'interactions', to: '/practice/interactions', label: 'Mouse & Keyboard', desc: 'Drag-and-drop, hover, right-click, and hotkeys', icon: <Mouse className="h-5 w-5" />, difficulty: 'Advanced' },
-  { id: 'dialogs', to: '/practice/dialogs', label: 'Popups & Dialogs', desc: 'Manage alerts, confirm prompts, and modals', icon: <MessageSquare className="h-5 w-5" />, difficulty: 'Beginner' },
-  { id: 'frames', to: '/practice/frames', label: 'Frames & Shadow DOM', desc: 'Switching contexts into iframes and shadow roots', icon: <AppWindow className="h-5 w-5" />, difficulty: 'Advanced' },
-  { id: 'dynamic', to: '/practice/dynamic', label: 'Dynamic & Waits', desc: 'Handle elements appearing asynchronously', icon: <Activity className="h-5 w-5" />, difficulty: 'Intermediate' },
-  { id: 'pagination-test', to: '/practice/pagination-test', label: 'Store Pagination', desc: 'Navigate multiple pages of products', icon: <List className="h-5 w-5" />, difficulty: 'Intermediate' },
-  { id: 'lazy-load', to: '/practice/lazy-load', label: 'Store Lazy Loading', desc: 'Scroll to trigger dynamic content fetching', icon: <MousePointer2 className="h-5 w-5" />, difficulty: 'Intermediate' },
-  { id: 'api-interception', to: '/practice/api-interception', label: 'API Interception', desc: 'Mock and modify network requests directly', icon: <Network className="h-5 w-5" />, difficulty: 'Advanced' },
-  { id: 'progress-bar', to: '/practice/progress-bar', label: 'Progress Bar Challenge', desc: 'Test waits on a dynamic progress bar', icon: <Activity className="h-5 w-5" />, difficulty: 'Intermediate' },
-];
 
 export default function PracticeDashboard() {
   const { completedTasks, totalTasks } = useProgressStore();
@@ -136,7 +120,8 @@ export default function PracticeDashboard() {
             return (
               <Link 
                 key={challenge.id} 
-                to={challenge.to}
+                to={challengePath(challenge)}
+                data-testid={`challenge-card-${challenge.id}`}
                 className={`relative group p-6 rounded-xl border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ${
                   completed 
                     ? 'bg-primary/5 border-primary/20 hover:border-primary/40' 
@@ -150,7 +135,7 @@ export default function PracticeDashboard() {
                 )}
                 <div className="flex items-start gap-4 mb-4">
                   <div className={`p-3 rounded-lg ${completed ? 'bg-primary text-white' : 'bg-slate-100 text-slate-600 group-hover:bg-primary group-hover:text-white transition-colors'}`}>
-                    {challenge.icon}
+                    <challenge.icon className="h-5 w-5" />
                   </div>
                   <div>
                     <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold mb-2 ${difficultyColor}`}>

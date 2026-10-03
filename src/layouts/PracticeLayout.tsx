@@ -1,26 +1,11 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { Outlet, NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
-import { 
-  Type, MousePointer2, List, Mouse, 
-  MessageSquare, AppWindow, Activity, ArrowLeft, Save, ArrowRight, RotateCcw, Trash2, Network, Menu, X
-} from 'lucide-react';
+import { AppWindow, ArrowLeft, Save, ArrowRight, RotateCcw, Trash2, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useProgressStore } from '../store/useProgressStore';
+import { challenges, challengePath } from '@/data/challenges';
 import { CheckCircle2 } from 'lucide-react';
 
-const sidebarLinks = [
-  { id: 'basic', to: '/practice/basic', label: 'Basic Elements', icon: <Type className="h-4 w-4" /> },
-  { id: 'advanced', to: '/practice/advanced', label: 'Advanced Inputs', icon: <MousePointer2 className="h-4 w-4" /> },
-  { id: 'tables', to: '/practice/tables', label: 'Tables & Lists', icon: <List className="h-4 w-4" /> },
-  { id: 'interactions', to: '/practice/interactions', label: 'Mouse & Keyboard', icon: <Mouse className="h-4 w-4" /> },
-  { id: 'dialogs', to: '/practice/dialogs', label: 'Popups & Dialogs', icon: <MessageSquare className="h-4 w-4" /> },
-  { id: 'frames', to: '/practice/frames', label: 'Frames & Shadow DOM', icon: <AppWindow className="h-4 w-4" /> },
-  { id: 'dynamic', to: '/practice/dynamic', label: 'Dynamic & Waits', icon: <Activity className="h-4 w-4" /> },
-  { id: 'pagination-test', to: '/practice/pagination-test', label: 'Store Pagination', icon: <List className="h-4 w-4" /> },
-  { id: 'lazy-load', to: '/practice/lazy-load', label: 'Store Lazy Loading', icon: <MousePointer2 className="h-4 w-4" /> },
-  { id: 'api-interception', to: '/practice/api-interception', label: 'API Interception', icon: <Network className="h-4 w-4" /> },
-  { id: 'progress-bar', to: '/practice/progress-bar', label: 'Progress Bar', icon: <Activity className="h-4 w-4" /> },
-];
 
 const FloatingProgress = () => {
   const { completedTasks, totalTasks } = useProgressStore();
@@ -32,9 +17,9 @@ const FloatingProgress = () => {
   let progressPercent = 0;
 
   if (isDashboard) {
-    const totalPages = sidebarLinks.length;
+    const totalPages = challenges.length;
     let fullyCompletedCount = 0;
-    sidebarLinks.forEach(link => {
+    challenges.forEach(link => {
       const id = link.id;
       if (id && totalTasks[id] && completedTasks[id]?.length === totalTasks[id]) {
         fullyCompletedCount++;
@@ -135,9 +120,9 @@ export default function PracticeLayout() {
 
   const handleNext = () => {
     savePageState();
-    const currentIndex = sidebarLinks.findIndex(l => l.to === location.pathname);
-    if (currentIndex >= 0 && currentIndex < sidebarLinks.length - 1) {
-      navigate(sidebarLinks[currentIndex + 1].to);
+    const currentIndex = challenges.findIndex(l => challengePath(l) === location.pathname);
+    if (currentIndex >= 0 && currentIndex < challenges.length - 1) {
+      navigate(challengePath(challenges[currentIndex + 1]));
     }
   };
 
@@ -155,9 +140,9 @@ export default function PracticeLayout() {
     window.location.reload();
   };
 
-  const isLastPage = location.pathname === sidebarLinks[sidebarLinks.length - 1].to;
+  const isLastPage = location.pathname === challengePath(challenges[challenges.length - 1]);
 
-    const currentLink = sidebarLinks.find(l => l.to === location.pathname);
+    const currentLink = challenges.find(l => challengePath(l) === location.pathname);
     const currentChallengeId = currentLink?.id;
     const isCurrentCompleted = currentChallengeId && totalTasks[currentChallengeId] ? completedTasks[currentChallengeId]?.length === totalTasks[currentChallengeId] : false;
 
@@ -199,12 +184,13 @@ export default function PracticeLayout() {
           
           <nav className="flex-1 overflow-y-auto py-4">
             <ul className="space-y-1 px-3">
-              {sidebarLinks.map((link) => {
+              {challenges.map((link) => {
                 const completed = link.id && totalTasks[link.id] ? completedTasks[link.id]?.length === totalTasks[link.id] : false;
                 return (
-                  <li key={link.to}>
+                  <li key={link.id}>
                     <NavLink
-                      to={link.to}
+                      to={challengePath(link)}
+                      data-testid={`nav-${link.id}`}
                       className={({ isActive }) =>
                         `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                           isActive 
@@ -215,7 +201,7 @@ export default function PracticeLayout() {
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <div className="flex-1 flex items-center gap-3">
-                        {link.icon}
+                        <link.icon className="h-4 w-4" />
                         {link.label}
                       </div>
                       {completed && <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />}
