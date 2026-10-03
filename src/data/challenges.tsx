@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Type, MousePointer2, List, Mouse, MessageSquare, AppWindow, Activity, Network, MousePointerClick, ScanSearch, Layers, Shuffle, Puzzle, Database, Server, GraduationCap, Award } from 'lucide-react';
+import { Type, MousePointer2, List, Mouse, MessageSquare, AppWindow, Activity, Network, MousePointerClick, ScanSearch, Layers, Shuffle, Puzzle, Database, Server, GraduationCap, Award, Bug } from 'lucide-react';
 
 export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced';
 
@@ -29,6 +29,7 @@ export const challenges: Challenge[] = [
   { id: 'deep-dom', label: 'Deep DOM', desc: 'Nested iframes, closed shadow roots and shadow DOM inside frames', icon: Layers, difficulty: 'Advanced' },
   { id: 'flaky', label: 'Flaky Page', desc: 'Random failures, random delays and re-rendered elements', icon: Shuffle, difficulty: 'Advanced' },
   { id: 'widgets', label: 'Real-World Widgets', desc: 'OTP boxes, tag inputs and star ratings', icon: Puzzle, difficulty: 'Intermediate' },
+  { id: 'bug-hunt', label: 'Bug Hunt', desc: 'Find six real bugs planted in the QA Store', icon: Bug, difficulty: 'Advanced' },
   { id: 'data-generator', label: 'Test Data Generator', desc: 'Unlimited fake users, orders and cards as CSV, JSON or SQL', icon: Database, difficulty: 'Beginner', kind: 'tool' },
   { id: 'api-playground', label: 'API Playground', desc: 'Mock REST API with auth, status codes, delays and rate limits', icon: Server, difficulty: 'Intermediate', kind: 'tool' },
   { id: 'interview', label: 'Interview Kit', desc: '60+ QA and SDET interview questions with answers and flashcards', icon: GraduationCap, difficulty: 'Beginner', kind: 'tool' },

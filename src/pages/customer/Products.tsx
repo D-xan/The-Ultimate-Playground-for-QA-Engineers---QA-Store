@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { api } from '@/utils/api';
 import { ProductCard } from '@/components/customer/ProductCard';
+import { isBugActive } from '@/utils/bugHunt';
 
 export default function Products() {
   const [products, setProducts] = useState<any[]>([]);
@@ -9,7 +10,8 @@ export default function Products() {
   const [searchParams] = useSearchParams();
   
   const categoryId = searchParams.get('category');
-  const searchQuery = searchParams.get('search')?.toLowerCase();
+  const rawSearch = searchParams.get('search') ?? undefined;
+  const searchQuery = rawSearch?.toLowerCase();
 
   useEffect(() => {
     const loadData = async () => {
@@ -21,10 +23,11 @@ export default function Products() {
           all = all.filter((p: any) => p.categoryId === categoryId);
         }
         
-        if (searchQuery) {
-          all = all.filter((p: any) => 
-            p.name.toLowerCase().includes(searchQuery)
-          );
+        if (searchQuery && rawSearch) {
+          // Bug Hunt `search-case`: matching is case-sensitive when the bug is active.
+          all = isBugActive('search-case')
+            ? all.filter((p: any) => p.name.includes(rawSearch))
+            : all.filter((p: any) => p.name.toLowerCase().includes(searchQuery));
         }
         
         setProducts(all);
@@ -35,7 +38,7 @@ export default function Products() {
       }
     };
     loadData();
-  }, [categoryId, searchQuery]);
+  }, [categoryId, searchQuery, rawSearch]);
 
   return (
     <div className="container mx-auto px-4 py-8">

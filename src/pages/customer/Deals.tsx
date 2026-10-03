@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { api } from '@/utils/api';
 import { ProductCard } from '@/components/customer/ProductCard';
 import { Tag } from 'lucide-react';
+import { isBugActive } from '@/utils/bugHunt';
 
 export default function Deals() {
   const [deals, setDeals] = useState<any[]>([]);
@@ -11,9 +12,11 @@ export default function Deals() {
     const loadDeals = async () => {
       try {
         const all = await api.products.getAll();
-        // Filter products with a discount and take top 12
+        // Filter products with a discount and take top 12.
+        // Bug Hunt `deals-sort-order`: sorts ascending, so the smallest discounts come first.
+        const dir = isBugActive('deals-sort-order') ? -1 : 1;
         const discounted = all.filter((p: any) => p.discount > 0)
-                              .sort((a: any, b: any) => b.discount - a.discount)
+                              .sort((a: any, b: any) => dir * (b.discount - a.discount))
                               .slice(0, 12);
         setDeals(discounted);
       } catch (e) {

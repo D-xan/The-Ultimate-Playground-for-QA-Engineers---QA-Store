@@ -44,6 +44,7 @@ const ApiPlayground = React.lazy(() => import('./pages/practice/ApiPlayground'))
 const InterviewKit = React.lazy(() => import('./pages/practice/InterviewKit'));
 const Certificate = React.lazy(() => import('./pages/practice/Certificate'));
 const Widgets = React.lazy(() => import('./pages/practice/Widgets'));
+const BugHunt = React.lazy(() => import('./pages/practice/BugHunt'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 // Role based protection
@@ -81,6 +82,7 @@ export const AppRoutes = () => {
             <Route path="deep-dom" element={<DeepDom />} />
             <Route path="flaky" element={<FlakyPage />} />
             <Route path="widgets" element={<Widgets />} />
+            <Route path="bug-hunt" element={<BugHunt />} />
             <Route path="data-generator" element={<DataGenerator />} />
             <Route path="api-playground" element={<ApiPlayground />} />
             <Route path="certificate" element={<Certificate />} />

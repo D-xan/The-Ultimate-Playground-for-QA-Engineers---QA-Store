@@ -7,8 +7,12 @@ interface ChallengeState {
   dynamicIds: boolean;
   flakyNetwork: boolean;
   duplicateElements: boolean;
+  bugHunt: boolean;
+  foundBugs: string[];
   toggleChallengeMode: () => void;
-  updateSettings: (settings: Partial<Omit<ChallengeState, 'enabled' | 'toggleChallengeMode' | 'updateSettings'>>) => void;
+  updateSettings: (settings: Partial<Omit<ChallengeState, 'enabled' | 'foundBugs' | 'toggleChallengeMode' | 'updateSettings' | 'reportFound' | 'resetBugHunt'>>) => void;
+  reportFound: (id: string) => void;
+  resetBugHunt: () => void;
 }
 
 export const useChallengeMode = create<ChallengeState>()(
@@ -19,8 +23,13 @@ export const useChallengeMode = create<ChallengeState>()(
       dynamicIds: false,
       flakyNetwork: false,
       duplicateElements: false,
+      bugHunt: false,
+      foundBugs: [],
       toggleChallengeMode: () => set((state) => ({ enabled: !state.enabled })),
       updateSettings: (settings) => set((state) => ({ ...state, ...settings })),
+      reportFound: (id) =>
+        set((state) => (state.foundBugs.includes(id) ? state : { foundBugs: [...state.foundBugs, id] })),
+      resetBugHunt: () => set({ bugHunt: false, foundBugs: [] }),
     }),
     {
       name: 'qa-challenge-mode',

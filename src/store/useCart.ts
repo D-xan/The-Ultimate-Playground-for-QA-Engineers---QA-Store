@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { isBugActive } from '@/utils/bugHunt';
 
 export interface CartItem {
   id: string; // unique cart item id
@@ -30,7 +31,11 @@ export const useCart = create<CartState>()(
         set((state) => ({ items: [...state.items, { ...item, id }] }));
       },
       removeItem: (id) => {
-        set((state) => ({ items: state.items.filter((i) => i.id !== id) }));
+        set((state) => {
+          // Bug Hunt `cart-remove-wrong`: removes the first line instead of the clicked one.
+          const target = isBugActive('cart-remove-wrong') ? state.items[0]?.id : id;
+          return { items: state.items.filter((i) => i.id !== target) };
+        });
       },
       updateQuantity: (id, quantity) => {
         set((state) => ({
@@ -39,7 +44,13 @@ export const useCart = create<CartState>()(
       },
       clearCart: () => set({ items: [] }),
       getTotal: () => {
-        return get().items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        const items = get().items;
+        // Bug Hunt `cart-subtotal-qty`: the last line counts its price once, ignoring quantity.
+        const buggy = isBugActive('cart-subtotal-qty');
+        return items.reduce(
+          (acc, item, i) => acc + item.price * (buggy && i === items.length - 1 ? 1 : item.quantity),
+          0
+        );
       }
     }),
     { name: 'qa-cart' }

@@ -8,11 +8,16 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { CheckCircle2 } from 'lucide-react';
 import { getTestId } from '@/utils/testUtils';
+import { isBugActive, taxRate } from '@/utils/bugHunt';
 
 const shippingSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
-  email: z.string().email('Please enter a valid email address'),
+  // Bug Hunt `checkout-email`: any non-empty text passes when the bug is active.
+  email: z.string().refine(
+    (v) => (isBugActive('checkout-email') ? v.trim().length > 0 : z.string().email().safeParse(v).success),
+    'Please enter a valid email address'
+  ),
   address: z.string().min(5, 'Address must be at least 5 characters'),
   city: z.string().min(2, 'City is required'),
   postalCode: z.string().regex(/^[0-9A-Za-z\s\-]{3,10}$/, 'Invalid postal code format. Use 3-10 alphanumeric characters.'),
@@ -25,6 +30,7 @@ export default function Checkout() {
   const { getTotal, clearCart } = useCart();
   const navigate = useNavigate();
   const total = getTotal();
+  const tax = total * taxRate();
 
   const { register, handleSubmit, formState: { errors } } = useForm<ShippingFormValues>({
     resolver: zodResolver(shippingSchema)
@@ -74,7 +80,7 @@ export default function Checkout() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <Input placeholder="First Name" {...register('firstName')} error={errors.firstName?.message} data-testid={getTestId('checkout-firstName')} />
               <Input placeholder="Last Name" {...register('lastName')} error={errors.lastName?.message} data-testid={getTestId('checkout-lastName')} />
-              <Input placeholder="Email Address" type="email" {...register('email')} error={errors.email?.message} className="sm:col-span-2" />
+              <Input placeholder="Email Address" type={isBugActive('checkout-email') ? 'text' : 'email'} {...register('email')} error={errors.email?.message} className="sm:col-span-2" />
               <Input placeholder="Address" {...register('address')} error={errors.address?.message} className="sm:col-span-2" />
               <Input placeholder="City" {...register('city')} error={errors.city?.message} />
               <Input placeholder="Postal Code" {...register('postalCode')} error={errors.postalCode?.message} />
@@ -113,11 +119,11 @@ export default function Checkout() {
               </div>
               <div className="flex justify-between mb-4 pb-4 border-b border-border">
                 <span className="text-slate-600">Tax</span>
-                <span className="font-medium">${(total * 0.08).toFixed(2)}</span>
+                <span className="font-medium">${tax.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-xl font-bold">
                 <span>Total</span>
-                <span className="text-primary">${(total * 1.08).toFixed(2)}</span>
+                <span className="text-primary">${(total * (1 + taxRate())).toFixed(2)}</span>
               </div>
             </div>
             <div className="flex gap-4">
