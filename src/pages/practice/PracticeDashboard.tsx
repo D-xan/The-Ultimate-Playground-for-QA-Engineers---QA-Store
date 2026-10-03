@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useProgressStore } from '../../store/useProgressStore';
 import { isPageComplete } from '../../store/progressLogic';
 import { AppWindow, Activity, Network, CheckCircle2, ArrowRight } from 'lucide-react';
-import { challenges, challengePath } from '@/data/challenges';
+import { practiceChallenges, tools, challengePath } from '@/data/challenges';
 import { Button } from '@/components/ui/Button';
 
 
@@ -11,13 +11,13 @@ export default function PracticeDashboard() {
   const progress = useProgressStore();
   
   let fullyCompletedCount = 0;
-  challenges.forEach(c => {
+  practiceChallenges.forEach(c => {
     if (isPageComplete(progress, c.id)) {
       fullyCompletedCount++;
     }
   });
 
-  const progressPercentage = Math.round((fullyCompletedCount / challenges.length) * 100) || 0;
+  const progressPercentage = Math.round((fullyCompletedCount / practiceChallenges.length) * 100) || 0;
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -56,7 +56,7 @@ export default function PracticeDashboard() {
           </div>
           <div>
             <div className="font-semibold text-slate-900">Your Progress</div>
-            <div className="text-sm text-slate-500">{fullyCompletedCount} of {challenges.length} completed</div>
+            <div className="text-sm text-slate-500">{fullyCompletedCount} of {practiceChallenges.length} completed</div>
           </div>
         </div>
       </div>
@@ -111,7 +111,7 @@ export default function PracticeDashboard() {
       <div>
         <h2 className="text-2xl font-bold text-slate-900 mb-6">Interactive Challenges</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {challenges.map((challenge) => {
+          {practiceChallenges.map((challenge) => {
             const completed = isPageComplete(progress, challenge.id);
             const difficultyColor = 
               challenge.difficulty === 'Beginner' ? 'bg-emerald-100 text-emerald-700' :
@@ -154,6 +154,31 @@ export default function PracticeDashboard() {
               </Link>
             );
           })}
+        </div>
+      </div>
+      {/* Tools */}
+      <div data-testid="tools-section">
+        <h2 className="text-2xl font-bold text-slate-900 mb-6">Free QA Tools</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {tools.map((tool) => (
+            <Link
+              key={tool.id}
+              to={challengePath(tool)}
+              data-testid={`tool-card-${tool.id}`}
+              className="relative group p-6 rounded-xl border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg bg-white border-slate-200 hover:border-slate-300"
+            >
+              <div className="flex items-start gap-4 mb-4">
+                <div className="p-3 rounded-lg bg-slate-100 text-slate-600 group-hover:bg-primary group-hover:text-white transition-colors">
+                  <tool.icon className="h-5 w-5" />
+                </div>
+                <h3 className="font-bold text-slate-900 text-lg leading-tight">{tool.label}</h3>
+              </div>
+              <p className="text-slate-500 text-sm mb-6 min-h-[40px]">{tool.desc}</p>
+              <div className="flex items-center text-sm font-semibold text-primary group-hover:translate-x-1 transition-transform">
+                Open tool <ArrowRight className="ml-1 h-4 w-4" />
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>

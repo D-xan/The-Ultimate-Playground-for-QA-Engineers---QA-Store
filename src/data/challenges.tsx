@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Type, MousePointer2, List, Mouse, MessageSquare, AppWindow, Activity, Network, MousePointerClick, ScanSearch, Layers, Shuffle, Puzzle } from 'lucide-react';
+import { Type, MousePointer2, List, Mouse, MessageSquare, AppWindow, Activity, Network, MousePointerClick, ScanSearch, Layers, Shuffle, Puzzle, Database } from 'lucide-react';
 
 export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced';
 
@@ -9,6 +9,7 @@ export interface Challenge {
   desc: string;
   difficulty: Difficulty;
   icon: LucideIcon;
+  kind?: 'tool';
 }
 
 export const challenges: Challenge[] = [
@@ -28,6 +29,10 @@ export const challenges: Challenge[] = [
   { id: 'deep-dom', label: 'Deep DOM', desc: 'Nested iframes, closed shadow roots and shadow DOM inside frames', icon: Layers, difficulty: 'Advanced' },
   { id: 'flaky', label: 'Flaky Page', desc: 'Random failures, random delays and re-rendered elements', icon: Shuffle, difficulty: 'Advanced' },
   { id: 'widgets', label: 'Real-World Widgets', desc: 'OTP boxes, tag inputs and star ratings', icon: Puzzle, difficulty: 'Intermediate' },
+  { id: 'data-generator', label: 'Test Data Generator', desc: 'Unlimited fake users, orders and cards as CSV, JSON or SQL', icon: Database, difficulty: 'Beginner', kind: 'tool' },
 ];
+
+export const practiceChallenges: Challenge[] = challenges.filter(c => c.kind !== 'tool');
+export const tools: Challenge[] = challenges.filter(c => c.kind === 'tool');
 
 export const challengePath = (c: Challenge) => `/practice/${c.id}`;

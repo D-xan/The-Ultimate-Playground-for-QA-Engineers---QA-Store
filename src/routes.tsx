@@ -39,6 +39,7 @@ const ClickTraps = React.lazy(() => import('./pages/practice/ClickTraps'));
 const LocatorTraps = React.lazy(() => import('./pages/practice/LocatorTraps'));
 const DeepDom = React.lazy(() => import('./pages/practice/DeepDom'));
 const FlakyPage = React.lazy(() => import('./pages/practice/FlakyPage'));
+const DataGenerator = React.lazy(() => import('./pages/practice/DataGenerator'));
 const Widgets = React.lazy(() => import('./pages/practice/Widgets'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
@@ -77,6 +78,7 @@ export const AppRoutes = () => {
             <Route path="deep-dom" element={<DeepDom />} />
             <Route path="flaky" element={<FlakyPage />} />
             <Route path="widgets" element={<Widgets />} />
+            <Route path="data-generator" element={<DataGenerator />} />
           </Route>
 
           {/* Customer Application */}

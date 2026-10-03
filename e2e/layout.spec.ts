@@ -18,3 +18,13 @@ test('dashboard has no horizontal scroll on a phone', async ({ page }) => {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
+for (const c of challenges) {
+  test(`${c.id}: no horizontal scroll on a phone`, async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto(`/#/practice/${c.id}`);
+    await expect(page.locator('main h1').first()).toBeVisible();
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+}

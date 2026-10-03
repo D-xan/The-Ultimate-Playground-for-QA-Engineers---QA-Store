@@ -4,7 +4,7 @@ import { AppWindow, ArrowLeft, Save, ArrowRight, RotateCcw, Trash2, Menu, X } fr
 import { Button } from '@/components/ui/Button';
 import { useProgressStore } from '../store/useProgressStore';
 import { isPageComplete, pageDone, pageTotal } from '../store/progressLogic';
-import { challenges, challengePath } from '@/data/challenges';
+import { challenges, practiceChallenges, tools, challengePath } from '@/data/challenges';
 import { CheckCircle2 } from 'lucide-react';
 
 
@@ -18,9 +18,9 @@ const FloatingProgress = () => {
   let progressPercent = 0;
 
   if (isDashboard) {
-    const totalPages = challenges.length;
+    const totalPages = practiceChallenges.length;
     let fullyCompletedCount = 0;
-    challenges.forEach(link => {
+    practiceChallenges.forEach(link => {
       if (isPageComplete(progress, link.id)) {
         fullyCompletedCount++;
       }
@@ -120,9 +120,9 @@ export default function PracticeLayout() {
 
   const handleNext = () => {
     savePageState();
-    const currentIndex = challenges.findIndex(l => challengePath(l) === location.pathname);
-    if (currentIndex >= 0 && currentIndex < challenges.length - 1) {
-      navigate(challengePath(challenges[currentIndex + 1]));
+    const currentIndex = practiceChallenges.findIndex(l => challengePath(l) === location.pathname);
+    if (currentIndex >= 0 && currentIndex < practiceChallenges.length - 1) {
+      navigate(challengePath(practiceChallenges[currentIndex + 1]));
     }
   };
 
@@ -141,10 +141,11 @@ export default function PracticeLayout() {
     window.location.reload();
   };
 
-  const isLastPage = location.pathname === challengePath(challenges[challenges.length - 1]);
+  const isLastPage = location.pathname === challengePath(practiceChallenges[practiceChallenges.length - 1]);
 
     const currentLink = challenges.find(l => challengePath(l) === location.pathname);
     const currentChallengeId = currentLink?.id;
+    const isToolPage = currentLink?.kind === 'tool';
     const isCurrentCompleted = currentChallengeId ? isPageComplete(progress, currentChallengeId) : false;
 
     return (
@@ -184,8 +185,11 @@ export default function PracticeLayout() {
           </div>
           
           <nav className="flex-1 overflow-y-auto py-4">
+            {[practiceChallenges, tools].map((list, idx) => (
+              <React.Fragment key={idx}>
+                {idx === 1 && list.length > 0 && <div className="text-xs uppercase text-slate-500 px-3 mt-4 mb-1">TOOLS</div>}
             <ul className="space-y-1 px-3">
-              {challenges.map((link) => {
+              {list.map((link) => {
                 const completed = isPageComplete(progress, link.id);
                 return (
                   <li key={link.id}>
@@ -211,6 +215,8 @@ export default function PracticeLayout() {
                 );
               })}
             </ul>
+              </React.Fragment>
+            ))}
           </nav>
   
           <div className="p-4 border-t border-slate-800">
@@ -230,7 +236,7 @@ export default function PracticeLayout() {
           </div>
           
           {/* Bottom Action Bar */}
-          {location.pathname !== '/practice' && (
+          {location.pathname !== '/practice' && !isToolPage && (
             <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-border p-3 md:p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
               <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
                 <div className="flex items-center gap-2 md:gap-3 w-full sm:w-auto justify-center sm:justify-start">

@@ -4,7 +4,8 @@ import { challenges } from '../src/data/challenges';
 test('dashboard lists every challenge', async ({ page }) => {
   await page.goto('/#/practice');
   for (const c of challenges) {
-    await expect(page.getByTestId(`challenge-card-${c.id}`)).toBeVisible();
+    const prefix = c.kind === 'tool' ? 'tool-card' : 'challenge-card';
+    await expect(page.getByTestId(`${prefix}-${c.id}`)).toBeVisible();
   }
 });
 

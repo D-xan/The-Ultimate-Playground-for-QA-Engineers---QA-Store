@@ -12,6 +12,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.5.0",
     "@hookform/resolvers": "^5.5.7",
     "@tanstack/react-table": "^8.21.3",
     "clsx": "^2.1.1",
@@ -26,7 +27,6 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
-    "@faker-js/faker": "^10.5.0",
     "@playwright/test": "^1.63.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.13.3",
