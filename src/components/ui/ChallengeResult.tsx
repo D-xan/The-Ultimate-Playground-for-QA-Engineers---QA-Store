@@ -10,11 +10,11 @@ const styles: Record<ResultState, string> = {
 
 const icons = { pending: Circle, success: CheckCircle2, failure: XCircle };
 
-export function ChallengeResult({ state, message }: { state: ResultState; message: string }) {
+export function ChallengeResult({ state, message, testId = 'challenge-result' }: { state: ResultState; message: string; testId?: string }) {
   const Icon = icons[state];
   return (
     <div
-      data-testid="challenge-result"
+      data-testid={testId}
       role="status"
       aria-live="polite"
       data-state={state}
