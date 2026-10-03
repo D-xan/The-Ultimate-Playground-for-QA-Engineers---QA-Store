@@ -19,7 +19,7 @@ Child pages live on a bare route `/popup/:kind` (outside `PracticeLayout`, no si
 1. **New tab** — `#open-tab` is `<a target="_blank" href="#/popup/secret">`. On mount the parent writes a fresh secret word to `localStorage['qa-windows-secret']`; the child shows it in `#tab-secret`. Typing it into `#tab-secret-input` + `#check-secret` → `result-tab` success.
 2. **Popup that reports back and closes** — `#open-popup` calls `window.open('#/popup/approve', 'approve', 'width=480,height=600')`. Child `#approve-btn` sends `postMessage({ type: 'qa-approve', code })` to `window.opener` (same origin only) and calls `window.close()`. Parent shows the code in `#approval-code` → `result-popup` success. Lesson: the handle you switched to disappears.
 3. **Delayed popup** — `#open-delayed` opens `#/popup/delayed` after 1–3 s (random; that is the lesson). Child `#delayed-confirm` posts `qa-delayed` → `result-delayed`.
-4. **Pick the right window** — three buttons `#open-a/b/c` each open a tab whose `document.title` is `Window A/B/C`. Only the child titled `Window B` has `#pick-me` enabled; clicking it posts `qa-pick` → `result-pick`. Lesson: find a window by title, not by order.
+4. **Pick the right window** — three buttons `#open-a/b/c` each open `#/popup/pick?w=A|B|C` in a new tab whose `document.title` is `Window A/B/C`. Only the child titled `Window B` has `#pick-me` enabled; clicking it posts `qa-pick` → `result-pick`. Lesson: find a window by title, not by order.
 
 Child pages without an `opener` (e.g. Cypress visiting them directly) show `#no-opener` text instead of failing. Cypress solution stubs `window.open` / removes `target` and says plainly which parts Cypress cannot do.
 
