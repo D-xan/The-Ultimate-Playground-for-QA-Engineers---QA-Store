@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { TaskQuestions } from '../../components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
+import { ChallengeResult, type ResultState } from '@/components/ui/ChallengeResult';
 
 export default function ProgressBarChallenge() {
   const [progress, setProgress] = useState(0);
   const [isStarting, setIsStarting] = useState(false);
   const [message, setMessage] = useState('');
+  const [result, setResult] = useState<ResultState>('pending');
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
@@ -32,11 +34,13 @@ export default function ProgressBarChallenge() {
   const handleStart = () => {
     setProgress(0);
     setMessage('');
+    setResult('pending');
     setIsStarting(true);
   };
 
   const handleStop = () => {
     setIsStarting(false);
+    setResult(progress >= 75 ? 'success' : 'failure');
   };
 
   return (
@@ -77,6 +81,10 @@ export default function ProgressBarChallenge() {
               className="bg-primary h-full transition-all duration-300 ease-out flex items-center justify-end px-2"
               style={{ width: `${progress}%` }}
               id="progress-bar-fill"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={progress}
             >
               {progress > 5 && <span className="text-white text-xs font-bold">{progress}%</span>}
             </div>
@@ -99,6 +107,15 @@ export default function ProgressBarChallenge() {
               Stop
             </Button>
           </div>
+
+          <ChallengeResult
+            state={result}
+            message={
+              result === 'success' ? `Stopped at ${progress}% — target reached`
+              : result === 'failure' ? `Stopped at ${progress}% — too early, target is 75%`
+              : 'Start the bar, then stop it at 75% or more'
+            }
+          />
 
           <div className="h-8 text-center">
             {message && (
