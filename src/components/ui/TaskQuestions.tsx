@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ClipboardList, Info, CheckCircle2, XCircle, CheckSquare, Square } from 'lucide-react';
+import { ClipboardList, Info, CheckCircle2, XCircle, CheckSquare, Square, Lightbulb } from 'lucide-react';
 import { useProgressStore } from '../../store/useProgressStore';
 import { taskKey } from '../../store/progressLogic';
 import { useLocation } from 'react-router-dom';
@@ -9,6 +9,8 @@ export interface TaskDetail {
   description: string;
   positive: string[];
   negative: string[];
+  /** A nudge shown only when the learner asks for it. */
+  hint?: string;
 }
 
 interface TaskQuestionsProps {
@@ -19,6 +21,7 @@ interface TaskQuestionsProps {
 
 export const TaskQuestions: React.FC<TaskQuestionsProps> = ({ tasks, groupId = 'main' }) => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [hintsShown, setHintsShown] = useState<number[]>([]);
   
   const location = useLocation();
   const challengeId = location.pathname.split('/').pop() || '';
@@ -58,6 +61,8 @@ export const TaskQuestions: React.FC<TaskQuestionsProps> = ({ tasks, groupId = '
               </button>
               <button 
                 onClick={() => toggleExpand(index)}
+                data-testid={`task-expand-${groupId}-${index}`}
+                aria-expanded={expandedIndex === index}
                 className="flex-1 flex items-center justify-between p-2 text-left cursor-pointer outline-none"
               >
                 <div className="flex items-center gap-3">
@@ -101,6 +106,24 @@ export const TaskQuestions: React.FC<TaskQuestionsProps> = ({ tasks, groupId = '
                     </ul>
                   </div>
                 </div>
+
+                {task.hint && (
+                  hintsShown.includes(index) ? (
+                    <p data-testid={`task-hint-${groupId}-${index}`} className="mt-4 flex gap-2 rounded-md border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+                      <Lightbulb className="h-4 w-4 shrink-0 text-amber-500" aria-hidden="true" />
+                      <span>{task.hint}</span>
+                    </p>
+                  ) : (
+                    <button
+                      type="button"
+                      data-testid={`show-hint-${groupId}-${index}`}
+                      onClick={() => setHintsShown((h) => [...h, index])}
+                      className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700 hover:text-amber-900"
+                    >
+                      <Lightbulb className="h-4 w-4" aria-hidden="true" /> Show hint
+                    </button>
+                  )
+                )}
               </div>
             )}
           </li>

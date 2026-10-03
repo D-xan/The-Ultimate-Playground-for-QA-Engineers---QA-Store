@@ -201,7 +201,8 @@ export default function CanvasCharts() {
             title: "Hit the target three times",
             description: "Click the moving red circle three times. Clicks that miss are counted too.",
             positive: ["Three hits turn the result green."],
-            negative: ["Clicking where the target used to be is a miss."]
+            negative: ["Clicking where the target used to be is a miss."],
+            hint: "Call window.qaCanvas.target() right before each click and click at the canvas's left + x, top + y."
           }
         ]} /></div>
         <canvas
@@ -225,7 +226,8 @@ export default function CanvasCharts() {
             title: "Connect the boxes",
             description: "Press inside Start, drag to End in one continuous stroke and release inside End.",
             positive: ["A continuous stroke from Start to End turns the result green."],
-            negative: ["Jumping straight to End without the moves in between fails.", "Starting or ending outside the boxes fails."]
+            negative: ["Jumping straight to End without the moves in between fails.", "Starting or ending outside the boxes fails."],
+            hint: "Press inside Start, move to End in ten or more small steps, then release. One big jump is ignored."
           }
         ]} /></div>
         <canvas
@@ -253,7 +255,8 @@ export default function CanvasCharts() {
             title: "Find the best month",
             description: "Hover the bars to read each month's sales, then enter the month with the highest sales.",
             positive: ["Hovering a bar shows a tooltip such as 'Mar: 4,210'.", "Entering the peak month turns the result green."],
-            negative: ["The values are not in the page until you hover."]
+            negative: ["The values are not in the page until you hover."],
+            hint: "Hover each bar, wait for the tooltip to name that month, and keep the largest number."
           }
         ]} /></div>
         <div className="relative max-w-[600px]">

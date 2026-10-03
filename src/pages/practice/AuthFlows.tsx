@@ -146,7 +146,8 @@ export default function AuthFlows() {
             title: "Log in with a one-time code",
             description: `Log in as ${DEMO_USER.email} / ${DEMO_USER.password}. A code arrives in the inbox after a moment; enter it to finish.`,
             positive: ["The right code within 60 seconds logs you in and the result turns green."],
-            negative: ["A wrong password shows an error.", "A wrong or expired code shows an error."]
+            negative: ["A wrong password shows an error.", "A wrong or expired code shows an error."],
+            hint: "Wait until #inbox-code holds six digits, read it, then type it. It changes on every login."
           }
         ]} /></div>
         <p className="mb-4 text-sm text-slate-600">Demo account: <code>{DEMO_USER.email}</code> / <code>{DEMO_USER.password}</code></p>
@@ -202,7 +203,8 @@ export default function AuthFlows() {
             title: "Finish the wizard",
             description: "Start the wizard and finish all three steps. Your session lasts 8 seconds and step 2 takes longer than that, so you will be asked for your password again.",
             positive: ["After entering the password, the wizard continues on the same step.", "Finishing after logging in again turns the result green."],
-            negative: ["A wrong password keeps the dialog open."]
+            negative: ["A wrong password keeps the dialog open."],
+            hint: "Step 2 keeps Next disabled for about 9 seconds. After each click, check whether the 'Session expired' dialog opened and enter the password if it did."
           }
         ]} /></div>
         {phase !== 'in' ? (
@@ -230,7 +232,8 @@ export default function AuthFlows() {
             title: "Reuse a saved session",
             description: "Log in with 'Remember me' ticked. Then open this page in a fresh browser context that starts with the saved storage. You should be logged in without the form.",
             positive: ["A fresh context with the saved storage shows 'Restored your session from storage.'"],
-            negative: ["Without 'Remember me', a reload shows the login form again.", "A corrupt stored session is ignored."]
+            negative: ["Without 'Remember me', a reload shows the login form again.", "A corrupt stored session is ignored."],
+            hint: "Log in once with Remember me ticked, save the cookies and localStorage, and load the page in a new browser context that starts with them."
           }
         ]} /></div>
         <ChallengeResult testId="result-remember" state={restored ? 'success' : 'pending'} message={restored ? 'Session restored from storage' : 'Load this page with a saved session'} />

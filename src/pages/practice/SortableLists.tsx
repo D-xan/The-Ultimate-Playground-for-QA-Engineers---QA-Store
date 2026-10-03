@@ -121,7 +121,8 @@ export default function SortableLists() {
             title: "Put the steps in order",
             description: "Drag the steps so they read Step 1 to Step 5 from top to bottom. Dropping an item on another puts it in that position.",
             positive: ["When the list reads Step 1 to Step 5 the result turns green."],
-            negative: ["Selenium's dragAndDrop leaves the list unchanged."]
+            negative: ["Selenium's dragAndDrop leaves the list unchanged."],
+            hint: "Drop each step onto the item that is currently in its target position, starting with Step 1. Re-read the list after every drop."
           }
         ]} /></div>
         <ul id="html5-list" data-testid="html5-list" className="space-y-2 max-w-sm mb-4">
@@ -152,7 +153,8 @@ export default function SortableLists() {
             title: "Sort A to E with press and hold",
             description: "Press an item and hold it still for a moment before moving. Release it over the place it should go.",
             positive: ["Holding, moving and releasing reorders the list.", "When it reads A to E the result turns green."],
-            negative: ["Moving straight away (a quick drag) does nothing.", "Jumping to the target in a single move does nothing either."]
+            negative: ["Moving straight away (a quick drag) does nothing.", "Jumping to the target in a single move does nothing either."],
+            hint: "Press, wait about 300 ms without moving, then move to the target in several small steps before releasing."
           }
         ]} /></div>
         <ul id="hold-list" data-testid="hold-list" className="space-y-2 max-w-sm mb-4">
@@ -185,7 +187,8 @@ export default function SortableLists() {
             title: "Move two cards",
             description: "Move 'Write tests' to Done and 'Fix bug #42' to In Progress. Leave the other cards where they are.",
             positive: ["With both cards moved and nothing else changed, the result turns green."],
-            negative: ["Moving any other card keeps the result pending."]
+            negative: ["Moving any other card keeps the result pending."],
+            hint: "Drop each card on the column itself, then check the column's text."
           }
         ]} /></div>
         <div className="grid gap-4 sm:grid-cols-3 mb-4">

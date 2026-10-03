@@ -116,7 +116,8 @@ export default function AccessibilityLab() {
             title: "Name every axe violation",
             description: "Scan the form below with axe-core, then tick exactly the rules it reports and press Check.",
             positive: ["Ticking exactly the reported rules turns the result green."],
-            negative: ["Ticking a rule the form does not break, or missing one, fails."]
+            negative: ["Ticking a rule the form does not break, or missing one, fails."],
+            hint: "Scroll the form into view, scan only #a11y-broken with the wcag2a and wcag2aa tags, and tick each violations[].id."
           }
         ]} /></div>
         <div id="a11y-broken" data-testid="a11y-broken" className="rounded-xl border border-dashed border-red-300 p-4 space-y-4 mb-6">
@@ -152,7 +153,8 @@ export default function AccessibilityLab() {
             title: "Assert there are no violations",
             description: "Scan this form the same way. A clean scan returns an empty violations list, which is the assertion to put in your own test suites.",
             positive: ["axe reports no violations for this form."],
-            negative: ["Scanning the whole page instead of this form mixes in other sections."]
+            negative: ["Scanning the whole page instead of this form mixes in other sections."],
+            hint: "Run the same scan on #a11y-fixed and assert that the violations list is empty."
           }
         ]} /></div>
         <div id="a11y-fixed" data-testid="a11y-fixed" className="rounded-xl border border-dashed border-green-300 p-4 space-y-4">
@@ -176,7 +178,8 @@ export default function AccessibilityLab() {
             title: "Submit without a mouse",
             description: "Fill in the form, pick Cypress, accept the terms and submit, using only the keyboard. The confirm dialog traps focus: Tab stays inside it and Escape closes it.",
             positive: ["Confirming with the keyboard turns the result green."],
-            negative: ["Any mouse click or tap in this section fails the task until you press Reset."]
+            negative: ["Any mouse click or tap in this section fails the task until you press Reset."],
+            hint: "Focus the name field with focus(), not a click. Then type, Tab, ArrowDown twice, Tab, Space, Tab, Enter and Enter again."
           }
         ]} /></div>
         <div id="keyboard-form" data-testid="keyboard-form" data-mouse-used={mouseUsed} onPointerDownCapture={() => setMouseUsed(true)} className="space-y-4">

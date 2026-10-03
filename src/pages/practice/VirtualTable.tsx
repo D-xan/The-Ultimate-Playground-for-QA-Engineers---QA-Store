@@ -61,7 +61,8 @@ export default function VirtualTable() {
             title: "Select row #7342",
             description: "Bring row 7342 into view and press its Select button. Its email appears below the table.",
             positive: ["Selecting row 7342 shows its email and the result turns green."],
-            negative: ["Only around 20 rows exist in the DOM at once."]
+            negative: ["Only around 20 rows exist in the DOM at once."],
+            hint: "Rows are 40 px tall: set the grid's scrollTop to (7342 - 1) × 40, then wait for [data-row-id=\"7342\"]."
           }
         ]} /></div>
         <ChallengeResult testId="result-find" state={found ? 'success' : 'pending'} message={found ? 'Row 7342 selected' : 'Select row 7342'} />
@@ -74,7 +75,8 @@ export default function VirtualTable() {
             title: "Select the top scorer",
             description: "Sort by score so the highest score is first, then select that row.",
             positive: ["The first click on Score sorts from highest to lowest.", "Selecting the top row turns the result green."],
-            negative: ["Without sorting, the top scorer is thousands of rows down."]
+            negative: ["Without sorting, the top scorer is thousands of rows down."],
+            hint: "Click the Score header once (highest first), then select the first rendered row."
           }
         ]} /></div>
         <ChallengeResult testId="result-sort" state={foundTop ? 'success' : 'pending'} message={foundTop ? 'Top scorer selected' : 'Select the row with the highest score'} />

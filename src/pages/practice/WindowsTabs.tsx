@@ -60,7 +60,8 @@ export default function WindowsTabs() {
             title: "Read a secret from a new tab",
             description: "Open the link in a new tab, read the secret word, close the tab, then type the word here.",
             positive: ["The new tab shows a secret word.", "Typing it and pressing Check shows success."],
-            negative: ["A wrong word shows a failure."]
+            negative: ["A wrong word shows a failure."],
+            hint: "Wait for the new window to exist before switching: compare the window handles from before and after the click."
           }
         ]} /></div>
         <a id="open-tab" data-testid="open-tab" href="#/popup/secret" target="_blank" rel="noopener" className="text-primary font-semibold underline">Open the secret in a new tab</a>
@@ -86,7 +87,8 @@ export default function WindowsTabs() {
             title: "Approve in a popup",
             description: "Open the popup and press Approve. The popup sends a code back to this page and closes itself.",
             positive: ["After Approve, the code appears here and the popup is gone."],
-            negative: ["Your driver must not keep using the closed window."]
+            negative: ["Your driver must not keep using the closed window."],
+            hint: "After Approve the popup closes itself. Switch back to the main window straight away; any command on the closed window throws."
           }
         ]} /></div>
         <Button id="open-popup" data-testid="open-popup" onClick={() => window.open('#/popup/approve', 'approve', POPUP_FEATURES)}>Open approval popup</Button>
@@ -101,7 +103,8 @@ export default function WindowsTabs() {
             title: "Wait for a slow popup",
             description: "The popup opens at once but its Confirm button appears after 1 to 3 seconds.",
             positive: ["Waiting for the button and clicking Confirm shows success here."],
-            negative: ["A fixed sleep is either too short or wastes time."]
+            negative: ["A fixed sleep is either too short or wastes time."],
+            hint: "Wait for the Confirm button to be clickable inside the popup instead of sleeping for a fixed time."
           }
         ]} /></div>
         <Button id="open-delayed" data-testid="open-delayed" onClick={() => window.open('#/popup/delayed', 'delayed', POPUP_FEATURES)}>Open slow popup</Button>
@@ -115,7 +118,8 @@ export default function WindowsTabs() {
             title: "Find a window by its title",
             description: "Open all three windows, switch to the one titled 'Window B' and press its button.",
             positive: ["Pressing the button in Window B shows success."],
-            negative: ["The button is disabled in Window A and Window C."]
+            negative: ["The button is disabled in Window A and Window C."],
+            hint: "Loop over every window handle, switch to it and check the title until it reads 'Window B'."
           }
         ]} /></div>
         <div className="flex flex-wrap gap-3 mb-4">
