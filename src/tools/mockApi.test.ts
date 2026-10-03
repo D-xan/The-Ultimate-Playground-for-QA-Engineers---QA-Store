@@ -52,4 +52,72 @@ describe('mockApi', () => {
     await api.handle({ method: 'GET', path: '/api/delay/60000' });
     expect(waited).toEqual([10_000]);
   });
+
+  const login = async (api: ReturnType<typeof fast>) => {
+    const r = await api.handle({ method: 'POST', path: '/api/auth/login', body: '{"username":"qa","password":"qa123"}' });
+    return (r.body as { token: string }).token;
+  };
+  const auth = (token: string) => ({ authorization: `Bearer ${token}` });
+
+  it('guards the status route against non-numeric and out-of-range codes', async () => {
+    const api = fast();
+    for (const bad of ['abc', '-5', '1e3', '99', '600']) {
+      expect((await api.handle({ method: 'GET', path: `/api/status/${bad}` })).status).toBe(400);
+    }
+    expect((await api.handle({ method: 'GET', path: '/api/status/100' })).status).toBe(100);
+    expect((await api.handle({ method: 'GET', path: '/api/status/599' })).status).toBe(599);
+  });
+  it('PUT replaces a user, 422 on invalid', async () => {
+    const api = fast();
+    const h = auth(await login(api));
+    const ok = await api.handle({ method: 'PUT', path: '/api/users/2', headers: h, body: '{"name":"Bobby","email":"b@x.io"}' });
+    expect(ok.status).toBe(200);
+    expect(ok.body).toMatchObject({ id: 2, name: 'Bobby', email: 'b@x.io' });
+    const bad = await api.handle({ method: 'PUT', path: '/api/users/2', headers: h, body: '{"name":"Bobby"}' });
+    expect(bad.status).toBe(422);
+  });
+  it('PATCH updates partially and 404s unknown ids', async () => {
+    const api = fast();
+    const h = auth(await login(api));
+    const ok = await api.handle({ method: 'PATCH', path: '/api/users/1', headers: h, body: '{"name":"Alice J."}' });
+    expect(ok.status).toBe(200);
+    expect(ok.body).toMatchObject({ id: 1, name: 'Alice J.', email: 'alice@example.com' });
+    expect((await api.handle({ method: 'PATCH', path: '/api/users/99', headers: h, body: '{}' })).status).toBe(404);
+  });
+  it('DELETE returns 204 with null body, then the user is gone', async () => {
+    const api = fast();
+    const h = auth(await login(api));
+    const del = await api.handle({ method: 'DELETE', path: '/api/users/3', headers: h });
+    expect(del.status).toBe(204);
+    expect(del.body).toBeNull();
+    expect((await api.handle({ method: 'GET', path: '/api/users/3' })).status).toBe(404);
+  });
+  it('reset restores users, tokens and rate-limit state', async () => {
+    let t = 0;
+    const api = createMockApi({ now: () => t, sleep: async () => {} });
+    const token = await login(api);
+    await api.handle({ method: 'DELETE', path: '/api/users/1', headers: auth(token) });
+    for (let i = 0; i < 5; i++) await api.handle({ method: 'GET', path: '/api/rate-limited' });
+    api.reset();
+    expect((await api.handle({ method: 'GET', path: '/api/users/1' })).status).toBe(200);
+    expect((await api.handle({ method: 'DELETE', path: '/api/users/2', headers: auth(token) })).status).toBe(401);
+    expect((await api.handle({ method: 'GET', path: '/api/rate-limited' })).status).toBe(200);
+  });
+  it('treats a bad token and a missing token as 401', async () => {
+    const api = fast();
+    expect((await api.handle({ method: 'DELETE', path: '/api/users/1', headers: auth('qa-bogus') })).status).toBe(401);
+    expect((await api.handle({ method: 'DELETE', path: '/api/users/1' })).status).toBe(401);
+  });
+  it('returns 400 for invalid JSON on PUT and PATCH with a valid token', async () => {
+    const api = fast();
+    const h = auth(await login(api));
+    expect((await api.handle({ method: 'PUT', path: '/api/users/1', headers: h, body: '{oops' })).status).toBe(400);
+    expect((await api.handle({ method: 'PATCH', path: '/api/users/1', headers: h, body: '{oops' })).status).toBe(400);
+  });
+  it('matches header names case-insensitively', async () => {
+    const api = fast();
+    const token = await login(api);
+    const r = await api.handle({ method: 'DELETE', path: '/api/users/1', headers: { AUTHORIZATION: `Bearer ${token}` } });
+    expect(r.status).toBe(204);
+  });
 });

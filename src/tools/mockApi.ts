@@ -165,7 +165,7 @@ export function createMockApi(opts: { now?: () => number; sleep?: (ms: number) =
 
     if (method === 'GET' && resource === 'status' && arg !== undefined && !extra) {
       const code = /^\d+$/.test(arg) ? Number(arg) : NaN;
-      if (code < 100 || code > 599) return reply(400, { error: 'Status code must be between 100 and 599' });
+      if (!Number.isInteger(code) || code < 100 || code > 599) return reply(400, { error: 'Status code must be between 100 and 599' });
       return reply(code, { status: code });
     }
 

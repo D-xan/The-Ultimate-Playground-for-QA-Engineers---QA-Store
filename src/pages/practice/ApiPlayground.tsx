@@ -1,7 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { HintAccordion } from '@/components/ui/HintAccordion';
-import { ENDPOINTS, createMockApi, type ApiResponse, type HttpMethod } from '@/tools/mockApi';
+import { ENDPOINTS, createMockApi, type ApiResponse, type HttpMethod, type MockApi } from '@/tools/mockApi';
+
+declare global {
+  interface Window { qaMockApi: MockApi }
+}
 
 const METHODS: HttpMethod[] = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
 
@@ -15,7 +19,11 @@ const SAMPLE_BODIES: Record<string, string> = {
 const fieldClass = 'rounded-md border border-slate-300 px-3 text-sm min-w-0 w-full font-mono';
 
 export default function ApiPlayground() {
-  const api = useMemo(() => createMockApi(), []);
+  const [api] = useState(() => createMockApi());
+  useEffect(() => {
+    window.qaMockApi = api;
+    return () => { delete (window as { qaMockApi?: MockApi }).qaMockApi; };
+  }, [api]);
   const [method, setMethod] = useState<HttpMethod>('GET');
   const [path, setPath] = useState('/api/users?page=1&limit=5');
   const [headers, setHeaders] = useState('');
@@ -73,6 +81,9 @@ export default function ApiPlayground() {
         <h1 className="text-3xl font-bold text-slate-900 mb-2">API Playground</h1>
         <p className="text-slate-500">
           Runs in your browser — use it from Playwright with page.evaluate or by driving this UI; external clients like Postman cannot reach it.
+        </p>
+        <p className="text-slate-500 mt-1">
+          Example: <code className="bg-slate-100 rounded px-1 text-xs break-all">await page.evaluate(() =&gt; window.qaMockApi.handle(&#123; method: 'GET', path: '/api/users' &#125;))</code>
         </p>
         <HintAccordion hints={[
           'Selenium: select a method in #api-method, type into #api-path and #api-body, click #api-send, then read #api-status and #api-response.',
