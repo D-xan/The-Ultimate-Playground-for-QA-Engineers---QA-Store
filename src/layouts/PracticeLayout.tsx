@@ -150,7 +150,7 @@ export default function PracticeLayout() {
     const isCurrentCompleted = currentChallengeId ? isPageComplete(progress, currentChallengeId) : false;
 
     return (
-      <div className="flex h-screen bg-slate-100 overflow-hidden relative">
+      <div className="flex flex-col md:flex-row h-screen bg-slate-100 overflow-hidden relative">
         {/* Mobile Top Bar */}
         <div className="md:hidden flex items-center justify-between p-4 bg-white border-b border-border shadow-sm z-20">
           <div className="flex items-center gap-2">
@@ -228,7 +228,7 @@ export default function PracticeLayout() {
         </aside>
   
         {/* Main Content */}
-        <main className="flex-1 flex flex-col overflow-hidden relative">
+        <main className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden relative">
           <FloatingProgress />
           <SelectorLab />
           <div className="flex-1 overflow-y-auto p-8 pt-20 md:pt-8">

@@ -172,7 +172,7 @@ export default function TablesLists() {
         <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">3. Pagination</h2>
         <div className="flex flex-col items-center gap-4">
           <div className="text-sm text-slate-500" id="pagination-info">Showing page {currentPage} of {totalPages}</div>
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2">
             <Button variant="outline" disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)} id="pagination-prev">Previous</Button>
             
             {[1, 2, 3].map(page => (

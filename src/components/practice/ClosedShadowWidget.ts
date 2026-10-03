@@ -11,8 +11,8 @@ export function defineClosedShadowWidget() {
       const root = this.attachShadow({ mode: 'closed' });
       root.innerHTML = `
         <style>
-          :host { display: inline-flex; gap: 8px; align-items: center; }
-          input { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; }
+          :host { display: inline-flex; flex-wrap: wrap; max-width: 100%; gap: 8px; align-items: center; }
+          input { min-width: 0; max-width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; }
           button { padding: 8px 16px; border: 0; border-radius: 8px; background: #4f46e5; color: #fff; font: inherit; cursor: pointer; }
         </style>
         <input type="text" aria-label="Closed shadow input" placeholder="Type here" />

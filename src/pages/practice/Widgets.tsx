@@ -87,7 +87,7 @@ export default function Widgets() {
           }
         ]} /></div>
         <p className="mb-4 text-slate-600">Your code is <strong id="otp-code">{OTP_CODE}</strong></p>
-        <div className="flex gap-2 mb-4">
+        <div className="flex flex-wrap gap-2 mb-4">
           {digits.map((d, i) => (
             <input
               key={i}

@@ -121,7 +121,7 @@ export default function ApiInterception() {
       {/* Postman-like UI */}
       <div className="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden flex flex-col h-[700px]">
         {/* Top URL Bar */}
-        <div className="p-4 border-b border-slate-200 bg-slate-50 flex gap-2">
+        <div className="p-4 border-b border-slate-200 bg-slate-50 flex flex-wrap gap-2">
           <select 
             className="px-4 py-2 bg-slate-100 border border-slate-300 rounded-md font-semibold text-slate-700 outline-none focus:ring-2 focus:ring-primary/50 w-32"
             value={method}
@@ -137,7 +137,7 @@ export default function ApiInterception() {
           
           <input 
             type="text" 
-            className="flex-1 px-4 py-2 border border-slate-300 rounded-md font-mono text-sm outline-none focus:ring-2 focus:ring-primary/50"
+            className="flex-1 min-w-0 basis-40 px-4 py-2 border border-slate-300 rounded-md font-mono text-sm outline-none focus:ring-2 focus:ring-primary/50"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="Enter request URL"
