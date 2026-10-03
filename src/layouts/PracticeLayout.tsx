@@ -6,6 +6,7 @@ import { useProgressStore } from '../store/useProgressStore';
 import { isPageComplete, pageDone, pageTotal } from '../store/progressLogic';
 import { challenges, practiceChallenges, tools, challengePath } from '@/data/challenges';
 import { CheckCircle2 } from 'lucide-react';
+import SelectorLab from '@/components/practice/SelectorLab';
 
 
 const FloatingProgress = () => {
@@ -229,6 +230,7 @@ export default function PracticeLayout() {
         {/* Main Content */}
         <main className="flex-1 flex flex-col overflow-hidden relative">
           <FloatingProgress />
+          <SelectorLab />
           <div className="flex-1 overflow-y-auto p-8 pt-20 md:pt-8">
             <div className="max-w-6xl mx-auto pb-24">
               <Outlet />

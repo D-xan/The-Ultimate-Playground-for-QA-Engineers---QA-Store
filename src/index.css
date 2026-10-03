@@ -98,3 +98,8 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+[data-selector-lab-match] {
+  outline: 2px solid #f59e0b !important;
+  outline-offset: 2px;
+}
