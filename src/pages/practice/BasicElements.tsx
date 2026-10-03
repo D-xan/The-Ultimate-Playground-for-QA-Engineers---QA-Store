@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TaskQuestions } from '@/components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { HintAccordion } from '@/components/ui/HintAccordion';
 
 export default function BasicElements() {
   const [loading, setLoading] = useState(false);
@@ -67,7 +68,12 @@ export default function BasicElements() {
       <div>
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Basic Elements</h1>
         <p className="text-slate-500">Practice interacting with standard HTML inputs, buttons, checkboxes, and sliders.</p>
-        
+        <HintAccordion hints={[
+          "<strong>Selenium:</strong> Use <code>driver.findElement(By.id('text-input')).sendKeys('test')</code> to type into the input.",
+          "<strong>Playwright:</strong> Use <code>await page.fill('#text-input', 'test')</code> or <code>await page.locator('#text-input').fill('test')</code>.",
+          "<strong>Cypress:</strong> Use <code>cy.get('#text-input').type('test')</code> to input text.",
+          "Checkboxes can be toggled in Cypress using <code>cy.get('#checkbox-1').check()</code>."
+        ]} />
       </div>
 
       {/* Inputs */}

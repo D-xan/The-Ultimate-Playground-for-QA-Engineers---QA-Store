@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { ClipboardList, Info, CheckCircle2, XCircle } from 'lucide-react';
+import { ClipboardList, Info, CheckCircle2, XCircle, CheckSquare, Square } from 'lucide-react';
+import { useProgressStore } from '../../store/useProgressStore';
+import { useLocation } from 'react-router-dom';
 
 export interface TaskDetail {
   title: string;
@@ -14,6 +16,16 @@ interface TaskQuestionsProps {
 
 export const TaskQuestions: React.FC<TaskQuestionsProps> = ({ tasks }) => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  
+  const location = useLocation();
+  const challengeId = location.pathname.split('/').pop() || '';
+  const { isTaskCompleted, toggleTask, setTotalTasks } = useProgressStore();
+
+  React.useEffect(() => {
+    if (challengeId) {
+      setTotalTasks(challengeId, tasks.length);
+    }
+  }, [challengeId, tasks.length, setTotalTasks]);
 
   const toggleExpand = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -23,28 +35,40 @@ export const TaskQuestions: React.FC<TaskQuestionsProps> = ({ tasks }) => {
     <div className="bg-primary/5 border border-primary/20 rounded-xl p-5 mb-8 mt-6 shadow-sm">
       <h3 className="font-bold text-primary flex items-center gap-2 mb-4">
         <ClipboardList className="w-5 h-5" />
-        Challenge Tasks
+        Challenge Tasks ({tasks.length})
       </h3>
       <ul className="space-y-3">
-        {tasks.map((task, index) => (
+        {tasks.map((task, index) => {
+          const isCompleted = isTaskCompleted(challengeId, index);
+          
+          return (
           <li key={index} className="flex flex-col border border-border rounded-lg shadow-sm overflow-hidden bg-card text-card-foreground">
-            <button 
-              onClick={() => toggleExpand(index)}
-              className="w-full flex items-center justify-between p-4 hover:bg-muted/10 transition-colors text-left cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-            >
-              <div className="flex items-center gap-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                  {index + 1}
-                </span>
-                <span className="font-medium">{task.title}</span>
-              </div>
-              <svg 
-                className={`w-5 h-5 opacity-50 transition-transform duration-200 ${expandedIndex === index ? 'rotate-180' : ''}`} 
-                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            <div className="w-full flex items-center p-2 hover:bg-muted/10 transition-colors">
+              <button 
+                onClick={() => toggleTask(challengeId, index)}
+                className="p-2 text-slate-400 hover:text-primary transition-colors focus:outline-none"
+                title="Mark task as complete"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+                {isCompleted ? <CheckSquare className="w-5 h-5 text-green-500" /> : <Square className="w-5 h-5" />}
+              </button>
+              <button 
+                onClick={() => toggleExpand(index)}
+                className="flex-1 flex items-center justify-between p-2 text-left cursor-pointer outline-none"
+              >
+                <div className="flex items-center gap-3">
+                  <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${isCompleted ? 'bg-green-100 text-green-600' : 'bg-primary/10 text-primary'}`}>
+                    {index + 1}
+                  </span>
+                  <span className={`font-medium ${isCompleted ? 'text-slate-500 line-through' : ''}`}>{task.title}</span>
+                </div>
+                <svg 
+                  className={`w-5 h-5 opacity-50 transition-transform duration-200 ${expandedIndex === index ? 'rotate-180' : ''}`} 
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
             
             {expandedIndex === index && (
               <div className="p-4 border-t border-border text-sm animate-in slide-in-from-top-2 fade-in duration-200 bg-muted/30">
@@ -75,7 +99,8 @@ export const TaskQuestions: React.FC<TaskQuestionsProps> = ({ tasks }) => {
               </div>
             )}
           </li>
-        ))}
+          );
+        })}
       </ul>
     </div>
   );

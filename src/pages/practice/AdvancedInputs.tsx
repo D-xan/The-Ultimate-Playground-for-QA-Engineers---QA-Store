@@ -3,6 +3,8 @@ import { TaskQuestions } from '@/components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import countries from '@/data/countries.json';
+import { HintAccordion } from '@/components/ui/HintAccordion';
+
 export default function AdvancedInputs() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -17,7 +19,11 @@ export default function AdvancedInputs() {
       <div>
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Advanced Inputs</h1>
         <p className="text-slate-500">Practice interacting with dropdowns, file uploads, date pickers, and more complex inputs.</p>
-        
+        <HintAccordion hints={[
+          "<strong>Date Pickers:</strong> In Playwright, use <code>await page.fill('input[type=\"date\"]', '2025-01-01')</code>.",
+          "<strong>File Uploads:</strong> In Cypress, use <code>cy.get('input[type=\"file\"]').selectFile('path/to/file.png')</code>.",
+          "<strong>Custom Dropdowns:</strong> You often need to click the dropdown container, then wait for the list items to appear, and then click the specific list item."
+        ]} />
       </div>
 
       {/* Dropdowns */}

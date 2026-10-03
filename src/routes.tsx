@@ -23,6 +23,7 @@ const AdminDashboard = React.lazy(() => import('./pages/admin/Dashboard'));
 const AdminProducts = React.lazy(() => import('./pages/admin/Products'));
 
 // Practice Pages
+const PracticeDashboard = React.lazy(() => import('./pages/practice/PracticeDashboard'));
 const BasicElements = React.lazy(() => import('./pages/practice/BasicElements'));
 const AdvancedInputs = React.lazy(() => import('./pages/practice/AdvancedInputs'));
 const TablesLists = React.lazy(() => import('./pages/practice/TablesLists'));
@@ -33,6 +34,7 @@ const DynamicWaiting = React.lazy(() => import('./pages/practice/DynamicWaiting'
 const PaginationChallenge = React.lazy(() => import('./pages/practice/PaginationChallenge'));
 const LazyLoadingChallenge = React.lazy(() => import('./pages/practice/LazyLoadingChallenge'));
 const ApiInterception = React.lazy(() => import('./pages/practice/ApiInterception'));
+const ProgressBarChallenge = React.lazy(() => import('./pages/practice/ProgressBarChallenge'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 // Role based protection
@@ -53,7 +55,7 @@ export const AppRoutes = () => {
           
           {/* Practice Portal */}
           <Route path="/practice" element={<PracticeLayout />}>
-            <Route index element={<Navigate to="basic" replace />} />
+            <Route index element={<PracticeDashboard />} />
             <Route path="basic" element={<BasicElements />} />
             <Route path="advanced" element={<AdvancedInputs />} />
             <Route path="tables" element={<TablesLists />} />
@@ -64,6 +66,7 @@ export const AppRoutes = () => {
             <Route path="pagination-test" element={<PaginationChallenge />} />
             <Route path="lazy-load" element={<LazyLoadingChallenge />} />
             <Route path="api-interception" element={<ApiInterception />} />
+            <Route path="progress-bar" element={<ProgressBarChallenge />} />
           </Route>
 
           {/* Customer Application */}
