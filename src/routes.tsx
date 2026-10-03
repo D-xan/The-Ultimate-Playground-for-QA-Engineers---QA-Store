@@ -48,6 +48,7 @@ const BugHunt = React.lazy(() => import('./pages/practice/BugHunt'));
 const WindowsTabs = React.lazy(() => import('./pages/practice/WindowsTabs'));
 const PopupPage = React.lazy(() => import('./pages/practice/PopupPage'));
 const SortableLists = React.lazy(() => import('./pages/practice/SortableLists'));
+const VirtualTable = React.lazy(() => import('./pages/practice/VirtualTable'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 // Role based protection
@@ -91,6 +92,7 @@ export const AppRoutes = () => {
             <Route path="bug-hunt" element={<BugHunt />} />
             <Route path="windows" element={<WindowsTabs />} />
             <Route path="sortable" element={<SortableLists />} />
+            <Route path="virtual-table" element={<VirtualTable />} />
             <Route path="data-generator" element={<DataGenerator />} />
             <Route path="api-playground" element={<ApiPlayground />} />
             <Route path="certificate" element={<Certificate />} />

@@ -6,6 +6,7 @@ import widgetsSpec from '../../../e2e/widgets.spec.ts?raw';
 import progressBarSpec from '../../../e2e/progress-bar.spec.ts?raw';
 import windowsSpec from '../../../e2e/windows.spec.ts?raw';
 import sortableSpec from '../../../e2e/sortable.spec.ts?raw';
+import virtualTableSpec from '../../../e2e/virtual-table.spec.ts?raw';
 import { clickTraps } from './click-traps';
 import { locatorTraps } from './locator-traps';
 import { deepDom } from './deep-dom';
@@ -14,6 +15,7 @@ import { widgets } from './widgets';
 import { progressBar } from './progress-bar';
 import { windows } from './windows';
 import { sortable } from './sortable';
+import { virtualTable } from './virtual-table';
 
 export interface Solution {
   playwright: string;
@@ -31,4 +33,5 @@ export const solutions: Record<string, Solution> = {
   'progress-bar': { playwright: progressBarSpec, ...progressBar },
   windows: { playwright: windowsSpec, ...windows },
   sortable: { playwright: sortableSpec, ...sortable },
+  'virtual-table': { playwright: virtualTableSpec, ...virtualTable },
 };
