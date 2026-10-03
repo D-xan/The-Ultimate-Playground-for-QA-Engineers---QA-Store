@@ -17,4 +17,10 @@ describe('interview questions', () => {
     expect(topicSlug('API Testing')).toBe('api-testing');
     expect(topicSlug('Framework Design')).toBe('framework-design');
   });
+  it('keeps the corrected technical details', () => {
+    const a = (id: string) => questions.find((q) => q.id === id)!.a;
+    expect(a('pw-1')).toMatch(/click[^.]*enabled/i);
+    expect(a('pw-1')).toMatch(/editable/i);
+    expect(a('cy-12')).toMatch(/subdomain|origin \(scheme, host or port\)/i);
+  });
 });

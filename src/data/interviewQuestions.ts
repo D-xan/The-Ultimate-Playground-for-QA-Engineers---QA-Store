@@ -62,29 +62,29 @@ export const questions: Question[] = [
   {
     id: 'sel-10', topic: 'Selenium', level: 'Senior',
     q: 'How does Selenium Grid 4 run tests in parallel?',
-    a: 'Grid 4 has a Router, Distributor, Session Map, Session Queue and Nodes, and can run as a standalone process, hub and nodes, or fully distributed. Tests create a RemoteWebDriver pointing at the Router URL and the Distributor assigns a free Node slot that matches the requested capabilities. Parallelism comes from your test runner starting several threads, each with its own driver instance, so the driver must never be shared in a static field.',
+    a: 'Grid 4 is made of a Router, Distributor, Session Map, New Session Queue, Event Bus and Nodes, and can run as standalone, hub and nodes, or fully distributed. Tests create a RemoteWebDriver pointing at the Router URL. The Router puts the request on the New Session Queue, and the Distributor takes it from the queue and assigns it to a Node with a free slot that matches the requested capabilities.',
   },
   {
     id: 'sel-11', topic: 'Selenium', level: 'Mid',
     q: 'What is the Actions class used for?',
-    a: 'Actions builds composite input sequences that a plain click or sendKeys cannot, such as hover (moveToElement), drag and drop, double click, context click and keyboard chords. You chain the steps and finish with perform(). In Selenium 4 the actions are sent through the W3C Actions endpoint, which is more consistent across browsers than the old interaction API.',
+    a: 'Actions builds composite input sequences that a plain click or sendKeys cannot, such as hover (moveToElement), drag and drop, double click, context click and keyboard chords. You chain the steps and finish with perform(). It sends them through the W3C Actions endpoint, and Selenium 4 made W3C the only protocol, which makes this consistent across browsers.',
   },
   {
     id: 'sel-12', topic: 'Selenium', level: 'Senior',
     q: 'What new capabilities did Selenium 4 add over Selenium 3?',
-    a: 'It is fully W3C WebDriver compliant, adds relative locators (above, below, toLeftOf, near), newWindow for tabs, element screenshots, and a redesigned Grid. It also introduces Chrome DevTools Protocol access for network and console features, and WebDriver BiDi support for event-driven features such as log and network listening. These make some tasks possible without a proxy, though CDP is browser specific.',
+    a: 'Selenium 4 makes W3C WebDriver the only protocol, adds relative locators (above, below, toLeftOf, near), newWindow for tabs, and a redesigned Grid. It also introduces Chrome DevTools Protocol access for network and console features, and WebDriver BiDi support for event-driven features such as log and network listening. CDP is browser specific, so prefer BiDi where it is available.',
   },
 
   // ---------- Playwright ----------
   {
     id: 'pw-1', topic: 'Playwright', level: 'Junior',
     q: 'What is auto-waiting in Playwright?',
-    a: 'Before an action such as click or fill, Playwright runs actionability checks automatically: the element must be attached, visible, stable, able to receive events and, for fill, enabled and editable. It retries until those pass or the timeout expires, so you rarely need explicit sleeps. This is why locators are lazy and re-resolved on every action.',
+    a: 'Before an action Playwright runs actionability checks and retries until they pass or the timeout expires. The checks depend on the action: click waits for the element to be visible, stable, able to receive events and enabled, while fill waits for it to be visible, enabled and editable. Locators are lazy by design, they only resolve when used, and that is what lets every action re-resolve the element and retry, so you rarely need explicit sleeps.',
   },
   {
     id: 'pw-2', topic: 'Playwright', level: 'Junior',
     q: 'Which locators does Playwright recommend, and in what order?',
-    a: 'Prefer user-facing locators: getByRole, getByLabel, getByPlaceholder, getByText and getByTestId, because they mirror how users and assistive technology find things. getByRole also nudges you to accessible markup. Fall back to CSS or XPath only when nothing semantic exists. You can chain and filter locators, for example page.getByRole("listitem").filter({ hasText: "Pro" }).',
+    a: 'Prefer user-facing locators, in roughly this order: getByRole, getByText, getByLabel, getByPlaceholder, getByAltText, getByTitle and then getByTestId. They mirror how users and assistive technology find things, and getByRole nudges you towards accessible markup. Use CSS or XPath only as a last resort. You can chain and filter locators, for example page.getByRole("listitem").filter({ hasText: "Pro" }).',
   },
   {
     id: 'pw-3', topic: 'Playwright', level: 'Mid',
@@ -99,12 +99,12 @@ export const questions: Question[] = [
   {
     id: 'pw-5', topic: 'Playwright', level: 'Mid',
     q: 'How do you mock or modify network requests?',
-    a: 'Use page.route(urlPattern, handler) and then call route.fulfill() with a stub response, route.continue() with overrides, or route.abort() to simulate failures. You can also fetch the real response with route.fetch() and alter it before fulfilling. Register routes before the navigation that triggers the request, and use page.unroute or context.route for wider scope.',
+    a: 'Use page.route(urlPattern, handler) and then call route.fulfill() with a stub response, route.continue() with overrides, or route.abort() to simulate failures. You can also fetch the real response with route.fetch() and alter it before fulfilling. Register routes before the navigation that triggers the request. context.route applies the handler to every page in the context, and page.unroute removes a handler you no longer want.',
   },
   {
     id: 'pw-6', topic: 'Playwright', level: 'Mid',
     q: 'What is the Playwright trace viewer and when do you turn it on?',
-    a: 'A trace is a zip with a timeline of actions, DOM snapshots before and after each step, network calls, console messages and source. Open it with npx playwright show-trace. A common configuration is trace: "on-first-retry" so CI captures a trace only when a test fails and retries, which keeps artifacts small while giving you what you need to debug.',
+    a: 'A trace is a zip with a timeline of actions, DOM snapshots before and after each step, network calls, console messages and source. Open it with npx playwright show-trace. A common setting is trace: "on-first-retry", which records only when a failed test is retried, so it needs retries greater than zero in the config. That keeps CI artifacts small while giving you a trace for exactly the tests that failed.',
   },
   {
     id: 'pw-7', topic: 'Playwright', level: 'Mid',
@@ -166,7 +166,7 @@ export const questions: Question[] = [
   {
     id: 'cy-6', topic: 'Cypress', level: 'Mid',
     q: 'What is the difference between cy.get() and cy.contains()?',
-    a: 'cy.get(selector) finds elements by CSS selector. cy.contains(text) finds the deepest element containing the given text, and with a selector first, cy.contains(".btn", "Save"), it narrows to a matching element. Contains is handy for visible labels, but it is sensitive to copy changes, so a data-cy attribute is more stable for core flows.',
+    a: 'cy.get(selector) finds elements by CSS selector. cy.contains(text) finds an element containing the given text, usually the deepest one, but it prefers certain higher elements such as input[type=submit], button, a and label when they contain the text. With a selector first, cy.contains(".btn", "Save"), it narrows to a matching element. Contains is handy for visible labels but sensitive to copy changes, so a data-cy attribute is more stable for core flows.',
   },
   {
     id: 'cy-7', topic: 'Cypress', level: 'Mid',
@@ -176,7 +176,7 @@ export const questions: Question[] = [
   {
     id: 'cy-8', topic: 'Cypress', level: 'Senior',
     q: 'How do you log in once and reuse the session in Cypress?',
-    a: 'Use cy.session(id, setupFn) which runs the setup, caches cookies, local storage and session storage under that id, and restores them in later tests. Log in through the API with cy.request inside the setup for speed, and pass a validate function so Cypress re-runs setup if the cached session expires. Cypress clears the page between tests, so the session restore happens at the start of each test.',
+    a: 'Use cy.session(id, setupFn), which runs the setup once, caches cookies, local storage and session storage under that id, and restores them on later calls. Call it where each test needs the login, usually in beforeEach. Log in through the API with cy.request inside the setup for speed, and pass a validate function so Cypress re-runs setup if the cached session expires. Cypress clears the page after cy.session, so the test must still cy.visit the page it wants.',
   },
   {
     id: 'cy-9', topic: 'Cypress', level: 'Mid',
@@ -196,7 +196,7 @@ export const questions: Question[] = [
   {
     id: 'cy-12', topic: 'Cypress', level: 'Senior',
     q: 'How does Cypress handle iframes and why does it need cy.origin?',
-    a: 'Cypress has no built-in frame switching, so you get the iframe body yourself: read the contentDocument body of the iframe element, wrap it with cy.wrap, and then query within it. cy.origin() is a separate feature for visiting a second superdomain in one test, such as an OAuth provider, because the browser same-origin policy would otherwise block Cypress from controlling that page.',
+    a: 'Cypress has no built-in frame switching, so you get the iframe body yourself: read the contentDocument body of the iframe element, wrap it with cy.wrap, and then query within it. cy.origin() is a separate feature. Since Cypress 14 it is required whenever a test navigates to a different origin (scheme, host or port, so even another subdomain), such as an OAuth provider, because the browser same-origin policy would otherwise block Cypress from controlling that page. This is consistent with the cross-origin limitation of the runner.',
   },
 
   // ---------- API Testing ----------
@@ -208,7 +208,7 @@ export const questions: Question[] = [
   {
     id: 'api-2', topic: 'API Testing', level: 'Junior',
     q: 'What is the difference between 401 and 403?',
-    a: '401 Unauthorized means the request has no valid credentials, so the server does not know who you are, and it should come with a WWW-Authenticate header. 403 Forbidden means the server knows who you are but you are not allowed to do this. Testing both for a protected endpoint shows whether authentication and authorisation are enforced separately.',
+    a: '401 Unauthorized means the request has no valid credentials, so the server does not know who you are, and RFC 9110 says the response must include a WWW-Authenticate header. 403 Forbidden means the server knows who you are but you are not allowed to do this. Testing both for a protected endpoint shows whether authentication and authorisation are enforced separately.',
   },
   {
     id: 'api-3', topic: 'API Testing', level: 'Mid',
@@ -257,8 +257,8 @@ export const questions: Question[] = [
   },
   {
     id: 'api-12', topic: 'API Testing', level: 'Senior',
-    q: 'How do you make API tests independent and repeatable?',
-    a: 'Each test creates the data it needs through the API, uses unique values such as a UUID in names, and cleans up in teardown, so tests can run in any order and in parallel. Avoid depending on pre-existing records in a shared environment. For third-party dependencies, use a mock or sandbox so outages and rate limits do not cause failures.',
+    q: 'How do you test an asynchronous endpoint or a webhook?',
+    a: 'An endpoint that returns 202 Accepted does the work later, so assert the 202 and a status URL or job ID, then poll that URL with a bounded timeout until it reports completion, never with a fixed sleep. For webhooks, run a small receiver or a request-capture service in the test and assert on the payload and signature header. Also test retries and duplicate deliveries, since the consumer should handle the same event twice.',
   },
 
   // ---------- Manual & Process ----------
@@ -275,7 +275,7 @@ export const questions: Question[] = [
   {
     id: 'man-3', topic: 'Manual & Process', level: 'Junior',
     q: 'Explain boundary value analysis with an example.',
-    a: 'Defects cluster at the edges of input ranges, so you test at and next to each boundary. For an age field that accepts 18 to 60, test 17, 18, 19, 59, 60 and 61. With two-value BVA you use each boundary and its nearest invalid neighbour. It pairs naturally with equivalence partitioning.',
+    a: 'Defects cluster at the edges of input ranges, so you test at and next to each boundary. For an age field that accepts 18 to 60, three-value BVA tests 17, 18, 19, 59, 60 and 61, the boundary and the values on both sides. Two-value BVA tests only 17, 18, 60 and 61, each boundary and its nearest neighbour in the adjacent partition. It pairs naturally with equivalence partitioning.',
   },
   {
     id: 'man-4', topic: 'Manual & Process', level: 'Junior',
