@@ -36,6 +36,7 @@ const LazyLoadingChallenge = React.lazy(() => import('./pages/practice/LazyLoadi
 const ApiInterception = React.lazy(() => import('./pages/practice/ApiInterception'));
 const ProgressBarChallenge = React.lazy(() => import('./pages/practice/ProgressBarChallenge'));
 const ClickTraps = React.lazy(() => import('./pages/practice/ClickTraps'));
+const LocatorTraps = React.lazy(() => import('./pages/practice/LocatorTraps'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 // Role based protection
@@ -69,6 +70,7 @@ export const AppRoutes = () => {
             <Route path="api-interception" element={<ApiInterception />} />
             <Route path="progress-bar" element={<ProgressBarChallenge />} />
             <Route path="click-traps" element={<ClickTraps />} />
+            <Route path="locator-traps" element={<LocatorTraps />} />
           </Route>
 
           {/* Customer Application */}

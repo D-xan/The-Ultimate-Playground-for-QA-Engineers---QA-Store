@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Type, MousePointer2, List, Mouse, MessageSquare, AppWindow, Activity, Network, MousePointerClick } from 'lucide-react';
+import { Type, MousePointer2, List, Mouse, MessageSquare, AppWindow, Activity, Network, MousePointerClick, ScanSearch } from 'lucide-react';
 
 export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced';
 
@@ -24,6 +24,7 @@ export const challenges: Challenge[] = [
   { id: 'api-interception', label: 'API Interception', desc: 'Mock and modify network requests directly', icon: Network, difficulty: 'Advanced' },
   { id: 'progress-bar', label: 'Progress Bar', desc: 'Test waits on a dynamic progress bar', icon: Activity, difficulty: 'Intermediate' },
   { id: 'click-traps', label: 'Click Traps', desc: 'Covered, moving and delayed elements that break naive clicks', icon: MousePointerClick, difficulty: 'Advanced' },
+  { id: 'locator-traps', label: 'Locator Traps', desc: 'Dynamic IDs, shuffled classes, hidden spaces and shifting layouts', icon: ScanSearch, difficulty: 'Intermediate' },
 ];
 
 export const challengePath = (c: Challenge) => `/practice/${c.id}`;
