@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { SolutionTabs } from '@/components/practice/SolutionTabs';
 import { TaskQuestions } from '@/components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -209,6 +210,8 @@ export default function ClickTraps() {
           <ChallengeResult testId="result-enabled" state={enabledResult} message={enabledMsg} />
         </div>
       </section>
+
+      <SolutionTabs challengeId="click-traps" number={5} />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { SolutionTabs } from '@/components/practice/SolutionTabs';
 import { Star } from 'lucide-react';
 import { TaskQuestions } from '@/components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
@@ -166,6 +167,8 @@ export default function Widgets() {
         </div>
         <p id="rating-value" className="mt-4 text-sm text-slate-600">{rating}/5</p>
       </section>
+
+      <SolutionTabs challengeId="widgets" number={4} />
     </div>
   );
 }

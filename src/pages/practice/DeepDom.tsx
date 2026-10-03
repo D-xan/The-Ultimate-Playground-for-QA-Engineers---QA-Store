@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { SolutionTabs } from '@/components/practice/SolutionTabs';
 import { TaskQuestions } from '@/components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
 import { HintAccordion } from '@/components/ui/HintAccordion';
@@ -163,6 +164,8 @@ export default function DeepDom() {
           <ChallengeResult testId="result-shadow-frame" state={shadowFrameResult} message={shadowFrameResult === 'success' ? 'Clicked the button inside the shadow root' : 'Click the button inside the frame'} />
         </div>
       </section>
+
+      <SolutionTabs challengeId="deep-dom" number={5} />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SolutionTabs } from '@/components/practice/SolutionTabs';
 import { TaskQuestions } from '@/components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
 import { HintAccordion } from '@/components/ui/HintAccordion';
@@ -200,6 +201,8 @@ export default function LocatorTraps() {
           <ChallengeResult testId="result-shifting" state={shiftResult} message={shiftMsg} />
         </div>
       </section>
+
+      <SolutionTabs challengeId="locator-traps" number={5} />
     </div>
   );
 }

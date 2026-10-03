@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { SolutionTabs } from '@/components/practice/SolutionTabs';
 import { TaskQuestions } from '@/components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
 import { HintAccordion } from '@/components/ui/HintAccordion';
@@ -184,6 +185,8 @@ export default function FlakyPage() {
           <span id="async-counter" className="text-2xl font-bold text-slate-900">{counter}</span>
         </div>
       </section>
+
+      <SolutionTabs challengeId="flaky" number={5} />
     </div>
   );
 }

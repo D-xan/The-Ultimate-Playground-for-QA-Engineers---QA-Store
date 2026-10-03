@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { SolutionTabs } from '@/components/practice/SolutionTabs';
 import { TaskQuestions } from '../../components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
 import { ChallengeResult, type ResultState } from '@/components/ui/ChallengeResult';
@@ -73,7 +74,7 @@ export default function ProgressBarChallenge() {
       />
 
       <div className="bg-white rounded-xl border border-border shadow-sm p-8">
-        <h2 className="text-xl font-bold text-slate-900 mb-6">Interactive Progress Bar</h2>
+        <h2 className="text-xl font-bold text-slate-900 mb-6">1. Interactive Progress Bar</h2>
         
         <div className="max-w-md mx-auto space-y-6">
           <div className="bg-slate-100 rounded-full h-6 w-full overflow-hidden relative shadow-inner">
@@ -126,6 +127,8 @@ export default function ProgressBarChallenge() {
           </div>
         </div>
       </div>
+
+      <SolutionTabs challengeId="progress-bar" number={2} />
     </div>
   );
 }
