@@ -8,6 +8,7 @@ import windowsSpec from '../../../e2e/windows.spec.ts?raw';
 import sortableSpec from '../../../e2e/sortable.spec.ts?raw';
 import virtualTableSpec from '../../../e2e/virtual-table.spec.ts?raw';
 import authFlowsSpec from '../../../e2e/auth-flows.spec.ts?raw';
+import canvasSpec from '../../../e2e/canvas.spec.ts?raw';
 import { clickTraps } from './click-traps';
 import { locatorTraps } from './locator-traps';
 import { deepDom } from './deep-dom';
@@ -18,6 +19,7 @@ import { windows } from './windows';
 import { sortable } from './sortable';
 import { virtualTable } from './virtual-table';
 import { authFlows } from './auth-flows';
+import { canvas } from './canvas';
 
 export interface Solution {
   playwright: string;
@@ -37,4 +39,5 @@ export const solutions: Record<string, Solution> = {
   sortable: { playwright: sortableSpec, ...sortable },
   'virtual-table': { playwright: virtualTableSpec, ...virtualTable },
   'auth-flows': { playwright: authFlowsSpec, ...authFlows },
+  canvas: { playwright: canvasSpec, ...canvas },
 };

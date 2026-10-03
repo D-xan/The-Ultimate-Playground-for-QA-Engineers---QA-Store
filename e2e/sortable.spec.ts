@@ -78,3 +78,21 @@ test('reset restores the start order', async ({ page }) => {
   expect(await texts(items)).toEqual(start);
   await expect(page.getByTestId('result-html5')).toHaveAttribute('data-state', 'pending');
 });
+
+test('synthetic pointer events (as Cypress sends them) also sort the hold list', async ({ page }) => {
+  const items = page.getByTestId('hold-item');
+  await items.first().scrollIntoViewIfNeeded();
+  const before = await texts(items);
+  await items.nth(1).evaluate(async (target) => {
+    const source = target.parentElement!.children[0] as HTMLElement;
+    const fire = (el: Element, type: string) => {
+      const r = el.getBoundingClientRect();
+      el.dispatchEvent(new PointerEvent(type, { pointerId: 99, bubbles: true, clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 }));
+    };
+    fire(source, 'pointerdown');
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    for (let i = 0; i < 3; i++) fire(target, 'pointermove');
+    fire(target, 'pointerup');
+  });
+  expect(await texts(items)).toEqual([before[1], before[0], ...before.slice(2)]);
+});

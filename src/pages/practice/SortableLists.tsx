@@ -30,6 +30,11 @@ const sameSet = (a: string[], b: string[]) => a.length === b.length && b.every((
 
 interface HoldDrag { from: number; startX: number; startY: number; active: boolean; over: number; moves: number; timer: number }
 
+/** Keeps pointer events coming while the pointer leaves the element. Synthetic events (Cypress, dispatchEvent) have no active pointer to capture. */
+function capturePointer(e: React.PointerEvent<Element>) {
+  try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* not a real pointer */ }
+}
+
 export default function SortableLists() {
   const [html5, setHtml5] = useState(HTML5_START);
   const [hold, setHold] = useState(HOLD_START);
@@ -54,7 +59,7 @@ export default function SortableLists() {
   };
 
   const onHoldDown = (e: React.PointerEvent<HTMLLIElement>, from: number) => {
-    e.currentTarget.setPointerCapture(e.pointerId);
+    capturePointer(e);
     const state: HoldDrag = { from, startX: e.clientX, startY: e.clientY, active: false, over: from, moves: 0, timer: 0 };
     state.timer = window.setTimeout(() => { state.active = true; setHoldOver(from); }, HOLD_DELAY_MS);
     drag.current = state;

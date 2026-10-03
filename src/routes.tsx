@@ -50,6 +50,7 @@ const PopupPage = React.lazy(() => import('./pages/practice/PopupPage'));
 const SortableLists = React.lazy(() => import('./pages/practice/SortableLists'));
 const VirtualTable = React.lazy(() => import('./pages/practice/VirtualTable'));
 const AuthFlows = React.lazy(() => import('./pages/practice/AuthFlows'));
+const CanvasCharts = React.lazy(() => import('./pages/practice/CanvasCharts'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 // Role based protection
@@ -95,6 +96,7 @@ export const AppRoutes = () => {
             <Route path="sortable" element={<SortableLists />} />
             <Route path="virtual-table" element={<VirtualTable />} />
             <Route path="auth-flows" element={<AuthFlows />} />
+            <Route path="canvas" element={<CanvasCharts />} />
             <Route path="data-generator" element={<DataGenerator />} />
             <Route path="api-playground" element={<ApiPlayground />} />
             <Route path="certificate" element={<Certificate />} />
