@@ -4,12 +4,14 @@ import deepDomSpec from '../../../e2e/deep-dom.spec.ts?raw';
 import flakySpec from '../../../e2e/flaky.spec.ts?raw';
 import widgetsSpec from '../../../e2e/widgets.spec.ts?raw';
 import progressBarSpec from '../../../e2e/progress-bar.spec.ts?raw';
+import windowsSpec from '../../../e2e/windows.spec.ts?raw';
 import { clickTraps } from './click-traps';
 import { locatorTraps } from './locator-traps';
 import { deepDom } from './deep-dom';
 import { flaky } from './flaky';
 import { widgets } from './widgets';
 import { progressBar } from './progress-bar';
+import { windows } from './windows';
 
 export interface Solution {
   playwright: string;
@@ -25,4 +27,5 @@ export const solutions: Record<string, Solution> = {
   flaky: { playwright: flakySpec, ...flaky },
   widgets: { playwright: widgetsSpec, ...widgets },
   'progress-bar': { playwright: progressBarSpec, ...progressBar },
+  windows: { playwright: windowsSpec, ...windows },
 };

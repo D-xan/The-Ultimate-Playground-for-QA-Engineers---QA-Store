@@ -45,6 +45,8 @@ const InterviewKit = React.lazy(() => import('./pages/practice/InterviewKit'));
 const Certificate = React.lazy(() => import('./pages/practice/Certificate'));
 const Widgets = React.lazy(() => import('./pages/practice/Widgets'));
 const BugHunt = React.lazy(() => import('./pages/practice/BugHunt'));
+const WindowsTabs = React.lazy(() => import('./pages/practice/WindowsTabs'));
+const PopupPage = React.lazy(() => import('./pages/practice/PopupPage'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 // Role based protection
@@ -63,6 +65,9 @@ export const AppRoutes = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           
+          {/* Child windows opened by the Windows & Tabs challenge */}
+          <Route path="/popup/:kind" element={<PopupPage />} />
+
           {/* Practice Portal */}
           <Route path="/practice" element={<PracticeLayout />}>
             <Route index element={<PracticeDashboard />} />
@@ -83,6 +88,7 @@ export const AppRoutes = () => {
             <Route path="flaky" element={<FlakyPage />} />
             <Route path="widgets" element={<Widgets />} />
             <Route path="bug-hunt" element={<BugHunt />} />
+            <Route path="windows" element={<WindowsTabs />} />
             <Route path="data-generator" element={<DataGenerator />} />
             <Route path="api-playground" element={<ApiPlayground />} />
             <Route path="certificate" element={<Certificate />} />
