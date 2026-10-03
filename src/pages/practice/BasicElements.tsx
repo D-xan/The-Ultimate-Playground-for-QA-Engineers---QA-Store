@@ -79,7 +79,7 @@ export default function BasicElements() {
       {/* Inputs */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
         <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">1. Input Fields</h2>
-        <div className="mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="mb-4 mt-2"><TaskQuestions groupId="inputs" tasks={[
   {
     "title": "Validate text and password fields",
     "description": "Locate the input fields and trigger their validation errors by typing invalid data. Then, type valid data to clear the errors.",
@@ -147,7 +147,7 @@ export default function BasicElements() {
       {/* Buttons */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
         <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">2. Buttons</h2>
-        <div className="mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="mb-4 mt-2"><TaskQuestions groupId="buttons" tasks={[
   {
     "title": "Click the loading button and wait for it to finish",
     "description": "Click the button that triggers a loading state. Wait until the loading indicator disappears and the button becomes clickable again.",
@@ -187,7 +187,7 @@ export default function BasicElements() {
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">3. Checkboxes</h2>
-        <div className="mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="mb-4 mt-2"><TaskQuestions groupId="checkboxes" tasks={[
   {
     "title": "Check the 'Accept Terms' checkbox",
     "description": "Find the checkbox for accepting terms and conditions and perform a click action to check it.",
@@ -215,7 +215,7 @@ export default function BasicElements() {
 
         <div>
           <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">4. Radio Buttons</h2>
-        <div className="mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="mb-4 mt-2"><TaskQuestions groupId="radios" tasks={[
   {
     "title": "Select a radio button option",
     "description": "Identify the radio button group and click one of the options (e.g., 'Option 2').",
@@ -245,7 +245,7 @@ export default function BasicElements() {
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">7. Sliders</h2>
-        <div className="mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="mb-4 mt-2"><TaskQuestions groupId="sliders" tasks={[
   {
     "title": "Move the slider to 75",
     "description": "Interact with the range slider element. Use automation to set its value to exactly 75.",

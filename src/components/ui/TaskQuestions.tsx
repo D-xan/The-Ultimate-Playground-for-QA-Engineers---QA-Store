@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ClipboardList, Info, CheckCircle2, XCircle, CheckSquare, Square } from 'lucide-react';
 import { useProgressStore } from '../../store/useProgressStore';
+import { taskKey } from '../../store/progressLogic';
 import { useLocation } from 'react-router-dom';
 
 export interface TaskDetail {
@@ -12,20 +13,22 @@ export interface TaskDetail {
 
 interface TaskQuestionsProps {
   tasks: TaskDetail[];
+  /** Distinguishes several task lists on one page. */
+  groupId?: string;
 }
 
-export const TaskQuestions: React.FC<TaskQuestionsProps> = ({ tasks }) => {
+export const TaskQuestions: React.FC<TaskQuestionsProps> = ({ tasks, groupId = 'main' }) => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   
   const location = useLocation();
   const challengeId = location.pathname.split('/').pop() || '';
-  const { isTaskCompleted, toggleTask, setTotalTasks } = useProgressStore();
+  const { completed, toggleTask, registerGroup } = useProgressStore();
 
   React.useEffect(() => {
     if (challengeId) {
-      setTotalTasks(challengeId, tasks.length);
+      registerGroup(challengeId, groupId, tasks.length);
     }
-  }, [challengeId, tasks.length, setTotalTasks]);
+  }, [challengeId, groupId, tasks.length, registerGroup]);
 
   const toggleExpand = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -39,13 +42,15 @@ export const TaskQuestions: React.FC<TaskQuestionsProps> = ({ tasks }) => {
       </h3>
       <ul className="space-y-3">
         {tasks.map((task, index) => {
-          const isCompleted = isTaskCompleted(challengeId, index);
+          const key = taskKey(groupId, index);
+          const isCompleted = (completed[challengeId] ?? []).includes(key);
           
           return (
           <li key={index} className="flex flex-col border border-border rounded-lg shadow-sm overflow-hidden bg-card text-card-foreground">
             <div className="w-full flex items-center p-2 hover:bg-muted/10 transition-colors">
               <button 
-                onClick={() => toggleTask(challengeId, index)}
+                onClick={() => toggleTask(challengeId, key)}
+                data-testid={`task-toggle-${groupId}-${index}`}
                 className="p-2 text-slate-400 hover:text-primary transition-colors focus:outline-none"
                 title="Mark task as complete"
               >

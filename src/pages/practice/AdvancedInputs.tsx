@@ -29,7 +29,7 @@ export default function AdvancedInputs() {
       {/* Dropdowns */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
         <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">5. Dropdowns</h2>
-        <div className="mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="mb-4 mt-2"><TaskQuestions groupId="dropdowns" tasks={[
   {
     "title": "Search for and select 'India' from the searchable dropdown",
     "description": "Type 'Ind' into the searchable dropdown, wait for the suggestions to appear, and select 'India' from the list of 195 countries.",
@@ -92,7 +92,7 @@ export default function AdvancedInputs() {
       {/* Date & Time */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
         <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">6. Date & Time</h2>
-        <div className="mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="mb-4 mt-2"><TaskQuestions groupId="datetime" tasks={[
   {
     "title": "Select a specific date from the date picker",
     "description": "Open the date picker calendar and select a specific target date, or directly input a valid date string.",
@@ -126,7 +126,7 @@ export default function AdvancedInputs() {
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">9. File Uploads</h2>
-        <div className="mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="mb-4 mt-2"><TaskQuestions groupId="uploads" tasks={[
   {
     "title": "Upload a dummy file",
     "description": "Use your automation tool's file upload mechanism to attach a dummy file to the file input.",
@@ -166,7 +166,7 @@ export default function AdvancedInputs() {
       {/* Color & Color Picker */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
         <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">37. Advanced Pickers</h2>
-        <div className="mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="mb-4 mt-2"><TaskQuestions groupId="pickers" tasks={[
   {
     "title": "Pick a custom color from the color picker",
     "description": "Interact with the color input type to set a specific hex color code.",

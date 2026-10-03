@@ -1,17 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useProgressStore } from '../../store/useProgressStore';
+import { isPageComplete } from '../../store/progressLogic';
 import { AppWindow, Activity, Network, CheckCircle2, ArrowRight } from 'lucide-react';
 import { challenges, challengePath } from '@/data/challenges';
 import { Button } from '@/components/ui/Button';
 
 
 export default function PracticeDashboard() {
-  const { completedTasks, totalTasks } = useProgressStore();
+  const progress = useProgressStore();
   
   let fullyCompletedCount = 0;
   challenges.forEach(c => {
-    if (totalTasks[c.id] && completedTasks[c.id]?.length === totalTasks[c.id]) {
+    if (isPageComplete(progress, c.id)) {
       fullyCompletedCount++;
     }
   });
@@ -111,7 +112,7 @@ export default function PracticeDashboard() {
         <h2 className="text-2xl font-bold text-slate-900 mb-6">Interactive Challenges</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {challenges.map((challenge) => {
-            const completed = totalTasks[challenge.id] && completedTasks[challenge.id]?.length === totalTasks[challenge.id];
+            const completed = isPageComplete(progress, challenge.id);
             const difficultyColor = 
               challenge.difficulty === 'Beginner' ? 'bg-emerald-100 text-emerald-700' :
               challenge.difficulty === 'Intermediate' ? 'bg-amber-100 text-amber-700' :

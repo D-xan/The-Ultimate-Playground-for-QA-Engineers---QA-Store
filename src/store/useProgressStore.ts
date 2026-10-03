@@ -1,50 +1,25 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { toggle, registerGroup, type ProgressData } from './progressLogic';
 
-interface ProgressState {
-  completedTasks: Record<string, number[]>; 
-  totalTasks: Record<string, number>;
-  toggleTask: (challengeId: string, taskIndex: number) => void;
-  setTotalTasks: (challengeId: string, total: number) => void;
-  isTaskCompleted: (challengeId: string, taskIndex: number) => boolean;
-  getPageProgress: (challengeId: string) => number[];
+interface ProgressState extends ProgressData {
+  toggleTask: (pageId: string, key: string) => void;
+  registerGroup: (pageId: string, groupId: string, count: number) => void;
   resetProgress: () => void;
 }
 
+// v2 keyed tasks by page only, so its data is ambiguous; drop it.
+try { localStorage.removeItem('qa-playground-progress-v2'); } catch { /* storage unavailable */ }
+
 export const useProgressStore = create<ProgressState>()(
   persist(
-    (set, get) => ({
-      completedTasks: {},
-      totalTasks: {},
-      setTotalTasks: (challengeId, total) => 
-        set((state) => ({
-          totalTasks: { ...state.totalTasks, [challengeId]: total }
-        })),
-      toggleTask: (challengeId: string, taskIndex: number) => 
-        set((state) => {
-          const pageTasks = state.completedTasks[challengeId] || [];
-          const isCompleted = pageTasks.includes(taskIndex);
-          const newTasks = isCompleted 
-            ? pageTasks.filter(i => i !== taskIndex)
-            : [...pageTasks, taskIndex];
-            
-          return {
-            completedTasks: {
-              ...state.completedTasks,
-              [challengeId]: newTasks
-            }
-          };
-        }),
-      isTaskCompleted: (challengeId: string, taskIndex: number) => {
-        return (get().completedTasks[challengeId] || []).includes(taskIndex);
-      },
-      getPageProgress: (challengeId: string) => {
-        return get().completedTasks[challengeId] || [];
-      },
-      resetProgress: () => set({ completedTasks: {} }),
+    (set) => ({
+      completed: {},
+      totals: {},
+      toggleTask: (pageId, key) => set((s) => toggle(s, pageId, key)),
+      registerGroup: (pageId, groupId, count) => set((s) => registerGroup(s, pageId, groupId, count)),
+      resetProgress: () => set({ completed: {} }),
     }),
-    {
-      name: 'qa-playground-progress-v2',
-    }
+    { name: 'qa-playground-progress-v3' }
   )
 );

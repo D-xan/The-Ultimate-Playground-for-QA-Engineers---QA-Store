@@ -49,7 +49,7 @@ export default function PopupsDialogs() {
       {/* JavaScript Dialogs */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
         <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">16. JavaScript Dialogs</h2>
-        <div className="mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="mb-4 mt-2"><TaskQuestions groupId="js-dialogs" tasks={[
   {
     "title": "Click 'Trigger Alert' and accept the native alert",
     "description": "Click the button to open a native browser alert, then instruct your automation tool to switch to the alert and accept (click OK) it.",
@@ -102,7 +102,7 @@ export default function PopupsDialogs() {
       {/* Custom Modals */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
         <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">15. Custom Popups / Modals</h2>
-        <div className="mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="mb-4 mt-2"><TaskQuestions groupId="modals" tasks={[
   {
     "title": "Open the custom modal and click confirm",
     "description": "Click to open the HTML-based custom modal, wait for it to be visible, and click its internal Confirm button.",
@@ -139,7 +139,7 @@ export default function PopupsDialogs() {
       {/* Tooltips */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
         <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">18. Tooltips</h2>
-        <div className="mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="mb-4 mt-2"><TaskQuestions groupId="tooltips" tasks={[
   {
     "title": "Hover the tooltip button and assert the tooltip text",
     "description": "Hover over the designated button, wait for the tooltip to appear, and verify its text content.",

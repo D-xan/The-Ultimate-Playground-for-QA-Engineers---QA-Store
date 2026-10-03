@@ -3,12 +3,13 @@ import { Outlet, NavLink, Link, useLocation, useNavigate } from 'react-router-do
 import { AppWindow, ArrowLeft, Save, ArrowRight, RotateCcw, Trash2, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useProgressStore } from '../store/useProgressStore';
+import { isPageComplete, pageDone, pageTotal } from '../store/progressLogic';
 import { challenges, challengePath } from '@/data/challenges';
 import { CheckCircle2 } from 'lucide-react';
 
 
 const FloatingProgress = () => {
-  const { completedTasks, totalTasks } = useProgressStore();
+  const progress = useProgressStore();
   const location = useLocation();
   const isDashboard = location.pathname === '/practice' || location.pathname === '/practice/';
   
@@ -20,8 +21,7 @@ const FloatingProgress = () => {
     const totalPages = challenges.length;
     let fullyCompletedCount = 0;
     challenges.forEach(link => {
-      const id = link.id;
-      if (id && totalTasks[id] && completedTasks[id]?.length === totalTasks[id]) {
+      if (isPageComplete(progress, link.id)) {
         fullyCompletedCount++;
       }
     });
@@ -30,9 +30,9 @@ const FloatingProgress = () => {
     countStr = `${fullyCompletedCount} of ${totalPages} Pages`;
   } else {
     const challengeId = location.pathname.split('/').pop() || '';
-    const currentTotal = totalTasks[challengeId] || 0;
+    const currentTotal = pageTotal(progress, challengeId);
     if (currentTotal === 0) return null; // TaskQuestions not mounted yet or no tasks
-    const currentCompleted = completedTasks[challengeId]?.length || 0;
+    const currentCompleted = pageDone(progress, challengeId);
     progressPercent = Math.round((currentCompleted / currentTotal) * 100);
     label = "Task Progress";
     countStr = `${currentCompleted} of ${currentTotal} Tasks`;
@@ -61,7 +61,7 @@ export default function PracticeLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { completedTasks, totalTasks } = useProgressStore();
+  const progress = useProgressStore();
 
   const savePageState = useCallback(() => {
     const inputs = document.querySelectorAll('input, select, textarea');
@@ -132,6 +132,7 @@ export default function PracticeLayout() {
   };
 
   const handleResetAll = () => {
+    useProgressStore.getState().resetProgress();
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('qa-state-')) {
         localStorage.removeItem(key);
@@ -144,7 +145,7 @@ export default function PracticeLayout() {
 
     const currentLink = challenges.find(l => challengePath(l) === location.pathname);
     const currentChallengeId = currentLink?.id;
-    const isCurrentCompleted = currentChallengeId && totalTasks[currentChallengeId] ? completedTasks[currentChallengeId]?.length === totalTasks[currentChallengeId] : false;
+    const isCurrentCompleted = currentChallengeId ? isPageComplete(progress, currentChallengeId) : false;
 
     return (
       <div className="flex h-screen bg-slate-100 overflow-hidden relative">
@@ -185,7 +186,7 @@ export default function PracticeLayout() {
           <nav className="flex-1 overflow-y-auto py-4">
             <ul className="space-y-1 px-3">
               {challenges.map((link) => {
-                const completed = link.id && totalTasks[link.id] ? completedTasks[link.id]?.length === totalTasks[link.id] : false;
+                const completed = isPageComplete(progress, link.id);
                 return (
                   <li key={link.id}>
                     <NavLink

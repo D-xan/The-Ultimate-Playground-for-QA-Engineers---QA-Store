@@ -75,7 +75,7 @@ export default function FramesDOM() {
       {/* Iframes */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
         <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">23. Frames (iframe)</h2>
-        <div className="-mx-1 mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="-mx-1 mb-4 mt-2"><TaskQuestions groupId="frames" tasks={[
   {
     "title": "Switch context to the iframe and interact with its button",
     "description": "Tell your automation tool to switch its context into the iframe. Find the button inside and click it.",
@@ -115,7 +115,7 @@ export default function FramesDOM() {
       {/* Shadow DOM */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
         <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">24. Shadow DOM</h2>
-        <div className="mb-4 mt-2"><TaskQuestions tasks={[
+        <div className="mb-4 mt-2"><TaskQuestions groupId="shadow-dom" tasks={[
   {
     "title": "Retrieve text from inside the Shadow DOM component",
     "description": "Access the open shadow root of the web component and retrieve the text content from one of its inner elements.",
