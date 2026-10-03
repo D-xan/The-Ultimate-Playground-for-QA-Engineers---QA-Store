@@ -62,8 +62,11 @@ export default function SelectorLab() {
   }, [query]);
 
   const runRef = useRef<() => void>(() => {});
+  const openRef = useRef(open);
+  openRef.current = open;
 
   const run = useCallback(() => {
+    if (!openRef.current) return;
     const root = document.querySelector('main');
     const ui = uiRef.current;
     if (!root || !debounced.trim()) {
@@ -88,7 +91,7 @@ export default function SelectorLab() {
       collectFrames(root).forEach((f) => {
         if (watched.current.has(f)) return;
         watched.current.add(f);
-        f.addEventListener('load', () => runRef.current());
+        f.addEventListener('load', () => { if (openRef.current) runRef.current(); });
       });
     }
     const top = items.slice(0, 20);
@@ -108,7 +111,7 @@ export default function SelectorLab() {
     let timer: ReturnType<typeof setTimeout> | undefined;
     const observer = new MutationObserver(() => {
       clearTimeout(timer);
-      timer = setTimeout(() => runRef.current(), 150);
+      timer = setTimeout(() => { if (openRef.current) runRef.current(); }, 150);
     });
     if (main) observer.observe(main, { childList: true, subtree: true });
     return () => {

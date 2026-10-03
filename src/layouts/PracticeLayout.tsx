@@ -1,3 +1,4 @@
+import { useChallengeMode } from '@/store/useChallengeMode';
 import React, { useEffect, useCallback, useState } from 'react';
 import { Outlet, NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import { AppWindow, ArrowLeft, Save, ArrowRight, RotateCcw, Trash2, Menu, X } from 'lucide-react';
@@ -69,7 +70,7 @@ export default function PracticeLayout() {
     const state: Record<string, any> = {};
     inputs.forEach((el: Element) => {
       const input = el as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-      if (input.id) {
+      if (input.id && !input.hasAttribute('data-no-persist')) {
         if (input.type === 'checkbox' || input.type === 'radio') {
           state[input.id] = (input as HTMLInputElement).checked;
         } else {
@@ -88,7 +89,7 @@ export default function PracticeLayout() {
         const inputs = document.querySelectorAll('input, select, textarea');
         inputs.forEach((el: Element) => {
           const input = el as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-          if (input.id && state[input.id] !== undefined) {
+          if (input.id && !input.hasAttribute('data-no-persist') && state[input.id] !== undefined) {
             const val = state[input.id];
             if (input.type === 'checkbox' || input.type === 'radio') {
               const proto = window.HTMLInputElement.prototype;
@@ -134,6 +135,7 @@ export default function PracticeLayout() {
 
   const handleResetAll = () => {
     useProgressStore.getState().resetProgress();
+    useChallengeMode.getState().resetBugHunt();
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('qa-state-')) {
         localStorage.removeItem(key);

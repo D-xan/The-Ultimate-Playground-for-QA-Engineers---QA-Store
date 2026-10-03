@@ -34,3 +34,38 @@ test('bug hunt on: subtotal bug appears and can be reported', async ({ page }) =
   await expect(page.getByTestId('result-report')).toHaveAttribute('data-state', 'success');
   await expect(page.locator('#bugs-found')).toHaveText('1 / 6 found');
 });
+
+test('bug hunt banner is visible in the store and can turn the mode off', async ({ page }) => {
+  await page.goto('/#/practice/bug-hunt');
+  await page.locator('#bug-hunt-toggle').check();
+  await page.goto('/#/');
+  await expect(page.getByTestId('bug-hunt-banner')).toBeVisible();
+  await page.locator('#bug-hunt-banner-off').click();
+  await expect(page.getByTestId('bug-hunt-banner')).toHaveCount(0);
+  const { subtotal, unit } = await cartSubtotalWithQty2(page);
+  expect(subtotal).toBeCloseTo(unit * 2, 2);
+});
+
+test('Reset All turns bug hunt off', async ({ page }) => {
+  await page.goto('/#/practice/bug-hunt');
+  await page.locator('#bug-hunt-toggle').check();
+  await page.getByRole('button', { name: 'Reset All' }).click();
+  await page.waitForLoadState('load');
+  await page.goto('/#/');
+  await expect(page.getByTestId('bug-hunt-banner')).toHaveCount(0);
+  await expect(page.getByTestId('bug-hunt-banner')).toHaveCount(0);
+  await page.goto('/#/practice/bug-hunt');
+  await expect(page.locator('#bug-hunt-toggle')).not.toBeChecked();
+});
+
+test('saved page state does not desync the bug hunt toggle', async ({ page }) => {
+  await page.goto('/#/practice/bug-hunt');
+  await page.locator('#bug-hunt-toggle').check();
+  page.once('dialog', (d) => d.accept());
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
+  await page.locator('#bug-hunt-toggle').uncheck();
+  await page.reload();
+  await page.waitForTimeout(500);
+  await expect(page.locator('#bug-hunt-toggle')).not.toBeChecked();
+  await expect(page.getByText('Bug Hunt mode off')).toBeVisible();
+});

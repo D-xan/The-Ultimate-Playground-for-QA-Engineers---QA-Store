@@ -24,3 +24,10 @@ test('rejects duplicate field names', async ({ page }) => {
   await page.locator('#generate').click();
   await expect(page.locator('#generator-error')).toBeVisible();
 });
+
+test('rejects reserved field names', async ({ page }) => {
+  await page.getByTestId('field-name').nth(1).fill('__proto__');
+  await page.locator('#generate').click();
+  await expect(page.locator('#generator-error')).toBeVisible();
+  await expect(page.locator('#generator-error')).toContainText('__proto__');
+});

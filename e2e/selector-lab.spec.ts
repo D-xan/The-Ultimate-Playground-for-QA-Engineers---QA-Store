@@ -101,3 +101,27 @@ test('route change leaves no stale highlights', async ({ page }) => {
   await expect(page.locator('[data-selector-lab-match]:not(button)')).toHaveCount(0);
   await expect(page.locator('#selector-lab-toggle')).not.toHaveAttribute('data-selector-lab-match', '');
 });
+
+test('closing the lab removes highlights even when a frame reloads afterwards', async ({ page }) => {
+  await page.goto('/#/practice/deep-dom');
+  await page.locator('#selector-lab-toggle').click();
+  await page.locator('#selector-input').fill('button');
+  await expect(page.locator('#selector-count')).not.toHaveText('0 matches');
+  await page.locator('#selector-lab-toggle').click();
+  await expect(page.getByTestId('selector-lab')).toHaveCount(0);
+  await page.evaluate(() => {
+    const f = document.querySelector<HTMLIFrameElement>('#countdown-frame')!;
+    f.srcdoc = '<button id="again">again</button>';
+  });
+  await page.waitForTimeout(800);
+  const leaked = await page.evaluate(() => {
+    const sel = '[data-selector-lab-match]';
+    let n = document.querySelectorAll(sel).length;
+    const walk = (doc: Document) => doc.querySelectorAll('iframe').forEach((f) => {
+      try { const d = f.contentDocument; if (d) { n += d.querySelectorAll(sel).length; walk(d); } } catch { /* cross-origin */ }
+    });
+    walk(document);
+    return n;
+  });
+  expect(leaked).toBe(0);
+});

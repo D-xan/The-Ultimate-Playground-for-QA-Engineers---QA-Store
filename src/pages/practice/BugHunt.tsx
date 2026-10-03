@@ -87,6 +87,7 @@ export default function BugHunt() {
             <input
               type="checkbox"
               id="bug-hunt-toggle"
+              data-no-persist
               className="h-4 w-4 accent-primary"
               checked={bugHunt}
               onChange={(e) => updateSettings({ bugHunt: e.target.checked })}

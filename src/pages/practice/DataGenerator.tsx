@@ -3,7 +3,7 @@ import { Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { HintAccordion } from '@/components/ui/HintAccordion';
 import {
-  FIELD_TYPES, MAX_ROWS, generateRows, toCSV, toJSON, toSQL,
+  FIELD_TYPES, MAX_ROWS, generateRows, toCSV, toJSON, toSQL, RESERVED_FIELD_NAMES,
   type FieldSpec, type FieldType, type Row,
 } from '@/tools/dataGenerator';
 
@@ -26,6 +26,7 @@ export default function DataGenerator() {
   const [table, setTable] = useState('users');
   const [error, setError] = useState('');
   const [rows, setRows] = useState<Row[] | null>(null);
+  const [columns, setColumns] = useState<string[]>([]);
   const [output, setOutput] = useState('');
   const [outputFormat, setOutputFormat] = useState<Format>('csv');
   const [copied, setCopied] = useState(false);
@@ -37,6 +38,8 @@ export default function DataGenerator() {
     const names = fields.map(f => f.name.trim());
     if (fields.length === 0) return setError('Add at least one field.');
     if (names.some(n => n === '')) return setError('Every field needs a name.');
+    const reserved = names.find(n => RESERVED_FIELD_NAMES.includes(n));
+    if (reserved) return setError(`Field name "${reserved}" is not allowed.`);
     if (new Set(names).size !== names.length) return setError('Field names must be unique.');
     if (format === 'sql' && table.trim() === '') return setError('Table name is required for SQL.');
     setError('');
@@ -44,7 +47,8 @@ export default function DataGenerator() {
     const seedNum = seed.trim() === '' || Number.isNaN(Number(seed)) ? undefined : Number(seed);
     const generated = generateRows(fields.map((f, i) => ({ ...f, name: names[i] })), count, seedNum);
     setRows(generated);
-    setOutput(format === 'csv' ? toCSV(generated) : format === 'json' ? toJSON(generated) : toSQL(generated, table.trim()));
+    setColumns(names);
+    setOutput(format === 'csv' ? toCSV(generated, names) : format === 'json' ? toJSON(generated) : toSQL(generated, table.trim(), names));
     setOutputFormat(format);
   };
 
@@ -70,7 +74,6 @@ export default function DataGenerator() {
   };
 
   const preview = rows ? rows.slice(0, 10) : [];
-  const columns = rows && rows.length > 0 ? Object.keys(rows[0]) : [];
 
   return (
     <div className="space-y-12 pb-12">

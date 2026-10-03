@@ -6,6 +6,8 @@ import { HintAccordion } from '@/components/ui/HintAccordion';
 import { ChallengeResult, type ResultState } from '@/components/ui/ChallengeResult';
 import { defineClosedShadowWidget, CLOSED_SHADOW_TAG } from '@/components/practice/ClosedShadowWidget';
 
+defineClosedShadowWidget();
+
 const escapeAttr = (html: string) => html.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 
 const wrap = (body: string) =>
@@ -68,7 +70,6 @@ export default function DeepDom() {
   }, []);
 
   useEffect(() => {
-    defineClosedShadowWidget();
     const host = widgetRef.current;
     if (!host) return;
     const onSubmit = (event: Event) => {

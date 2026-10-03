@@ -1,11 +1,23 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
+import { useChallengeMode } from '@/store/useChallengeMode';
 import { CustomerNavbar } from '@/components/customer/CustomerNavbar';
 
 export default function CustomerLayout() {
+  const bugHunt = useChallengeMode(s => s.bugHunt);
+  const updateSettings = useChallengeMode(s => s.updateSettings);
   return (
     <div className="flex min-h-screen flex-col bg-slate-100 font-sans">
       <CustomerNavbar />
+      {bugHunt && (
+        <div data-testid="bug-hunt-banner" role="status" className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-amber-300 bg-amber-100 px-4 py-2 text-sm font-medium text-amber-900">
+          <span className="min-w-0 flex-1 basis-60">Bug Hunt mode is on — this store has planted defects.</span>
+          <Link to="/practice/bug-hunt" className="underline hover:no-underline">Open Bug Hunt</Link>
+          <button id="bug-hunt-banner-off" type="button" onClick={() => updateSettings({ bugHunt: false })} className="rounded-md border border-amber-400 bg-white px-3 py-1 text-amber-900 hover:bg-amber-50">
+            Turn off
+          </button>
+        </div>
+      )}
       
       <main className="flex-1">
         <Outlet />

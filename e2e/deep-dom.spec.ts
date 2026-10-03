@@ -29,3 +29,21 @@ test('open shadow DOM inside an iframe', async ({ page }) => {
   await expect(frame.locator('#shadow-frame-status')).toHaveText('Clicked inside shadow in frame');
   await expect(page.getByTestId('result-shadow-frame')).toHaveAttribute('data-state', 'success');
 });
+
+test('closed shadow widget is defined as soon as the page module loads', async ({ page }) => {
+  // record, in the first mutation callback after the element is inserted, whether it was already defined
+  await page.addInitScript(() => {
+    const w = window as unknown as { __definedOnInsert?: boolean };
+    new MutationObserver((_m, obs) => {
+      if (document.querySelector('closed-shadow-widget')) {
+        w.__definedOnInsert = customElements.get('closed-shadow-widget') !== undefined;
+        obs.disconnect();
+      }
+    }).observe(document, { childList: true, subtree: true });
+  });
+  await page.goto('about:blank');
+  await page.goto('/#/practice/deep-dom');
+  await page.locator('closed-shadow-widget').waitFor({ state: 'attached' });
+  expect(await page.evaluate(() => customElements.get('closed-shadow-widget') !== undefined)).toBe(true);
+  expect(await page.evaluate(() => (window as unknown as { __definedOnInsert?: boolean }).__definedOnInsert)).toBe(true);
+});

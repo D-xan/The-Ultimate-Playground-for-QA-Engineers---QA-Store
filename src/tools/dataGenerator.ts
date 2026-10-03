@@ -31,6 +31,7 @@ export const FIELD_TYPES: { value: FieldType; label: string }[] = [
 export interface FieldSpec { name: string; type: FieldType }
 export type Row = Record<string, string | number | boolean>;
 export const MAX_ROWS = 100_000;
+export const RESERVED_FIELD_NAMES = ['__proto__', 'constructor', 'prototype'];
 
 const generators: Record<FieldType, () => string | number | boolean> = {
   fullName: () => faker.person.fullName(),
@@ -58,6 +59,9 @@ const generators: Record<FieldType, () => string | number | boolean> = {
 export function generateRows(fields: FieldSpec[], count: number, seed?: number): Row[] {
   const n = Math.min(MAX_ROWS, Math.max(1, Math.floor(Number.isFinite(count) ? count : 1)));
   faker.seed(seed !== undefined ? seed : Math.floor(Math.random() * 2 ** 31));
+  for (const f of fields) {
+    if (RESERVED_FIELD_NAMES.includes(f.name)) throw new Error(`Field name "${f.name}" is not allowed.`);
+  }
   const rows: Row[] = [];
   for (let i = 0; i < n; i++) {
     const row: Row = {};
@@ -72,9 +76,9 @@ const csvCell = (v: string | number | boolean) => {
   return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 };
 
-export function toCSV(rows: Row[]): string {
+export function toCSV(rows: Row[], columns: string[]): string {
   if (rows.length === 0) return '';
-  const keys = Object.keys(rows[0]);
+  const keys = columns;
   return [keys.map(csvCell).join(','), ...rows.map(r => keys.map(k => csvCell(r[k])).join(','))].join('\n');
 }
 
@@ -86,9 +90,9 @@ const quoteId = (s: string) => `"${s.replace(/"/g, '""')}"`;
 const sqlValue = (v: string | number | boolean) =>
   typeof v === 'string' ? `'${v.replace(/'/g, "''")}'` : typeof v === 'boolean' ? (v ? 'TRUE' : 'FALSE') : String(v);
 
-export function toSQL(rows: Row[], table: string): string {
+export function toSQL(rows: Row[], table: string, columns: string[]): string {
   if (rows.length === 0) return '';
-  const keys = Object.keys(rows[0]);
+  const keys = columns;
   const cols = keys.map(quoteId).join(', ');
   return rows
     .map(r => `INSERT INTO ${quoteId(table)} (${cols}) VALUES (${keys.map(k => sqlValue(r[k])).join(', ')});`)
