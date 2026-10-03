@@ -33,3 +33,11 @@ test('input is typed only once it becomes enabled', async ({ page }) => {
   await page.locator('#submit-delayed').click();
   await expect(page.getByTestId('result-enabled')).toHaveAttribute('data-state', 'success');
 });
+
+test('start cannot restart the animation while the button is moving', async ({ page }) => {
+  await page.locator('#start-animation').click();
+  await expect(page.locator('#moving-button')).toHaveClass(/animating/);
+  await expect(page.locator('#start-animation')).toBeDisabled();
+  await expect(page.locator('#moving-button')).not.toHaveClass(/animating/, { timeout: 5000 });
+  await expect(page.locator('#start-animation')).toBeEnabled();
+});

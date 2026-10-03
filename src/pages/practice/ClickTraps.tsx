@@ -34,6 +34,7 @@ export default function ClickTraps() {
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   const startAnimation = () => {
+    if (moving) return;
     setMovingResult('pending');
     setMovingMsg('Wait for the button to stop, then click it');
     setAtEnd(prev => !prev);
@@ -129,7 +130,7 @@ export default function ClickTraps() {
           }
         ]} /></div>
         <div className="space-y-4">
-          <Button id="start-animation" onClick={startAnimation}>Start animation</Button>
+          <Button id="start-animation" onClick={startAnimation} disabled={moving}>Start animation</Button>
           <div className="rounded-xl border border-border bg-slate-50 p-4 overflow-hidden">
             <button
               id="moving-button"
