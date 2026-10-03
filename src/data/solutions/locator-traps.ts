@@ -1,3 +1,5 @@
+import { SITE_URL } from '@/config/site';
+
 export const locatorTraps = {
   seleniumJava: String.raw`import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +19,7 @@ class LocatorTrapsTest {
     void setUp() {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("https://qa.randomly.online/#/practice/locator-traps");
+        driver.get("${SITE_URL}#/practice/locator-traps");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
@@ -73,7 +75,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "https://qa.randomly.online/#/practice/locator-traps"
+URL = "${SITE_URL}#/practice/locator-traps"
 
 
 @pytest.fixture

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { certificateId, linkedInUrl, localDateISO } from './certificate';
+import { SITE_URL } from '@/config/site';
 
 describe('certificate', () => {
   it('id is 12 upper-case hex chars and independent of challenge order', async () => {
@@ -12,7 +13,7 @@ describe('certificate', () => {
     const url = new URL(linkedInUrl({ certId: 'ABC', issued: new Date('2026-10-03T00:00:00Z') }));
     expect(url.searchParams.get('certId')).toBe('ABC');
     expect(url.searchParams.get('issueYear')).toBe('2026');
-    expect(url.searchParams.get('certUrl')).toBe('https://qa.randomly.online/');
+    expect(url.searchParams.get('certUrl')).toBe(SITE_URL);
   });
   it('localDateISO uses the local calendar day', () => {
     expect(localDateISO(new Date(2026, 0, 5, 23, 59))).toBe('2026-01-05');

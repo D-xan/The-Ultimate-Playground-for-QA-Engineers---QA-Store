@@ -1,3 +1,5 @@
+import { SITE_URL } from '@/config/site';
+
 export const deepDom = {
   seleniumJava: String.raw`import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +19,7 @@ class DeepDomTest {
     void setUp() {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("https://qa.randomly.online/#/practice/deep-dom");
+        driver.get("${SITE_URL}#/practice/deep-dom");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
@@ -84,7 +86,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "https://qa.randomly.online/#/practice/deep-dom"
+URL = "${SITE_URL}#/practice/deep-dom"
 
 
 @pytest.fixture

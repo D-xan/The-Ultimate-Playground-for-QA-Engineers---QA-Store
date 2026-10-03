@@ -1,3 +1,5 @@
+import { SITE_URL } from '@/config/site';
+
 export function localDateISO(d: Date): string {
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
@@ -18,7 +20,7 @@ export function linkedInUrl(opts: { certId: string; issued: Date }): string {
     'https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME' +
     '&name=QA%20Automation%20Practitioner&organizationName=QA%20Playground' +
     `&issueYear=${opts.issued.getFullYear()}&issueMonth=${opts.issued.getMonth() + 1}` +
-    `&certId=${encodeURIComponent(opts.certId)}&certUrl=https%3A%2F%2Fqa.randomly.online%2F`
+    `&certId=${encodeURIComponent(opts.certId)}&certUrl=${encodeURIComponent(SITE_URL)}`
   );
 }
 
@@ -84,5 +86,5 @@ export function drawCertificate(
   ctx.fillText(`Certificate ID ${data.certId}`, W / 2, 950);
   ctx.fillStyle = '#94a3b8';
   ctx.font = '22px sans-serif';
-  ctx.fillText('qa.randomly.online', W / 2, 1020);
+  ctx.fillText(SITE_URL.replace(/^https:\/\//, '').replace(/\/$/, ''), W / 2, 1020);
 }
