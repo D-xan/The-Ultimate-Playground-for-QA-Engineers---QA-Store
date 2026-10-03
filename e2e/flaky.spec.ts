@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/#/practice/flaky');
+  await page.goto('/practice/flaky');
 });
 
 test('retry the unreliable request until it succeeds', async ({ page }) => {

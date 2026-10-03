@@ -19,7 +19,7 @@ class WidgetsTest {
     void setUp() {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("${SITE_URL}#/practice/widgets");
+        driver.get("${SITE_URL}practice/widgets");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
@@ -96,7 +96,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}#/practice/widgets"
+URL = "${SITE_URL}practice/widgets"
 
 PASTE_SCRIPT = """
 const el = arguments[0];
@@ -169,7 +169,7 @@ def test_star_rating(driver):
 `,
   cypress: String.raw`describe('Widgets', () => {
   beforeEach(() => {
-    cy.visit('/#/practice/widgets');
+    cy.visit('/practice/widgets');
   });
 
   it('typing the OTP auto-advances through the boxes', () => {

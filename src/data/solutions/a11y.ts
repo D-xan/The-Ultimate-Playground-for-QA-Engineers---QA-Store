@@ -26,7 +26,7 @@ class AccessibilityLabTest {
     void setUp() {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("${SITE_URL}#/practice/a11y");
+        driver.get("${SITE_URL}practice/a11y");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
@@ -94,7 +94,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}#/practice/a11y"
+URL = "${SITE_URL}practice/a11y"
 AXE_JS = "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js"
 PLANTED = ["button-name", "color-contrast", "image-alt", "label", "link-name"]
 
@@ -164,7 +164,7 @@ const wcag = { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] } };
 
 describe('Accessibility Lab', () => {
   beforeEach(() => {
-    cy.visit('/#/practice/a11y');
+    cy.visit('/practice/a11y');
     cy.injectAxe();
   });
 

@@ -18,7 +18,7 @@ class WindowsTabsTest {
     void setUp() {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("${SITE_URL}#/practice/windows");
+        driver.get("${SITE_URL}practice/windows");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
         main = driver.getWindowHandle();
     }
@@ -109,7 +109,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}#/practice/windows"
+URL = "${SITE_URL}practice/windows"
 
 
 @pytest.fixture
@@ -189,7 +189,7 @@ def test_find_the_window_by_its_title(driver):
 // The results on the main page will not turn green this way, because the child has no opener.
 describe('Windows & Tabs', () => {
   beforeEach(() => {
-    cy.visit('/#/practice/windows');
+    cy.visit('/practice/windows');
   });
 
   it('new tab: remove target and open it in the same tab', () => {
@@ -203,7 +203,7 @@ describe('Windows & Tabs', () => {
       cy.stub(win, 'open').as('open');
     });
     cy.get('#open-popup').click();
-    cy.get('@open').should('have.been.calledWithMatch', '#/popup/approve');
+    cy.get('@open').should('have.been.calledWithMatch', 'popup/approve');
   });
 
   it('window picker: each button opens its own URL', () => {
@@ -211,8 +211,8 @@ describe('Windows & Tabs', () => {
       cy.stub(win, 'open').as('open');
     });
     cy.get('#open-b').click();
-    cy.get('@open').should('have.been.calledWith', '#/popup/pick?w=B', '_blank');
-    cy.visit('/#/popup/pick?w=B');
+    cy.get('@open').should('have.been.calledWithMatch', 'popup/pick?w=B');
+    cy.visit('/popup/pick?w=B');
     cy.title().should('eq', 'Window B');
     cy.get('#no-opener').should('be.visible'); // no opener when visited directly
   });

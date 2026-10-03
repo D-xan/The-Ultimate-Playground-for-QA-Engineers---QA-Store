@@ -4,7 +4,7 @@ import { test, expect, type Locator } from '@playwright/test';
 const centre = (canvas: Locator) => canvas.evaluate((el) => el.scrollIntoView({ block: 'center' }));
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/#/practice/canvas');
+  await page.goto('/practice/canvas');
   await expect(page.locator('main h1')).toBeVisible();
 });
 

@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 class AuthFlowsTest {
-    static final String URL = "${SITE_URL}#/practice/auth-flows";
+    static final String URL = "${SITE_URL}practice/auth-flows";
     WebDriver driver;
     WebDriverWait wait;
 
@@ -98,7 +98,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}#/practice/auth-flows"
+URL = "${SITE_URL}practice/auth-flows"
 
 
 def open_page():
@@ -190,13 +190,13 @@ def test_reuse_a_saved_session(driver):
 
 describe('Auth Flows', () => {
   it('two-step login', () => {
-    cy.visit('/#/practice/auth-flows');
+    cy.visit('/practice/auth-flows');
     login();
     cy.get('[data-testid="result-2fa"]').should('have.attr', 'data-state', 'success');
   });
 
   it('survives a session that expires mid-wizard', () => {
-    cy.visit('/#/practice/auth-flows');
+    cy.visit('/practice/auth-flows');
     login();
     cy.get('#start-wizard').click();
     cy.get('#wizard-next').click();
@@ -213,10 +213,10 @@ describe('Auth Flows', () => {
   it('reuses a saved session with cy.session', () => {
     // cy.session runs the login once, caches cookies + localStorage, and restores them in later tests.
     cy.session('tester', () => {
-      cy.visit('/#/practice/auth-flows');
+      cy.visit('/practice/auth-flows');
       login(true);
     });
-    cy.visit('/#/practice/auth-flows');
+    cy.visit('/practice/auth-flows');
     cy.get('#session-restored').should('be.visible');
     cy.get('[data-testid="result-remember"]').should('have.attr', 'data-state', 'success');
   });

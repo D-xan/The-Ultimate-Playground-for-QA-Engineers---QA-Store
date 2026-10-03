@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/#/practice/widgets');
+  await page.goto('/practice/widgets');
 });
 
 test('typing the OTP auto-advances through the boxes', async ({ page }) => {

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/#/practice/data-generator');
+  await page.goto('/practice/data-generator');
 });
 
 test('generates rows and previews ten of them', async ({ page }) => {

@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { PLANTED } from '../src/data/a11yRules';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/#/practice/a11y');
+  await page.goto('/practice/a11y');
   await expect(page.locator('main h1')).toBeVisible();
 });
 

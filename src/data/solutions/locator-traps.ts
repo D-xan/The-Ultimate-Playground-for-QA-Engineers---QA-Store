@@ -19,7 +19,7 @@ class LocatorTrapsTest {
     void setUp() {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("${SITE_URL}#/practice/locator-traps");
+        driver.get("${SITE_URL}practice/locator-traps");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
@@ -75,7 +75,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}#/practice/locator-traps"
+URL = "${SITE_URL}practice/locator-traps"
 
 
 @pytest.fixture
@@ -126,7 +126,7 @@ def test_shifting_menu_is_clicked_by_name_not_position(driver):
 `,
   cypress: String.raw`describe('Locator Traps', () => {
   beforeEach(() => {
-    cy.visit('/#/practice/locator-traps');
+    cy.visit('/practice/locator-traps');
   });
 
   const state = (testId) => cy.get('[data-testid="' + testId + '"]');

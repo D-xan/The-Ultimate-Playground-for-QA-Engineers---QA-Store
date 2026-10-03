@@ -5,7 +5,7 @@ const PAGES = ['windows', 'sortable', 'virtual-table', 'auth-flows', 'canvas', '
 
 for (const id of PAGES) {
   test(`${id}: every task has a hint behind a button`, async ({ page }) => {
-    await page.goto(`/#/practice/${id}`);
+    await page.goto(`/practice/${id}`);
     await expect(page.locator('main h1')).toBeVisible();
     const expanders = page.locator('[data-testid^="task-expand-"]');
     const count = await expanders.count();

@@ -1,7 +1,7 @@
 import { test, expect, type Page, type Locator } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/#/practice/sortable');
+  await page.goto('/practice/sortable');
   await expect(page.locator('main h1')).toBeVisible();
 });
 

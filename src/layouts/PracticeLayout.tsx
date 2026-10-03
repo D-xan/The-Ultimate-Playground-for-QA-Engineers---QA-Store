@@ -1,6 +1,7 @@
 import { useChallengeMode } from '@/store/useChallengeMode';
 import React, { useEffect, useCallback, useState } from 'react';
 import { Outlet, NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
+import { PageGuide } from '@/seo/PageGuide';
 import { AppWindow, ArrowLeft, Save, ArrowRight, RotateCcw, Trash2, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useProgressStore } from '../store/useProgressStore';
@@ -236,6 +237,7 @@ export default function PracticeLayout() {
           <div className="flex-1 overflow-y-auto p-8 pt-20 md:pt-8">
             <div className="max-w-6xl mx-auto pb-24">
               <Outlet />
+              <PageGuide />
             </div>
           </div>
           

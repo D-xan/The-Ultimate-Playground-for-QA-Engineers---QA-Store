@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/#/practice/windows');
+  await page.goto('/practice/windows');
   await expect(page.locator('main h1')).toBeVisible();
 });
 
@@ -54,6 +54,6 @@ test('a wrong secret fails', async ({ page }) => {
 });
 
 test('a popup opened directly says it has no opener', async ({ page }) => {
-  await page.goto('/#/popup/approve');
+  await page.goto('/popup/approve');
   await expect(page.locator('#no-opener')).toBeVisible();
 });

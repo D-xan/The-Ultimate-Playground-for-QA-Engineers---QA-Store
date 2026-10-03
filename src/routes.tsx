@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './store/useAuth';
+import { SeoHead } from './seo/SeoHead';
 
 // Lazy loading pages for better performance and split architecture
 const CustomerLayout = React.lazy(() => import('./layouts/CustomerLayout'));
@@ -65,7 +66,8 @@ const ProtectedRoute = ({ children, requiredRole }: { children: React.ReactNode,
 
 export const AppRoutes = () => {
   return (
-    <HashRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+      <SeoHead />
       <Suspense fallback={<div className="flex h-screen w-full items-center justify-center">Loading...</div>}>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -133,6 +135,6 @@ export const AppRoutes = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
-    </HashRouter>
+    </BrowserRouter>
   );
 };

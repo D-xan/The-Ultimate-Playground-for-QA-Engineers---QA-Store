@@ -19,7 +19,7 @@ class VirtualTableTest {
     void setUp() {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("${SITE_URL}#/practice/virtual-table");
+        driver.get("${SITE_URL}practice/virtual-table");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
@@ -83,7 +83,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}#/practice/virtual-table"
+URL = "${SITE_URL}practice/virtual-table"
 ROW_HEIGHT = 40
 
 
@@ -146,7 +146,7 @@ def test_sort_by_score_and_pick_the_top_row(driver):
   const ROW_HEIGHT = 40;
 
   beforeEach(() => {
-    cy.visit('/#/practice/virtual-table');
+    cy.visit('/practice/virtual-table');
   });
 
   it('only a few rows are in the DOM', () => {

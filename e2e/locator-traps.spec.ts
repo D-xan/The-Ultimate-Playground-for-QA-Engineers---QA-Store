@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/#/practice/locator-traps');
+  await page.goto('/practice/locator-traps');
 });
 
 test('dynamic id button is found by its text', async ({ page }) => {

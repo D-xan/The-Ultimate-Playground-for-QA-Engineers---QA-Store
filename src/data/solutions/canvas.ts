@@ -20,7 +20,7 @@ class CanvasChartsTest {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         js = (JavascriptExecutor) driver;
-        driver.get("${SITE_URL}#/practice/canvas");
+        driver.get("${SITE_URL}practice/canvas");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
@@ -94,7 +94,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}#/practice/canvas"
+URL = "${SITE_URL}practice/canvas"
 
 
 @pytest.fixture
@@ -157,7 +157,7 @@ def test_find_the_peak_month_from_the_tooltips(driver):
 `,
   cypress: String.raw`describe('Canvas & Charts', () => {
   beforeEach(() => {
-    cy.visit('/#/practice/canvas');
+    cy.visit('/practice/canvas');
   });
 
   it('hits the moving target three times', () => {

@@ -19,7 +19,7 @@ class ProgressBarTest {
     void setUp() {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("${SITE_URL}#/practice/progress-bar");
+        driver.get("${SITE_URL}practice/progress-bar");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
@@ -55,7 +55,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}#/practice/progress-bar"
+URL = "${SITE_URL}practice/progress-bar"
 
 
 @pytest.fixture
@@ -88,7 +88,7 @@ def test_waiting_for_100_percent_shows_the_completion_message(driver):
 `,
   cypress: String.raw`describe('Progress bar', () => {
   beforeEach(() => {
-    cy.visit('/#/practice/progress-bar');
+    cy.visit('/practice/progress-bar');
   });
 
   it('stops the progress bar at 75% or more', () => {

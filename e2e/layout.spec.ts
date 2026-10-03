@@ -3,7 +3,7 @@ import { challenges } from '../src/data/challenges';
 
 for (const c of challenges) {
   test(`${c.id}: numbered sections run 1..n`, async ({ page }) => {
-    await page.goto(`/#/practice/${c.id}`);
+    await page.goto(`/practice/${c.id}`);
     await expect(page.locator('main h1').first()).toBeVisible();
     const texts = await page.locator('main h2').allInnerTexts();
     const nums = texts.map((t) => t.match(/^(\d+)\.\s/)?.[1]).filter(Boolean).map(Number);
@@ -55,7 +55,7 @@ const expectNoOverflow = async (page: Page) => {
 
 test('dashboard has no horizontal scroll on a phone', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto('/#/practice');
+  await page.goto('/practice');
   await expect(page.getByTestId('challenge-card-basic')).toBeVisible();
   await expectNoOverflow(page);
 });
@@ -63,7 +63,7 @@ test('dashboard has no horizontal scroll on a phone', async ({ page }) => {
 for (const c of challenges) {
   test(`${c.id}: no horizontal scroll on a phone`, async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto(`/#/practice/${c.id}`);
+    await page.goto(`/practice/${c.id}`);
     await expect(page.locator('main h1').first()).toBeVisible();
     await expectNoOverflow(page);
   });
@@ -71,7 +71,7 @@ for (const c of challenges) {
 
 test('overflow check can fail (guard)', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto('/#/practice/basic');
+  await page.goto('/practice/basic');
   await expect(page.locator('main h1').first()).toBeVisible();
   await page.evaluate(() => {
     const d = document.createElement('div');

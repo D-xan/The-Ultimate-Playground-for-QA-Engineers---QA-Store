@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 
-const PATH = '/#/practice/auth-flows';
+const PATH = '/practice/auth-flows';
 
 async function login(page: Page, remember = false) {
   await page.locator('#auth-email').fill('tester@qa.test');

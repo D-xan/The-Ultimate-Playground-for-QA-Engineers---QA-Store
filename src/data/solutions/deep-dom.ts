@@ -19,7 +19,7 @@ class DeepDomTest {
     void setUp() {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("${SITE_URL}#/practice/deep-dom");
+        driver.get("${SITE_URL}practice/deep-dom");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
@@ -86,7 +86,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}#/practice/deep-dom"
+URL = "${SITE_URL}practice/deep-dom"
 
 
 @pytest.fixture
@@ -159,7 +159,7 @@ const toBody = (frame) =>
 
 describe('Deep DOM', () => {
   beforeEach(() => {
-    cy.visit('/#/practice/deep-dom');
+    cy.visit('/practice/deep-dom');
   });
 
   const state = (testId) => cy.get('[data-testid="' + testId + '"]');

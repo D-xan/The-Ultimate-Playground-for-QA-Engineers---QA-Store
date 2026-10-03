@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('CSS selector highlights matches', async ({ page }) => {
-  await page.goto('/#/practice/progress-bar');
+  await page.goto('/practice/progress-bar');
   await page.locator('#selector-lab-toggle').click();
   await page.locator('#selector-input').fill('#start-button');
   await expect(page.locator('#selector-count')).toHaveText('1 match');
@@ -10,7 +10,7 @@ test('CSS selector highlights matches', async ({ page }) => {
 });
 
 test('XPath is detected and counted', async ({ page }) => {
-  await page.goto('/#/practice/progress-bar');
+  await page.goto('/practice/progress-bar');
   await page.locator('#selector-lab-toggle').click();
   await page.locator('#selector-input').fill('//h1');
   await expect(page.locator('#selector-kind')).toHaveText('XPath');
@@ -18,14 +18,14 @@ test('XPath is detected and counted', async ({ page }) => {
 });
 
 test('invalid selector shows an error', async ({ page }) => {
-  await page.goto('/#/practice/progress-bar');
+  await page.goto('/practice/progress-bar');
   await page.locator('#selector-lab-toggle').click();
   await page.locator('#selector-input').fill('##nope');
   await expect(page.locator('#selector-error')).toBeVisible();
 });
 
 test('pierces open shadow DOM inside iframes only when enabled', async ({ page }) => {
-  await page.goto('/#/practice/deep-dom');
+  await page.goto('/practice/deep-dom');
   await page.locator('#selector-lab-toggle').click();
   await page.locator('#selector-input').fill('#shadow-frame-button');
   await expect(page.locator('#selector-count')).toHaveText('1 match');
@@ -34,7 +34,7 @@ test('pierces open shadow DOM inside iframes only when enabled', async ({ page }
 });
 
 test('closing the lab removes highlights', async ({ page }) => {
-  await page.goto('/#/practice/progress-bar');
+  await page.goto('/practice/progress-bar');
   await page.locator('#selector-lab-toggle').click();
   await page.locator('#selector-input').fill('button');
   await expect(page.locator('[data-selector-lab-match]').first()).toBeAttached();
@@ -43,7 +43,7 @@ test('closing the lab removes highlights', async ({ page }) => {
 });
 
 test('own toggle and panel are excluded from results', async ({ page }) => {
-  await page.goto('/#/practice/progress-bar');
+  await page.goto('/practice/progress-bar');
   await page.locator('#selector-lab-toggle').click();
   await page.locator('#selector-input').fill('button');
   await expect(page.locator('#start-button')).toHaveAttribute('data-selector-lab-match', '');
@@ -54,7 +54,7 @@ test('own toggle and panel are excluded from results', async ({ page }) => {
 });
 
 test('shadow-in-frame match gets a visible outline', async ({ page }) => {
-  await page.goto('/#/practice/deep-dom');
+  await page.goto('/practice/deep-dom');
   await page.locator('#selector-lab-toggle').click();
   await page.locator('#selector-input').fill('#shadow-frame-button');
   await expect(page.locator('#selector-count')).toHaveText('1 match');
@@ -63,7 +63,7 @@ test('shadow-in-frame match gets a visible outline', async ({ page }) => {
 });
 
 test('pierce shadow off hides shadow matches', async ({ page }) => {
-  await page.goto('/#/practice/deep-dom');
+  await page.goto('/practice/deep-dom');
   await page.locator('#selector-lab-toggle').click();
   await page.locator('#selector-input').fill('#shadow-frame-button');
   await expect(page.locator('#selector-count')).toHaveText('1 match');
@@ -72,7 +72,7 @@ test('pierce shadow off hides shadow matches', async ({ page }) => {
 });
 
 test('XPath is scoped to frame bodies', async ({ page }) => {
-  await page.goto('/#/practice/deep-dom');
+  await page.goto('/practice/deep-dom');
   await page.locator('#selector-lab-toggle').click();
   await page.locator('#selector-input').fill('//button[@id="deep-button"]');
   await expect(page.locator('#selector-count')).toHaveText('1 match');
@@ -83,14 +83,14 @@ test('XPath is scoped to frame bodies', async ({ page }) => {
 });
 
 test('finds elements in nested frames', async ({ page }) => {
-  await page.goto('/#/practice/deep-dom');
+  await page.goto('/practice/deep-dom');
   await page.locator('#selector-lab-toggle').click();
   await page.locator('#selector-input').fill('#deep-button');
   await expect(page.locator('#selector-count')).toHaveText('1 match');
 });
 
 test('route change leaves no stale highlights', async ({ page }) => {
-  await page.goto('/#/practice/progress-bar');
+  await page.goto('/practice/progress-bar');
   await page.locator('#selector-lab-toggle').click();
   await page.locator('#selector-input').fill('button');
   await expect(page.locator('[data-selector-lab-match]').first()).toBeAttached();
@@ -103,7 +103,7 @@ test('route change leaves no stale highlights', async ({ page }) => {
 });
 
 test('closing the lab removes highlights even when a frame reloads afterwards', async ({ page }) => {
-  await page.goto('/#/practice/deep-dom');
+  await page.goto('/practice/deep-dom');
   await page.locator('#selector-lab-toggle').click();
   await page.locator('#selector-input').fill('button');
   await expect(page.locator('#selector-count')).not.toHaveText('0 matches');

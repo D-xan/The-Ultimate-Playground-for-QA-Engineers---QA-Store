@@ -64,7 +64,7 @@ export default function WindowsTabs() {
             hint: "Wait for the new window to exist before switching: compare the window handles from before and after the click."
           }
         ]} /></div>
-        <a id="open-tab" data-testid="open-tab" href="#/popup/secret" target="_blank" rel="noopener" className="text-primary font-semibold underline">Open the secret in a new tab</a>
+        <a id="open-tab" data-testid="open-tab" href={`${import.meta.env.BASE_URL}popup/secret`} target="_blank" rel="noopener" className="text-primary font-semibold underline">Open the secret in a new tab</a>
         <div className="flex flex-wrap items-center gap-3 mt-4 mb-4">
           <input
             id="tab-secret-input"
@@ -91,7 +91,7 @@ export default function WindowsTabs() {
             hint: "After Approve the popup closes itself. Switch back to the main window straight away; any command on the closed window throws."
           }
         ]} /></div>
-        <Button id="open-popup" data-testid="open-popup" onClick={() => window.open('#/popup/approve', 'approve', POPUP_FEATURES)}>Open approval popup</Button>
+        <Button id="open-popup" data-testid="open-popup" onClick={() => window.open(`${import.meta.env.BASE_URL}popup/approve`, 'approve', POPUP_FEATURES)}>Open approval popup</Button>
         <p className="mt-4 mb-4 text-slate-600">Approval code: <strong id="approval-code" data-testid="approval-code">{approvalCode}</strong></p>
         <ChallengeResult testId="result-popup" state={approvalCode ? 'success' : 'pending'} message={approvalCode ? 'Approved in the popup' : 'Waiting for approval'} />
       </section>
@@ -107,7 +107,7 @@ export default function WindowsTabs() {
             hint: "Wait for the Confirm button to be clickable inside the popup instead of sleeping for a fixed time."
           }
         ]} /></div>
-        <Button id="open-delayed" data-testid="open-delayed" onClick={() => window.open('#/popup/delayed', 'delayed', POPUP_FEATURES)}>Open slow popup</Button>
+        <Button id="open-delayed" data-testid="open-delayed" onClick={() => window.open(`${import.meta.env.BASE_URL}popup/delayed`, 'delayed', POPUP_FEATURES)}>Open slow popup</Button>
         <div className="mt-4"><ChallengeResult testId="result-delayed" state={delayedDone ? 'success' : 'pending'} message={delayedDone ? 'Confirmed in the slow popup' : 'Waiting for confirmation'} /></div>
       </section>
 
@@ -124,7 +124,7 @@ export default function WindowsTabs() {
         ]} /></div>
         <div className="flex flex-wrap gap-3 mb-4">
           {(['A', 'B', 'C'] as const).map((w) => (
-            <Button key={w} id={`open-${w.toLowerCase()}`} data-testid={`open-${w.toLowerCase()}`} variant="outline" onClick={() => window.open(`#/popup/pick?w=${w}`, '_blank')}>Open window {w}</Button>
+            <Button key={w} id={`open-${w.toLowerCase()}`} data-testid={`open-${w.toLowerCase()}`} variant="outline" onClick={() => window.open(`${import.meta.env.BASE_URL}popup/pick?w=${w}`, '_blank')}>Open window {w}</Button>
           ))}
         </div>
         <ChallengeResult testId="result-pick" state={pickResult} message={pickResult === 'success' ? 'You picked Window B' : pickResult === 'failure' ? 'Wrong window' : 'Pick Window B'} />

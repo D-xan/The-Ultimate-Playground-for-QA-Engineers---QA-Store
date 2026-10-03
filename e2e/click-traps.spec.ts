@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/#/practice/click-traps');
+  await page.goto('/practice/click-traps');
 });
 
 test('covered button cannot be clicked until the cover is dismissed', async ({ page }) => {

@@ -1,0 +1,1132 @@
+{
+ "a11y": {
+  "title": "Accessibility Testing Practice Page (axe) | QA Playground",
+  "metaDescription": "Free accessibility testing practice page with planted axe violations. Find them, assert a clean scan and finish a form by keyboard in Playwright or Selenium.",
+  "h1Subtitle": "Find planted axe violations, assert a clean scan and finish a form using only the keyboard.",
+  "answer": "Accessibility testing checks that people using screen readers, keyboards and other assistive tools can use a page. You practice it by running axe-core against a page with known WCAG violations, fixing or asserting on them, and then completing a form with the keyboard only. This free lab does that and works with Playwright, Selenium and Cypress.",
+  "faqs": [
+   {
+    "q": "How do I run axe accessibility tests in Playwright?",
+    "a": "Install @axe-core/playwright, create an AxeBuilder with your page, call analyze(), and assert that results.violations is empty. You can scope the scan with include() or limit rules with withTags(['wcag2a', 'wcag2aa']). Run the scan after the page reaches the state you want to check."
+   },
+   {
+    "q": "Can Selenium run axe-core accessibility scans?",
+    "a": "Yes. Selenium Java has the com.deque.html.axe-core:selenium package with AxeBuilder, and Python has axe-selenium-python. Both inject axe-core into the page and return a violations list you can assert on. Selenium has no built-in accessibility audit."
+   },
+   {
+    "q": "What can automated accessibility tests not catch?",
+    "a": "Automated tools such as axe find roughly a third to half of WCAG issues, mainly missing labels, bad contrast and invalid ARIA. They cannot judge whether alt text is meaningful, whether focus order makes sense or whether a screen reader flow is usable. Manual and keyboard checks are still needed."
+   },
+   {
+    "q": "How do I test keyboard navigation in an automated test?",
+    "a": "Send Tab, Shift+Tab, Enter and Space key presses and assert which element has focus after each one. In Playwright use page.keyboard.press('Tab') and expect(locator).toBeFocused(). In Selenium use Actions or send_keys with Keys.TAB, then compare the active element."
+   },
+   {
+    "q": "Where can I practice accessibility testing for free?",
+    "a": "The Accessibility Lab on QA Playground has planted axe violations, a task to assert a clean scan after fixes, and a keyboard-only form task. It needs no signup, runs in the browser, and includes reference solutions in Playwright, Selenium Java, Selenium Python and Cypress."
+   }
+  ],
+  "ogHeadline": "Accessibility Testing Lab",
+  "ogSubline": "Planted axe violations, clean scans, keyboard-only forms",
+  "imageAlt": "Accessibility Lab share image with the text Accessibility Testing Lab and a list of axe violations to find",
+  "relatedIds": [
+   "widgets",
+   "basic",
+   "bug-hunt",
+   "locator-traps"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "accessibility testing practice page"
+ },
+ "advanced": {
+  "title": "Date Picker, Slider and File Upload Practice | QA Playground",
+  "metaDescription": "Free practice page for automating date pickers, range sliders and file uploads. Scored tasks with hints and solutions in Playwright, Selenium and Cypress.",
+  "h1Subtitle": "Automate date pickers, range sliders and file uploads, then check each task with a pass/fail result.",
+  "answer": "Advanced input automation covers controls that cannot be handled with a simple click or type: date pickers, range sliders and file upload fields. A test sets a date, moves a slider to an exact value, or attaches a file, then asserts the result. This free page gives scored tasks for each, with hints and solutions in Playwright, Selenium and Cypress.",
+  "faqs": [
+   {
+    "q": "How do you upload a file in Playwright?",
+    "a": "Call page.locator('input[type=file]').setInputFiles('path/to/file.pdf'). It works without opening the native dialog. For inputs created on click, use page.waitForEvent('filechooser') and then fileChooser.setFiles(). Pass an empty array to clear the selection."
+   },
+   {
+    "q": "How do you upload a file in Selenium?",
+    "a": "Locate the input[type=file] element and call send_keys with the absolute file path in Python, or sendKeys in Java. Do not click the element first, because that opens the native dialog, which Selenium cannot control. The input must be present, though it can be hidden."
+   },
+   {
+    "q": "How do you automate a date picker?",
+    "a": "For a native date input, send the value in yyyy-mm-dd format, or use fill() in Playwright. For custom calendars, click the field, move to the right month, then click the day cell. Assert on the input value afterward, not the visible calendar."
+   },
+   {
+    "q": "How do you set a range slider value in a test?",
+    "a": "Press arrow keys on the focused slider for exact steps, or set the value with JavaScript and dispatch input and change events. Dragging by pixels is less reliable. Playwright's fill() also works on input[type=range]. Assert the displayed value."
+   },
+   {
+    "q": "Can I practice file uploads without a server?",
+    "a": "Yes. This page runs in your browser and reads the chosen file locally, so no upload leaves your machine. Tasks include valid files and rejected ones, such as the wrong type or too large a size, so you can test both outcomes."
+   }
+  ],
+  "ogHeadline": "Dates, Sliders, File Uploads",
+  "ogSubline": "Free scored practice for tricky input controls",
+  "imageAlt": "QA Playground Advanced Inputs page with a date picker, range slider and file upload field",
+  "relatedIds": [
+   "basic",
+   "widgets",
+   "a11y",
+   "dynamic"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "date picker range slider file upload automation practice"
+ },
+ "api-interception": {
+  "title": "API Mocking Practice for Playwright | QA Playground",
+  "metaDescription": "Free API interception practice page. Mock, modify and block network requests with Playwright, Cypress or Selenium. Pass/fail checks, hints, no signup.",
+  "h1Subtitle": "Mock, modify and block the network requests this page makes, then check your test passes.",
+  "answer": "API interception is a testing technique where your test captures a request the page sends and either answers it with fake data, changes it, or blocks it. In Playwright you use page.route, in Cypress cy.intercept, and in Selenium 4 the DevTools or BiDi network APIs. This page makes real fetch calls so you can practice each approach for free in the browser.",
+  "faqs": [
+   {
+    "q": "How do you mock an API response in Playwright?",
+    "a": "Call page.route with a URL pattern before the action that triggers the request, then use route.fulfill with a status, headers and JSON body. Use route.continue to let a request through, optionally with changes, and route.abort to simulate a network failure."
+   },
+   {
+    "q": "How do you intercept network requests in Cypress?",
+    "a": "Use cy.intercept with a method and URL to stub a response or spy on traffic. Give it an alias with .as, then cy.wait the alias to assert on the request body or response status. Define the intercept before the click that fires the request."
+   },
+   {
+    "q": "Can Selenium intercept and mock network requests?",
+    "a": "Yes, in Selenium 4. Selenium Java offers NetworkInterceptor and Python uses the Chrome DevTools Protocol through execute_cdp_cmd, with BiDi network commands as the newer route. It is more verbose than Playwright or Cypress and works best in Chromium browsers."
+   },
+   {
+    "q": "Why mock APIs in UI tests?",
+    "a": "Mocking makes tests fast and repeatable and lets you force states that are hard to reach for real, such as 500 errors, empty lists, slow responses and timeouts. Keep a few unmocked end-to-end tests so real integration still gets checked."
+   },
+   {
+    "q": "Do I need to sign up or install anything to practice here?",
+    "a": "No. The page is free and runs in the browser. Point your own Playwright, Selenium or Cypress project at it, finish the tasks, and the result box shows which ones passed. Reference solutions in four frameworks are available when you get stuck."
+   }
+  ],
+  "ogHeadline": "API Interception Practice",
+  "ogSubline": "Mock and modify network requests with Playwright or Cypress",
+  "imageAlt": "QA Playground API Interception page showing tasks for mocking and modifying network requests",
+  "relatedIds": [
+   "api-playground",
+   "dynamic",
+   "flaky",
+   "auth-flows"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "api mocking practice playwright"
+ },
+ "api-playground": {
+  "title": "Mock REST API for Testing Practice | QA Playground",
+  "metaDescription": "Free mock REST API to practice API testing: auth tokens, forced status codes, delays and rate limits. No signup. Tasks with pass/fail checks and solutions.",
+  "h1Subtitle": "A mock REST API with auth, status codes, delays and rate limits, built for test practice.",
+  "answer": "A mock REST API for testing is a fake web service that returns predictable responses, so you can practice API tests without a real backend. This playground offers endpoints with token auth, selectable status codes, artificial delays and rate limits. Send requests from the browser, Postman, REST Assured, Python requests or Playwright, and assert on status, headers and JSON bodies.",
+  "faqs": [
+   {
+    "q": "What is a good free API to practice API testing?",
+    "a": "Pick one that exposes failure cases, not just happy paths. JSONPlaceholder suits first requests, while this playground adds auth, forced status codes, delays and rate limits, so you can write positive and negative tests. It needs no signup or API key."
+   },
+   {
+    "q": "How do I test a 429 Too Many Requests response?",
+    "a": "Send requests in a loop until the API returns 429, then assert the status and check for a Retry-After header. A good test also waits for the window to reset and confirms the next call succeeds. This playground has a rate-limited endpoint for it."
+   },
+   {
+    "q": "How do I test a bearer token API?",
+    "a": "Request a token, send it in the Authorization header as Bearer <token>, and assert a 200. Then send no token and an invalid one, and assert 401. Test a valid token without permission too, which should return 403."
+   },
+   {
+    "q": "How do I test slow API responses?",
+    "a": "Call an endpoint with an artificial delay and assert the response arrives within your timeout, or that the client times out and shows an error. In Playwright, set the request timeout. In Python requests, pass the timeout argument and expect a Timeout exception."
+   },
+   {
+    "q": "Which tools can I use against this API?",
+    "a": "Any HTTP client works: Postman, curl, REST Assured, Python requests, Playwright's request fixture or Cypress cy.request. The tasks include a pass/fail result box and reference solutions in Playwright, Selenium Java, Selenium Python and Cypress."
+   }
+  ],
+  "ogHeadline": "Mock REST API for Practice",
+  "ogSubline": "Auth, status codes, delays and rate limits. Free.",
+  "imageAlt": "QA Playground API Playground page with a mock REST API request console and status code results",
+  "relatedIds": [
+   "api-interception",
+   "data-generator",
+   "auth-flows",
+   "interview"
+  ],
+  "schemaType": "WebApplication",
+  "primaryKeyword": "mock rest api for testing practice"
+ },
+ "auth-flows": {
+  "title": "Login Flow Automation Practice: Sessions | QA Playground",
+  "metaDescription": "Free practice site for login flow automation: two-step login, sessions that expire mid-task and remembered logins. Solutions in four frameworks.",
+  "h1Subtitle": "Automate a two-step login, recover from a session that expires mid-task and check a remembered login.",
+  "answer": "Login flow automation is the practice of scripting authentication in browser tests, including multi-step sign-in, session expiry and remembered logins. Tests must handle a second verification step, detect when a session ends partway through a task, and reuse saved cookies or storage instead of logging in each time. This free page lets you practice all three with pass/fail results.",
+  "faqs": [
+   {
+    "q": "How do you test a session timeout in automation?",
+    "a": "Start a task after login, wait for or force the session to expire, then perform the next action and assert the app redirects to login or shows an expired message. Prefer shortening the timeout or clearing the session cookie over using long sleeps."
+   },
+   {
+    "q": "How does Playwright storageState work for login?",
+    "a": "Call context.storageState({ path: 'state.json' }) after logging in, then set use: { storageState: 'state.json' } in the config. New contexts start with those cookies and localStorage applied. It does not capture sessionStorage, and saved state can expire, so refresh it."
+   },
+   {
+    "q": "How do you automate a two-step login in Selenium?",
+    "a": "Fill the first step, click continue, then use an explicit WebDriverWait until the second step's field is visible before typing. Do not assume the second form is in the DOM yet. Assert both the success state and error messages for wrong inputs."
+   },
+   {
+    "q": "How do you test a remember me checkbox?",
+    "a": "Log in with the box checked, close the browser context or reload, open the app again and assert you are still signed in. Repeat unchecked and assert you land on the login page. Check that the persistent cookie has an expiry date."
+   },
+   {
+    "q": "Is there a free site to practice login automation?",
+    "a": "Yes. This page is free, needs no signup and runs in your browser. It has tasks with positive and negative cases, hints, and reference solutions in Playwright, Selenium Java, Selenium Python and Cypress."
+   }
+  ],
+  "ogHeadline": "Login Flow Automation Practice",
+  "ogSubline": "Two-step login, expiring sessions, remembered logins",
+  "imageAlt": "Share image for the Auth Flows practice page showing a two-step login form and a session expired message",
+  "relatedIds": [
+   "widgets",
+   "api-playground",
+   "dynamic",
+   "flaky"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "login flow automation practice"
+ },
+ "basic": {
+  "title": "Selenium Practice Form: Inputs and Buttons | QA Playground",
+  "metaDescription": "Free page to practice automating text inputs, buttons, checkboxes and forms. Positive and negative test cases, hints and solutions for Selenium and Playwright.",
+  "h1Subtitle": "Practice locating and interacting with inputs, buttons and forms, with a pass/fail result for each task.",
+  "answer": "Basic web element automation is the skill of finding form controls such as text inputs, buttons, checkboxes and radio buttons, then typing, clicking and asserting on them from a test script. You practice it on this free page by completing tasks that include positive and negative cases, then checking the result box. Solutions are given in Playwright, Selenium Java, Selenium Python and Cypress.",
+  "faqs": [
+   {
+    "q": "How do I practice Selenium with inputs and buttons?",
+    "a": "Open this page, pick a task, and write a script that locates the element, performs the action and asserts the outcome. A result box reports pass or fail for each task. No signup is needed, and the page runs in your browser."
+   },
+   {
+    "q": "How do you type into a text field in Playwright?",
+    "a": "Use page.getByLabel('Name').fill('value') or page.locator(selector).fill('value'). The fill method clears the field and sets the text. Use pressSequentially if the app needs real keystroke events, for example for autocomplete."
+   },
+   {
+    "q": "How do you click a button in Selenium 4?",
+    "a": "Find it with driver.find_element(By.ID, 'submit') in Python, or driver.findElement(By.id(\"submit\")) in Java, then call click(). Use an explicit WebDriverWait with element_to_be_clickable first if the button may be disabled or still rendering."
+   },
+   {
+    "q": "What are negative test cases for a form?",
+    "a": "Negative cases check that invalid input is rejected: empty required fields, wrong formats, text beyond a length limit, or a disabled button that must not submit. Each task here includes both positive and negative cases to automate."
+   },
+   {
+    "q": "Which tool is best for beginners to practice with?",
+    "a": "Any of the four works here. Playwright and Cypress have auto-waiting, which hides timing problems, while Selenium shows them early. The page includes reference solutions in all four, so you can compare approaches."
+   }
+  ],
+  "ogHeadline": "Basic Elements Practice",
+  "ogSubline": "Inputs, buttons and forms with pass/fail checks",
+  "imageAlt": "QA Playground Basic Elements page showing form inputs, buttons and a pass/fail result box",
+  "relatedIds": [
+   "advanced",
+   "dialogs",
+   "dynamic",
+   "locator-traps"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "selenium practice form inputs buttons"
+ },
+ "bug-hunt": {
+  "title": "Bug Hunt Practice Website for Testers | QA Playground",
+  "metaDescription": "Free bug hunt for testers: find six bugs planted in a working online store, then write Playwright or Selenium checks for them. No signup.",
+  "h1Subtitle": "Six real bugs are planted in the QA Store. Find each one and prove it with a test.",
+  "answer": "A bug hunt is an exercise where testers explore an application that contains known defects and report what they find. This free page plants six real bugs in the QA Store, a working mock shop. You find them by exploratory testing, then write Playwright, Selenium or Cypress checks that fail because of each bug.",
+  "faqs": [
+   {
+    "q": "Where can I practice finding bugs as a tester?",
+    "a": "Sites such as AcademyBugs and Guru99 list deliberately buggy pages. The Bug Hunt on QA Playground plants six bugs in a working store, checks your answers with a result box, offers per-task hints, and is free with no signup."
+   },
+   {
+    "q": "How do I practice exploratory testing?",
+    "a": "Set a charter, such as 'explore checkout with unusual quantities', and time-box it to 30 to 60 minutes. Take notes on what you try, vary inputs and flows, and record anything unexpected. Then turn each finding into a reproducible bug report."
+   },
+   {
+    "q": "What makes a good bug report?",
+    "a": "A clear title, numbered steps to reproduce, expected result, actual result, environment details and a screenshot or recording. Keep one bug per report. A developer should be able to reproduce the issue without asking you questions."
+   },
+   {
+    "q": "How do I turn a found bug into an automated test?",
+    "a": "Write the test for the correct behavior and let it fail against the bug. For example, assert that the cart total equals the sum of the line items. Keep the test, and it will pass once the bug is fixed and guard against regression."
+   },
+   {
+    "q": "What kinds of bugs are hidden in the QA Store?",
+    "a": "They are the kinds found in real shops: incorrect totals, validation that does not hold, state that does not persist and similar logic errors. The page lists each task with hints, so you can decide how much help to use."
+   }
+  ],
+  "ogHeadline": "Bug Hunt for Testers",
+  "ogSubline": "Six real bugs planted in a working online store",
+  "imageAlt": "Bug Hunt share image with the text Bug Hunt for Testers and a magnifying glass over a shopping cart",
+  "relatedIds": [
+   "a11y",
+   "basic",
+   "flaky",
+   "tables"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "bug hunt practice website for testers"
+ },
+ "canvas": {
+  "title": "Canvas Automation Testing Practice Page | QA Playground",
+  "metaDescription": "Free canvas testing practice: click a moving target, draw a stroke and read chart tooltips with Playwright, Selenium or Cypress. No signup needed.",
+  "h1Subtitle": "Click a moving canvas target, draw a stroke and read chart tooltips with no DOM nodes to lean on.",
+  "answer": "Canvas testing is automating a drawing surface where shapes are pixels, not DOM elements, so locators cannot find them. You work with coordinates instead: click at an offset, press and drag the mouse to draw, and read results from the page state or a screenshot. This page gives you a moving target, a stroke task and chart tooltips to practice.",
+  "faqs": [
+   {
+    "q": "How do you click a specific point on a canvas in Playwright?",
+    "a": "Use locator.click({ position: { x: 120, y: 80 } }), where the position is relative to the canvas top-left corner. For a moving target, read its coordinates from the page via evaluate, or expose them in app state, then click at that position."
+   },
+   {
+    "q": "How do you click a canvas by offset in Selenium 4?",
+    "a": "Use new Actions(driver).moveToElement(canvas, x, y).click().perform(). In Selenium 4 the offset is measured from the element's center, not its top-left, so subtract half the width and height from your coordinates."
+   },
+   {
+    "q": "How do you draw on a canvas in an automated test?",
+    "a": "Move the mouse to the start point, press the button, move through several points, and release. In Playwright: mouse.move, mouse.down, mouse.move with steps, mouse.up. In Selenium: clickAndHold, moveByOffset calls, release. Then verify via app state or a screenshot."
+   },
+   {
+    "q": "How do you verify a chart tooltip drawn on a canvas?",
+    "a": "Hover the data point coordinates, then read the tooltip. If the tooltip is DOM-based, assert its text normally. If it is drawn on the canvas, compare a screenshot with toHaveScreenshot, or read the chart library's data through page.evaluate."
+   },
+   {
+    "q": "Why can't I find elements inside a canvas with locators?",
+    "a": "A canvas is a single bitmap element. Shapes drawn into it are not in the DOM, so CSS and XPath cannot target them. Use coordinate input, JavaScript access to the app's model, or visual comparison instead."
+   }
+  ],
+  "ogHeadline": "Canvas Testing Practice",
+  "ogSubline": "Moving targets, drawing and chart tooltips. Free.",
+  "imageAlt": "QA Playground Canvas and Charts page with a moving target and a chart tooltip",
+  "relatedIds": [
+   "interactions",
+   "sortable",
+   "click-traps",
+   "a11y"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "canvas automation testing practice"
+ },
+ "certificate": {
+  "title": "Free QA Automation Practice Certificate | QA Playground",
+  "metaDescription": "Finish every QA automation challenge on the playground and download your free completion certificate. No signup, no payment, runs in your browser.",
+  "h1Subtitle": "Complete every challenge and download a free certificate of practice.",
+  "answer": "The QA Playground certificate is a free completion certificate you earn by finishing every automation challenge on the site. Each challenge needs real work with Selenium, Playwright or Cypress against a live page, and progress is tracked in your browser. It is a record of practice, not an accredited qualification such as ISTQB.",
+  "faqs": [
+   {
+    "q": "How do I get the QA Playground certificate?",
+    "a": "Complete every challenge on the practice hub so each shows a passed result. When all are done, the certificate page unlocks and you can download it. Progress is stored in your browser, so use the same browser."
+   },
+   {
+    "q": "Is the certificate free?",
+    "a": "Yes. There is no fee, no signup and no email required. You enter the name you want printed and download the certificate directly from your browser."
+   },
+   {
+    "q": "Is this an accredited QA certification?",
+    "a": "No. It shows you completed hands-on practice tasks. Accredited options like ISTQB Foundation Level need a proctored exam. Use this certificate as a portfolio item alongside your GitHub tests, not as a formal credential."
+   },
+   {
+    "q": "Does my progress save if I close the browser?",
+    "a": "Progress is saved in your browser's local storage, so it survives closing the tab. It is lost if you clear site data or switch browsers or devices, so finish and download in one place."
+   },
+   {
+    "q": "Which challenges count toward the certificate?",
+    "a": "All practice challenges on the hub count, from Basic Elements and Dialogs to Canvas, Accessibility and Auth Flows. Each needs a passing result in its result box."
+   }
+  ],
+  "ogHeadline": "Free QA Practice Certificate",
+  "ogSubline": "Finish every challenge and download it free",
+  "imageAlt": "QA Playground certificate of completion for finishing all automation challenges",
+  "relatedIds": [
+   "basic",
+   "advanced",
+   "bug-hunt",
+   "interview"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "free QA automation certificate"
+ },
+ "click-traps": {
+  "title": "Element Click Intercepted Practice Page | QA Playground",
+  "metaDescription": "Free practice page for covered, moving and delayed buttons that cause click intercepted errors. Fix them in Playwright, Selenium or Cypress. No signup.",
+  "h1Subtitle": "Covered, moving and delayed elements that break naive clicks, with reference fixes in four frameworks.",
+  "answer": "A click trap is an element that is visible but cannot receive a click, because another element covers it, it is still moving, or it is not enabled yet. Selenium reports this as ElementClickInterceptedException and Playwright retries until it times out. You practice by reproducing each trap, then fixing it with actionability waits, scrolling, or closing the overlay instead of forcing the click.",
+  "faqs": [
+   {
+    "q": "What does ElementClickInterceptedException mean in Selenium?",
+    "a": "It means the browser found the element, but another element would receive the click at that point, such as a modal, sticky header or cookie banner. Selenium 4 names the intercepting element in the message. Wait for the overlay to go away, scroll the target into view, or close the overlay."
+   },
+   {
+    "q": "How does Playwright handle a covered element?",
+    "a": "Playwright runs actionability checks before click: visible, stable, enabled, and receives events. If another element intercepts pointer events, it retries until the timeout, then fails with a log naming the blocker. Dismiss the overlay or wait for it to detach rather than using force: true."
+   },
+   {
+    "q": "Should I use a JavaScript click to get around a click trap?",
+    "a": "Usually not. A JavaScript click skips the checks a real user hits, so it can pass while the button is unusable. Use it only when the element is genuinely clickable but the driver misreports it, and say why in a comment."
+   },
+   {
+    "q": "How do I click an element that is moving?",
+    "a": "Wait until the element is stable. Playwright does this automatically by checking that the bounding box is unchanged across two animation frames. In Selenium and Cypress, wait for the animation to finish or for a class or position change, then click."
+   },
+   {
+    "q": "How do I test a button that is disabled or delayed?",
+    "a": "Assert or wait for the enabled state before clicking. Use expect(button).toBeEnabled() in Playwright, an ExpectedConditions.elementToBeClickable wait in Selenium, or should('not.be.disabled') in Cypress. Avoid fixed sleeps, which are slow and still flaky."
+   }
+  ],
+  "ogHeadline": "Click Traps",
+  "ogSubline": "Covered, moving and delayed elements to click safely",
+  "imageAlt": "QA Playground Click Traps page showing a button covered by an overlay and a moving target",
+  "relatedIds": [
+   "dynamic",
+   "flaky",
+   "interactions",
+   "locator-traps"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "element click intercepted practice page"
+ },
+ "data-generator": {
+  "title": "Test Data Generator for QA: CSV, JSON, SQL | QA Playground",
+  "metaDescription": "Free test data generator for QA. Create unlimited fake users, orders and test cards as CSV, JSON or SQL in your browser. No signup, no row limit.",
+  "h1Subtitle": "Generate unlimited fake users, orders and cards as CSV, JSON or SQL, right in the browser.",
+  "answer": "A test data generator creates realistic but fake records, such as users, orders and payment cards, so you can fill forms, seed databases and drive API tests without using real personal data. This free generator runs in your browser, has no row limit, and exports CSV, JSON or SQL INSERT statements you can load into a test database or a Playwright, Selenium or Cypress test.",
+  "faqs": [
+   {
+    "q": "What is a test data generator?",
+    "a": "A test data generator produces fake but realistic records like names, emails, addresses and orders. Testers use it to populate databases, fill forms and feed automated tests without exposing real customer data or writing records by hand."
+   },
+   {
+    "q": "How do I generate fake users as CSV or JSON?",
+    "a": "Pick the user dataset, set how many rows you need, choose CSV or JSON, then copy or download the output. You can load the file in a test with fs.readFileSync in Playwright, Cypress fixtures, or a CSV reader in Selenium."
+   },
+   {
+    "q": "Can I generate SQL INSERT statements for test data?",
+    "a": "Yes. Choose the SQL format and the generator outputs INSERT statements for the selected table. Run them against a local or staging database to seed users or orders before a test run. Never run them on production."
+   },
+   {
+    "q": "Are the fake credit card numbers safe to use?",
+    "a": "The card numbers are fake and follow the Luhn check so format validation passes, but they are not real accounts and cannot be charged. For real payment flows use the test cards your payment provider documents, such as Stripe's 4242 card."
+   },
+   {
+    "q": "Is there a limit on how many rows I can generate?",
+    "a": "No limit is enforced by the site and nothing is sent to a server. Generation happens in your browser, so very large sets are limited only by your device memory. No account or signup is required."
+   }
+  ],
+  "ogHeadline": "Test Data Generator",
+  "ogSubline": "Fake users, orders and cards as CSV, JSON or SQL",
+  "imageAlt": "QA Playground test data generator showing fake user rows exported as CSV, JSON and SQL",
+  "relatedIds": [
+   "api-playground",
+   "basic",
+   "tables",
+   "advanced"
+  ],
+  "schemaType": "WebApplication",
+  "primaryKeyword": "test data generator for QA"
+ },
+ "deep-dom": {
+  "title": "Nested iFrame & Closed Shadow Root Practice | QA Playground",
+  "metaDescription": "Free practice page for nested iframes, closed shadow roots and shadow DOM inside frames. Hints and solutions for Playwright, Selenium, Cypress.",
+  "h1Subtitle": "Nested iframes, closed shadow roots and shadow DOM inside frames, all on one page.",
+  "answer": "A deep DOM is a page where iframes are nested inside iframes and shadow roots sit inside those frames, some of them closed. A closed shadow root returns null for element.shadowRoot, so page scripts cannot reach it. Automate it by switching or chaining through each frame in order, then using the driver's own shadow root access rather than JavaScript.",
+  "faqs": [
+   {
+    "q": "How do I handle nested iframes in Selenium?",
+    "a": "Switch one level at a time: switchTo().frame(outer), then switchTo().frame(inner). Use parentFrame() to go up one level or defaultContent() to return to the top. Switching straight to the inner frame fails because Selenium only sees children of the current context."
+   },
+   {
+    "q": "How do I handle nested iframes in Playwright?",
+    "a": "Chain frameLocator calls: page.frameLocator('#outer').frameLocator('#inner').getByRole('button'). Each call narrows the context, and Playwright auto-waits at each level. You do not need to fetch frame objects or switch back afterward."
+   },
+   {
+    "q": "What is a closed shadow root?",
+    "a": "A closed shadow root is created with attachShadow({ mode: 'closed' }). The host element's shadowRoot property returns null, so page JavaScript and querySelector chains cannot enter it. Open roots, with mode 'open', expose shadowRoot normally."
+   },
+   {
+    "q": "Can Selenium or Playwright access a closed shadow root?",
+    "a": "Not by locating elements. Playwright's CSS and text locators pierce open shadow roots only, and Selenium's getShadowRoot() cannot open a closed one. The practical route is the keyboard: focus the element just before the host, press Tab into the closed root and type, which is what the Deep DOM page asks you to do."
+   },
+   {
+    "q": "How do I find a shadow DOM element inside an iframe?",
+    "a": "Enter the frame first, then locate the shadow host and open its root. In Selenium: switchTo().frame(), findElement(host).getShadowRoot().findElement(css). In Playwright: frameLocator(...).locator('host-css inner-css'), since Playwright's CSS locators pierce open shadow roots."
+   }
+  ],
+  "ogHeadline": "Nested iFrames & Closed Shadow DOM",
+  "ogSubline": "Free advanced practice page for test automation",
+  "imageAlt": "Share image for the QA Playground deep DOM page showing nested iframes and closed shadow root test tasks.",
+  "relatedIds": [
+   "frames",
+   "locator-traps",
+   "click-traps",
+   "flaky"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "nested iframe and closed shadow root practice"
+ },
+ "dialogs": {
+  "title": "Selenium Alert and Popup Practice | QA Playground",
+  "metaDescription": "Free practice page for JavaScript alerts, confirm and prompt dialogs and HTML modals. Test cases, hints and solutions in Selenium, Playwright and Cypress.",
+  "h1Subtitle": "Handle JavaScript alerts, confirm prompts and modal dialogs, then check your result in the pass/fail box.",
+  "answer": "A JavaScript dialog is a browser-native popup, such as alert, confirm or prompt, that blocks the page until it is handled. In Selenium you switch to it with driver.switchTo().alert() and call accept, dismiss or sendKeys. Playwright uses the page dialog event, and Cypress listens to window:alert and window:confirm. HTML modals are normal elements and need regular locators.",
+  "faqs": [
+   {
+    "q": "How do you handle an alert in Selenium?",
+    "a": "Call driver.switchTo().alert() in Java, or driver.switch_to.alert in Python, then use accept() to click OK or dismiss() to cancel. Use getText() to read the message. Wrap the switch in WebDriverWait with ExpectedConditions.alertIsPresent() so the test does not fail with NoAlertPresentException."
+   },
+   {
+    "q": "How do you handle a confirm dialog in Playwright?",
+    "a": "Register page.on('dialog', dialog => dialog.accept()) or dialog.dismiss() before the click that opens it. Playwright auto-dismisses dialogs if no listener exists, so the handler must be attached first. Use page.once for a single dialog, and dialog.message() to assert the text."
+   },
+   {
+    "q": "How do you type into a JavaScript prompt?",
+    "a": "In Selenium call alert.sendKeys('text') then accept(). In Playwright call dialog.accept('text'). In Cypress stub window.prompt with cy.window().then(win => cy.stub(win, 'prompt').returns('text')). Dismissing a prompt returns null to the page, which is a useful negative test."
+   },
+   {
+    "q": "What is the difference between a JavaScript alert and a modal dialog?",
+    "a": "An alert, confirm or prompt is drawn by the browser, blocks all script and cannot be found with locators. A modal is ordinary HTML and CSS in the DOM, so you locate its buttons like any element and wait for it to be visible. They need different automation code."
+   },
+   {
+    "q": "How do you test an alert in Cypress?",
+    "a": "Cypress accepts alerts automatically and fires window:alert. Assert the message with cy.on('window:alert', text => expect(text).to.equal('Hello')). For confirm, return false from cy.on('window:confirm') to cancel. Register the listener before the action that triggers the dialog."
+   }
+  ],
+  "ogHeadline": "Alerts, Confirms and Modals",
+  "ogSubline": "Free popup and dialog practice for Selenium and Playwright",
+  "imageAlt": "QA Playground Popups and Dialogs page showing alert, confirm, prompt and modal tasks with a pass/fail result box",
+  "relatedIds": [
+   "basic",
+   "windows",
+   "frames",
+   "dynamic"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "selenium alert popup practice"
+ },
+ "dynamic": {
+  "title": "Dynamic Waits Selenium Practice Page | QA Playground",
+  "metaDescription": "Free practice page for dynamic waits: elements that appear, enable or change after a delay. Try explicit waits in Selenium, Playwright, Cypress.",
+  "h1Subtitle": "Practice explicit waits on elements that appear, enable and change after a delay.",
+  "answer": "A dynamic wait is a rule that pauses a test until an element reaches a state, such as visible, enabled or containing text, instead of sleeping a fixed time. You practice it on a page where content loads asynchronously. In Selenium use WebDriverWait with ExpectedConditions. Playwright and Cypress retry assertions and actions automatically until a timeout.",
+  "faqs": [
+   {
+    "q": "What is an explicit wait in Selenium?",
+    "a": "An explicit wait is a WebDriverWait with a condition and a timeout. Selenium polls the condition, every 500 ms by default, until it returns a truthy value or the timeout expires. Use it for a specific element or state, for example element_to_be_clickable or visibility_of_element_located."
+   },
+   {
+    "q": "Why is Thread.sleep a bad way to wait for elements?",
+    "a": "A fixed sleep is either too short, so the test fails on a slow run, or too long, so every run wastes time. A condition-based wait continues the moment the element is ready and fails only after a timeout you choose, which keeps tests faster and more stable."
+   },
+   {
+    "q": "Does Playwright need explicit waits?",
+    "a": "Usually not. Playwright actions such as click and fill auto-wait for the element to be attached, visible, stable, enabled and able to receive events. Web-first assertions like expect(locator).toBeVisible() also retry until the timeout. Use waitFor only for states no action covers."
+   },
+   {
+    "q": "How does Cypress handle elements that appear late?",
+    "a": "Cypress retries cy.get and most assertions until they pass or the default 4 second timeout ends. If an element needs longer, pass a timeout option to that command, for example cy.get('#result', { timeout: 10000 }). You do not add sleeps."
+   },
+   {
+    "q": "Should I mix implicit and explicit waits?",
+    "a": "No. Selenium documentation warns that mixing them can produce unpredictable wait times. Set the implicit wait to zero and use explicit waits for each condition that needs one."
+   }
+  ],
+  "ogHeadline": "Dynamic Waits Practice",
+  "ogSubline": "Delayed elements with pass/fail checks for Selenium and Playwright",
+  "imageAlt": "Dynamic and Waits challenge page showing a delayed element and a pass/fail result box",
+  "relatedIds": [
+   "progress-bar",
+   "flaky",
+   "lazy-load",
+   "locator-traps"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "dynamic waits selenium practice"
+ },
+ "flaky": {
+  "title": "Flaky Test Practice Page for Automation | QA Playground",
+  "metaDescription": "Free flaky test practice page with random failures, random delays and re-rendered elements. Learn retries, waits and stale element fixes. No signup.",
+  "h1Subtitle": "Reproduce random failures, random delays and re-rendered elements, then make your test stable.",
+  "answer": "A flaky test passes and fails on the same code. Causes include fixed sleeps, race conditions, shared state and elements re-rendered mid-test. This page injects random failures, delays and DOM re-renders so you can reproduce them. Fix them with condition-based waits, fresh locators, web-first assertions and bounded retries instead of longer sleeps.",
+  "faqs": [
+   {
+    "q": "What is a flaky test?",
+    "a": "A flaky test gives different results on repeated runs without any change to the code or the test. Typical causes are timing, shared test data, network variance and unstable locators. The result cannot be trusted either way, so it should be fixed or quarantined."
+   },
+   {
+    "q": "How do I fix a StaleElementReferenceException?",
+    "a": "The element was removed or re-rendered after you found it. Locate it again right before use, or wait with an expected condition that re-finds it, such as element_to_be_clickable. In Playwright, locators are lazy and re-resolve on each action, so this rarely occurs."
+   },
+   {
+    "q": "Should I use retries to deal with flaky tests?",
+    "a": "Retries keep a pipeline moving but hide the cause. Playwright supports retries in config and Cypress has test retries since version 5. Use them as a stopgap, track tests that needed a retry, and fix the underlying wait or locator."
+   },
+   {
+    "q": "Why do tests pass locally but fail in CI?",
+    "a": "CI machines are usually slower, run in parallel and have less memory, so timing assumptions break. Replace sleeps with condition waits, avoid shared data between tests, and add traces or videos on failure to see what the page looked like."
+   },
+   {
+    "q": "How can I find the cause of a flaky test?",
+    "a": "Run it many times, for example Playwright's --repeat-each, and compare failing traces to passing ones. Look for an action that ran before the page was ready, or an element replaced between find and click. Fix the timing at that step."
+   }
+  ],
+  "ogHeadline": "Flaky Test Practice",
+  "ogSubline": "Random failures and delays to make your tests stable",
+  "imageAlt": "Flaky Page challenge showing random failures and a pass/fail result box",
+  "relatedIds": [
+   "dynamic",
+   "progress-bar",
+   "click-traps",
+   "locator-traps"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "flaky test practice page"
+ },
+ "frames": {
+  "title": "iFrame and Shadow DOM Practice Page | QA Playground",
+  "metaDescription": "Free iframe and shadow DOM practice page. Switch into frames, pierce shadow roots, with hints and solutions in Playwright, Selenium and Cypress.",
+  "h1Subtitle": "Practice switching into iframes and reaching elements inside shadow roots.",
+  "answer": "An iframe is a separate document embedded in a page, and a shadow DOM is an encapsulated element tree attached to a host element. Test tools cannot see inside either by default. To automate them, switch to the frame first (switchTo().frame in Selenium, frameLocator in Playwright), then locate shadow content with a shadow root API or a piercing selector.",
+  "faqs": [
+   {
+    "q": "How do I switch to an iframe in Selenium?",
+    "a": "Call driver.switchTo().frame() with an index, a name or id, or the iframe WebElement. Locate elements inside it as usual, then return with switchTo().defaultContent(). Forgetting to switch back is the most common cause of NoSuchElementException on the main page."
+   },
+   {
+    "q": "How do I handle an iframe in Playwright?",
+    "a": "Use page.frameLocator('iframe#id') and chain locators from it, for example frameLocator('#pay').getByRole('button'). Playwright waits for the frame and auto-waits for elements, so no manual switching or switching back is needed."
+   },
+   {
+    "q": "How do I find elements inside a shadow DOM in Selenium 4?",
+    "a": "Find the shadow host, call getShadowRoot() on it (Java) or shadow_root (Python), then use findElement with a CSS selector on that root. XPath does not work inside shadow roots. For nested roots, repeat the step per host."
+   },
+   {
+    "q": "Does Playwright pierce shadow DOM automatically?",
+    "a": "Yes. Playwright CSS and role-based locators such as getByRole, getByText and locator('css') pass through open shadow roots at any depth. XPath selectors do not pierce them, so prefer CSS or user-facing locators."
+   },
+   {
+    "q": "How do I test an iframe or shadow DOM in Cypress?",
+    "a": "Cypress has no built-in frame switching. Read the iframe body from its contentDocument and wrap it, or use a plugin. For shadow DOM, pass { includeShadowDom: true } to cy.get or set it in config so selectors pierce open roots."
+   }
+  ],
+  "ogHeadline": "iFrame & Shadow DOM Practice",
+  "ogSubline": "Free page for Playwright, Selenium and Cypress",
+  "imageAlt": "Share image for the QA Playground frames and shadow DOM practice page with iframe and shadow root test tasks.",
+  "relatedIds": [
+   "deep-dom",
+   "locator-traps",
+   "dynamic",
+   "windows"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "iframe and shadow DOM practice page"
+ },
+ "home": {
+  "title": "Demo Ecommerce Site for Automation Testing | QA Playground",
+  "metaDescription": "QA Store is a free demo ecommerce website for automation testing: products, cart, checkout and admin to test with Selenium, Playwright or Cypress.",
+  "h1Subtitle": "A mock online store built to be tested: browse products, fill a cart, check out and try the admin.",
+  "answer": "A demo ecommerce website for automation testing is a fake online store that exists only to be tested. QA Store has products, search, a cart, checkout and an admin area, with no real payments or data. Use it to write end-to-end Selenium, Playwright or Cypress tests for login, cart totals and checkout, then continue to the practice arena for focused challenges.",
+  "faqs": [
+   {
+    "q": "Which demo ecommerce website can I use for Selenium practice?",
+    "a": "QA Store is free, needs no signup and has products, cart, checkout and admin pages. SauceDemo, Demoblaze and the Tricentis Demo Web Shop are other common options. Pick one with stable locators and automate a full purchase flow."
+   },
+   {
+    "q": "What should I test on an ecommerce site?",
+    "a": "Cover search and filters, adding and removing cart items, quantity and total calculations, form validation at checkout, login and logout, and error states. Include negative cases such as an empty cart, invalid card data and missing required fields."
+   },
+   {
+    "q": "Does QA Store process real payments or store real data?",
+    "a": "No. It is a mock store with fake products and no payment processor. Nothing you enter is a real transaction, so you can run automated checkouts as often as you like."
+   },
+   {
+    "q": "Can I run Playwright or Cypress tests against QA Store?",
+    "a": "Yes. It is a normal public web app, so Playwright, Cypress, Selenium or any other tool can drive it. The practice arena adds guided tasks with reference solutions for each framework."
+   },
+   {
+    "q": "Are there bugs planted in the store to find?",
+    "a": "Yes. The Bug Hunt challenge hides six real bugs in QA Store. Find them by exploring manually or with scripts, which practices exploratory testing and writing assertions that actually catch defects."
+   }
+  ],
+  "ogHeadline": "Demo Ecommerce Test Site",
+  "ogSubline": "Free mock store for Selenium, Playwright and Cypress",
+  "imageAlt": "QA Store mock ecommerce website with product grid, cart and checkout for automation testing",
+  "relatedIds": [
+   "bug-hunt",
+   "pagination-test",
+   "lazy-load"
+  ],
+  "schemaType": "WebSite",
+  "primaryKeyword": "demo ecommerce website for automation testing"
+ },
+ "interactions": {
+  "title": "Selenium Drag and Drop Practice | QA Playground",
+  "metaDescription": "Free practice page for drag and drop, hover, right-click and hotkeys. Test with Selenium, Playwright or Cypress. No signup, with pass/fail results.",
+  "h1Subtitle": "Practice drag and drop, hover menus, right-click and hotkeys with a pass/fail result for every task.",
+  "answer": "Mouse and keyboard interaction testing means driving drag, hover, context-click and key-press events from a script instead of a person. In Selenium 4 you use the Actions class, for example dragAndDrop, moveToElement and contextClick. In Playwright you call dragTo, hover, click with button right, and keyboard.press. This page gives you each interaction as a task with a result box.",
+  "faqs": [
+   {
+    "q": "How do you do drag and drop in Selenium 4?",
+    "a": "Create an Actions object and call dragAndDrop(source, target).perform(), or chain clickAndHold, moveToElement and release for finer control. If the page uses HTML5 native drag events, the simple call can fail, and you may need clickAndHold with small moves or a JavaScript fallback."
+   },
+   {
+    "q": "How do you hover over an element in Playwright?",
+    "a": "Call await page.locator('selector').hover(). Playwright waits for the element to be visible and stable, scrolls it into view, then moves the mouse over it. Assert on the revealed menu or tooltip with expect(locator).toBeVisible() afterwards."
+   },
+   {
+    "q": "How do you right-click in Selenium and Playwright?",
+    "a": "In Selenium use new Actions(driver).contextClick(element).perform(). In Playwright use locator.click({ button: 'right' }). Both open the page's custom context menu, which you then locate in the DOM like any other element. Native browser menus cannot be automated."
+   },
+   {
+    "q": "How do you press keyboard shortcuts in automated tests?",
+    "a": "In Playwright use page.keyboard.press('Control+S'). In Selenium use Actions.keyDown(Keys.CONTROL).sendKeys('s').keyUp(Keys.CONTROL). In Cypress use cy.get('body').type('{ctrl}s'). Focus the right element first or the page may ignore the keys."
+   },
+   {
+    "q": "Why does my drag and drop test pass but nothing moves?",
+    "a": "The page probably listens for different events than the ones your tool fires. HTML5 drag uses dragstart and drop, while many widgets use mouse or pointer events. Check which one the page uses, then pick dragTo, manual mouse moves, or dispatched DragEvents to match."
+   }
+  ],
+  "ogHeadline": "Mouse & Keyboard Practice",
+  "ogSubline": "Drag and drop, hover, right-click and hotkeys. Free.",
+  "imageAlt": "QA Playground Mouse and Keyboard practice page with drag and drop, hover and right-click tasks",
+  "relatedIds": [
+   "sortable",
+   "click-traps",
+   "canvas",
+   "widgets"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "selenium drag and drop practice"
+ },
+ "interview": {
+  "title": "QA Automation Interview Questions | QA Playground",
+  "metaDescription": "Free QA automation interview kit: 60+ QA and SDET questions with answers on Selenium, Playwright, Cypress and APIs, plus flashcards. No signup.",
+  "h1Subtitle": "60+ QA and SDET interview questions with short answers and flashcards for fast revision.",
+  "answer": "QA automation interview questions test your grasp of testing basics, locators, waits, framework design, API testing and CI. This free kit lists more than 60 QA and SDET questions with concise answers and flashcards. Read them by topic, quiz yourself, then practice the same ideas on the site's challenge pages with Selenium, Playwright or Cypress.",
+  "faqs": [
+   {
+    "q": "What are the most common QA automation interview questions?",
+    "a": "Expect questions on implicit versus explicit waits, locator strategies, the Page Object Model, handling iframes and alerts, flaky tests, API testing, and how you structure a framework and run it in CI."
+   },
+   {
+    "q": "How do I prepare for an SDET interview?",
+    "a": "Review testing fundamentals, practice one language such as Java, Python or TypeScript, solve small coding problems, and build a sample framework. Then rehearse explaining design choices like waits, test data and reporting aloud."
+   },
+   {
+    "q": "What is the difference between implicit and explicit wait in Selenium?",
+    "a": "An implicit wait sets a global polling timeout for finding elements. An explicit wait, using WebDriverWait with ExpectedConditions, waits for a specific condition on one element. Selenium advises not mixing them because timeouts can combine unpredictably."
+   },
+   {
+    "q": "How does Playwright differ from Selenium in interviews?",
+    "a": "Playwright auto-waits for elements to be actionable, ships its own test runner, and supports multiple browser contexts and network mocking built in. Selenium 4 uses the WebDriver protocol and relies on explicit waits and separate runners such as TestNG or pytest."
+   },
+   {
+    "q": "Are the interview questions free to use?",
+    "a": "Yes. The kit is free, needs no signup, and runs in your browser. Use the flashcard mode to quiz yourself and the related practice pages to try each concept against a real page."
+   }
+  ],
+  "ogHeadline": "QA Interview Questions",
+  "ogSubline": "60+ QA and SDET questions with answers and flashcards",
+  "imageAlt": "QA Playground interview kit with a flashcard showing a Selenium wait question",
+  "relatedIds": [
+   "dynamic",
+   "flaky",
+   "locator-traps",
+   "api-playground"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "QA automation interview questions and answers"
+ },
+ "lazy-load": {
+  "title": "Lazy Loading Automation Testing Practice | QA Playground",
+  "metaDescription": "Free lazy loading test page: scroll to load more products, wait for new items and count them. Practice in Playwright, Selenium and Cypress. No signup.",
+  "h1Subtitle": "Scroll a product list that loads more items as you go, and assert on what appears.",
+  "answer": "Lazy loading is a pattern where a page fetches and renders content only when the user scrolls near it. To automate it, scroll the list or its last item into view, then wait for the item count to grow. Playwright offers scrollIntoViewIfNeeded and mouse.wheel. Selenium uses JavaScript scrollIntoView or Actions, followed by an explicit wait.",
+  "faqs": [
+   {
+    "q": "How do I test infinite scroll in Playwright?",
+    "a": "Scroll the last item into view with locator.scrollIntoViewIfNeeded() or mouse.wheel(), then assert the count grows with expect(items).toHaveCount(n) or expect.poll. Repeat until the count stops changing or reaches the expected total, rather than using fixed sleeps."
+   },
+   {
+    "q": "How do I scroll to load more content in Selenium?",
+    "a": "Run driver.execute_script('arguments[0].scrollIntoView()', lastItem) or use Actions.scroll_to_element in Selenium 4, then use WebDriverWait to wait until the number of items increases. Loop until no new items appear."
+   },
+   {
+    "q": "What is the difference between lazy loading and pagination?",
+    "a": "Pagination splits content across pages the user navigates. Lazy loading or infinite scroll appends items to the same page as the user scrolls. Tests for lazy loading need scroll actions and waits, while pagination tests click next and check the URL or content."
+   },
+   {
+    "q": "Why does my element not exist until I scroll?",
+    "a": "The page only renders it after it enters the viewport, usually via IntersectionObserver. Scroll to the container first, wait for the element, then interact. Locating it before scrolling will fail with a not found or timeout error."
+   },
+   {
+    "q": "Can I check lazy loaded images in a test?",
+    "a": "Yes. Scroll the image into view, then assert its naturalWidth is greater than zero or that the src attribute is populated. Playwright can evaluate this in the page, and Cypress can use invoke on the element."
+   }
+  ],
+  "ogHeadline": "Lazy Loading Practice",
+  "ogSubline": "Scroll to load products, then assert in your tests",
+  "imageAlt": "Store Lazy Loading page with product cards loading as the list scrolls",
+  "relatedIds": [
+   "pagination-test",
+   "virtual-table",
+   "dynamic",
+   "progress-bar"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "lazy loading automation testing practice"
+ },
+ "locator-traps": {
+  "title": "Dynamic ID Locator Practice Page | QA Playground",
+  "metaDescription": "Free practice page for dynamic IDs, shuffled classes, hidden spaces and shifting layouts. Write stable locators in Playwright, Selenium or Cypress.",
+  "h1Subtitle": "Dynamic IDs, shuffled classes, hidden spaces and shifting layouts that break brittle locators.",
+  "answer": "A locator trap is markup that makes a fragile selector fail: IDs regenerated on every load, classes in changing order, extra whitespace in attribute values, or elements that move when the layout shifts. Stable locators use role, label, visible text, data-testid or partial matches instead. You practice by finding each target with a selector that still works after a reload.",
+  "faqs": [
+   {
+    "q": "How do I locate an element with a dynamic ID in Selenium?",
+    "a": "Skip the full ID. Use a partial match such as By.cssSelector(\"[id^='submit-']\") or XPath contains(@id, 'submit'), or locate by text, label or a data attribute. Best of all, ask developers to add a stable data-testid attribute."
+   },
+   {
+    "q": "What is the best locator strategy in Playwright?",
+    "a": "Playwright recommends user-facing locators first: getByRole, getByLabel, getByText and getByTestId. They match what a user sees and survive markup changes. Fall back to CSS or XPath only when no accessible role or label exists."
+   },
+   {
+    "q": "Why does a class locator break when class order changes?",
+    "a": "An XPath like @class='btn primary' compares the whole string, so order or extra spaces break it. Use a CSS class selector such as .btn.primary, or XPath contains(concat(' ', normalize-space(@class), ' '), ' primary '), which ignores order and spacing."
+   },
+   {
+    "q": "How do I handle hidden elements and extra spaces in text?",
+    "a": "Check visibility before interacting and match text with normalize-space() in XPath, or Playwright getByText, which normalizes whitespace by default. Filter out hidden duplicates with :visible in Playwright or by checking isDisplayed() in Selenium."
+   },
+   {
+    "q": "How can I make locators less flaky when the layout shifts?",
+    "a": "Do not rely on position, such as nth-child or absolute XPath. Anchor on stable attributes or on a nearby label, then navigate relative to it. Playwright locator chaining and filter() make this readable."
+   }
+  ],
+  "ogHeadline": "Locator Traps",
+  "ogSubline": "Dynamic IDs, shuffled classes and shifting layouts",
+  "imageAlt": "QA Playground Locator Traps page with buttons whose IDs and classes change on every load",
+  "relatedIds": [
+   "click-traps",
+   "basic",
+   "dynamic",
+   "flaky"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "dynamic id locator practice page"
+ },
+ "pagination-test": {
+  "title": "Pagination Testing Practice Site | QA Playground",
+  "metaDescription": "Free pagination testing practice: walk through multiple pages of store products with Selenium, Playwright or Cypress and check your result in the browser.",
+  "h1Subtitle": "Navigate pages of products, collect items and handle first and last page edge cases.",
+  "answer": "Pagination splits a long list of items across numbered pages, and testing it means checking that next, previous and page links load the right items. To practice, loop until the next button is disabled, collect items from each page, and assert there are no duplicates or gaps. This free page gives you a paginated product store with tasks.",
+  "faqs": [
+   {
+    "q": "How do I automate pagination in Selenium?",
+    "a": "Loop: read the items on the current page, then click the Next button if it is enabled, and stop when it is disabled or missing. In Selenium 4 use WebDriverWait to confirm the page changed before reading again, to avoid stale element errors."
+   },
+   {
+    "q": "How do I loop through all pages in Playwright?",
+    "a": "Use a while loop that collects page.locator('.product') texts, then checks await next.isEnabled() and clicks it. After each click, wait for the first item text or the page indicator to change so you do not read the old page."
+   },
+   {
+    "q": "What are the main pagination test cases?",
+    "a": "Check the first page has Previous disabled, the last page has Next disabled, page numbers jump correctly, items per page is consistent, no item repeats across pages, and the total count matches. Also test an invalid page number in the URL."
+   },
+   {
+    "q": "How do I know I reached the last page?",
+    "a": "Check that the Next control is disabled, hidden or absent, or that the current page equals the total pages shown. Do not rely on a fixed page count, because data can change between runs."
+   },
+   {
+    "q": "Where can I practice pagination testing for free?",
+    "a": "This page is free, needs no signup and runs in the browser. It lists store products over several pages, with positive and negative tasks, a pass or fail result box and hints."
+   }
+  ],
+  "ogHeadline": "Pagination Testing Practice",
+  "ogSubline": "Walk every page of a product list, free",
+  "imageAlt": "QA Playground Store Pagination page showing product cards and numbered page links",
+  "relatedIds": [
+   "lazy-load",
+   "tables",
+   "virtual-table",
+   "dynamic"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "pagination testing practice site"
+ },
+ "practice": {
+  "title": "Selenium Practice Website, 23 Challenges | QA Playground",
+  "metaDescription": "Free Selenium, Playwright and Cypress practice website with 23 automation challenges, pass/fail checks, hints and reference solutions. No signup needed.",
+  "h1Subtitle": "Free automation challenges with pass/fail results, hints and reference solutions in four frameworks.",
+  "answer": "A QA automation practice website is a safe web app built to be tested, so you can write Selenium, Playwright or Cypress scripts without touching a real product. QA Playground offers 23 free challenges, from basic forms to flaky pages, iframes and API mocking. Each has positive and negative test cases, a pass/fail result box and hints, and runs in the browser with no signup.",
+  "faqs": [
+   {
+    "q": "What is the best website to practice Selenium automation?",
+    "a": "Pick a site that gives tasks, not just components. QA Playground has 23 challenges, 4 tools with pass/fail checks, hints and reference solutions. The Internet, SauceDemo and DemoQA are also common choices. Start with simple forms and move to waits, frames and flaky behavior as you improve."
+   },
+   {
+    "q": "Can I use this site to practice Playwright and Cypress too?",
+    "a": "Yes. The site is plain web UI, so any tool works. Newer challenge pages include reference solutions in Playwright, Selenium Java, Selenium Python and Cypress, so you can compare how each framework handles the same task."
+   },
+   {
+    "q": "Is the practice site really free and without signup?",
+    "a": "Yes. Every challenge is free, needs no account and runs in the browser. You can automate it against the live URL from your own machine, and a certificate is available once you finish all challenges."
+   },
+   {
+    "q": "What should a beginner practice first in test automation?",
+    "a": "Start with Basic Elements and Popups & Dialogs: inputs, buttons, forms, alerts and modals. Then learn explicit waits on Dynamic & Waits, and only after that try frames, shadow DOM, windows and drag and drop."
+   },
+   {
+    "q": "How do I practice handling flaky tests?",
+    "a": "Use the Flaky Page and Click Traps challenges. They add random delays, failures and re-rendered elements, so fixed sleeps fail. Replace sleeps with auto-waiting locators, explicit waits and retry-safe assertions, then check that the run passes repeatedly."
+   }
+  ],
+  "ogHeadline": "Automation Practice Website",
+  "ogSubline": "23 free Selenium, Playwright and Cypress challenges",
+  "imageAlt": "QA Playground practice arena listing free Selenium, Playwright and Cypress automation challenges",
+  "relatedIds": [
+   "basic",
+   "dynamic",
+   "flaky",
+   "bug-hunt"
+  ],
+  "schemaType": "CollectionPage",
+  "primaryKeyword": "selenium practice website"
+ },
+ "progress-bar": {
+  "title": "Progress Bar Automation Testing Practice | QA Playground",
+  "metaDescription": "Free progress bar test page: wait for 100 percent, read the value and stop at a target. Practice in Selenium, Playwright and Cypress. No signup needed.",
+  "h1Subtitle": "Wait for a progress bar to finish, read its value and stop it at a target.",
+  "answer": "Testing a progress bar means checking that it advances and reaches a state, usually 100 percent, before the next step runs. Read the value from aria-valuenow, a style width or text, then wait for it with a condition. In Selenium use WebDriverWait. Playwright and Cypress retry assertions such as toHaveAttribute until the bar completes.",
+  "faqs": [
+   {
+    "q": "How do I wait for a progress bar to reach 100% in Selenium?",
+    "a": "Use WebDriverWait with a condition on the bar, for example text_to_be_present_in_element or a lambda that reads aria-valuenow and returns true at 100. Set a timeout longer than the bar's expected duration so a stuck bar fails the test instead of hanging."
+   },
+   {
+    "q": "How do I read the progress bar value in Playwright?",
+    "a": "Use expect(bar).toHaveAttribute('aria-valuenow', '100') for a web-first assertion that retries. To read it once, call await bar.getAttribute('aria-valuenow'). Avoid reading it in a loop with sleeps, because the assertion already retries."
+   },
+   {
+    "q": "How can I stop a progress bar at a specific percentage?",
+    "a": "Poll the value and click Stop when it reaches the target. Exact stops are timing sensitive, so tests usually accept a range, such as 70 to 80. In Playwright use expect.poll on the value, then click and assert the range."
+   },
+   {
+    "q": "Why does my progress bar test fail intermittently?",
+    "a": "Common causes are asserting before the bar finishes, using a fixed sleep shorter than the run time, or reading a stale element after a re-render. Wait on the bar's state with a timeout and re-locate the element when the DOM changes."
+   },
+   {
+    "q": "Is aria-valuenow reliable for progress bars?",
+    "a": "It is when the bar uses role=progressbar and updates the attribute, which is the accessible pattern. Some bars only change a style width. Inspect the element first and assert on whichever attribute the page actually updates."
+   }
+  ],
+  "ogHeadline": "Progress Bar Practice",
+  "ogSubline": "Wait, read and stop a live progress bar in your tests",
+  "imageAlt": "Progress Bar challenge page with a filling bar and a pass/fail result box",
+  "relatedIds": [
+   "dynamic",
+   "flaky",
+   "lazy-load",
+   "canvas"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "progress bar automation testing practice"
+ },
+ "sortable": {
+  "title": "Drag and Drop Sortable List Practice | QA Playground",
+  "metaDescription": "Free sortable list practice: HTML5 drag and drop, press-and-hold reordering and a Kanban board. Test with Playwright, Selenium or Cypress. No signup.",
+  "h1Subtitle": "Reorder lists with HTML5 drag and drop, press-and-hold sorting and a Kanban board, then check the result.",
+  "answer": "A sortable list is a UI where items are reordered by dragging, and it is hard to automate because implementations differ. Native HTML5 lists fire dragstart and drop events, while many libraries use mouse or pointer events and long presses. This page has an HTML5 list, a press-and-hold list and a Kanban board so you can match the technique to each.",
+  "faqs": [
+   {
+    "q": "Why does Selenium drag and drop not work on HTML5 lists?",
+    "a": "Native HTML5 drag relies on dragstart, dragover and drop events with a DataTransfer object, which synthetic mouse actions often do not trigger in some drivers. Try Actions clickAndHold with several small moveByOffset steps, or dispatch the drag events with JavaScript."
+   },
+   {
+    "q": "How do you test drag and drop in Playwright?",
+    "a": "Use source.dragTo(target) for most cases. If the page needs intermediate events, use page.mouse.move, page.mouse.down, a second page.mouse.move with steps set above 1, and page.mouse.up. Then assert the new order by reading the list item texts."
+   },
+   {
+    "q": "How do you test a press-and-hold sortable list?",
+    "a": "Move the mouse to the item, press down, wait longer than the hold delay, then move in steps to the target and release. In Playwright that is mouse.down, waitForTimeout, mouse.move with steps, mouse.up. Replace fixed waits with an assertion once the item is lifted."
+   },
+   {
+    "q": "How do you assert the order after reordering items?",
+    "a": "Collect the text of all list items and compare the array with the expected order. Playwright: expect(items).toHaveText([...]). Selenium: map findElements to getText and use assertEquals. Do not assert on pixel positions, which vary by viewport."
+   },
+   {
+    "q": "How do you automate a Kanban board drag?",
+    "a": "Locate the card and the target column, drag the card into the column area, and assert the card is now a child of that column's container. Cards often move only when dropped over a specific zone, so aim at the column body, not its header."
+   }
+  ],
+  "ogHeadline": "Sortable List Practice",
+  "ogSubline": "HTML5 drag and drop, press-and-hold and Kanban. Free.",
+  "imageAlt": "QA Playground Sortable Lists page showing a draggable list and a Kanban board",
+  "relatedIds": [
+   "interactions",
+   "click-traps",
+   "widgets",
+   "canvas"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "drag and drop sortable list automation practice"
+ },
+ "tables": {
+  "title": "Web Table Practice for Automation Testing | QA Playground",
+  "metaDescription": "Free web table practice page for Selenium, Playwright and Cypress. Read cells, sort, filter and extract data from a dynamic grid with graded tasks.",
+  "h1Subtitle": "Extract, sort and verify data in a dynamic grid, then check your result in the browser.",
+  "answer": "A web table is an HTML grid of rows and cells that automated tests read, sort, filter and click inside. To practice, locate rows by their text rather than by index, read cell values by column, and assert after sorting or filtering. This free page gives you a dynamic data grid with tasks you can solve in Playwright, Selenium or Cypress.",
+  "faqs": [
+   {
+    "q": "How do I get a cell value from a web table in Selenium?",
+    "a": "Find the row with a locator such as //tr[td[text()='Alice']], then read the cell with a relative path like ./td[3] and call getText(). Locating the row by content instead of index keeps the test stable when the data order changes."
+   },
+   {
+    "q": "How do I locate a table row by text in Playwright?",
+    "a": "Use page.getByRole('row').filter({ hasText: 'Alice' }) to get the row, then row.getByRole('cell').nth(2) for a column. Playwright re-queries on each action, so the locator survives re-sorting and re-rendering."
+   },
+   {
+    "q": "How do I test table sorting in automation?",
+    "a": "Click the column header, read every value in that column into an array, and compare it with a sorted copy of the same array. Check ascending and descending, and test numbers and dates separately because text sorting orders them differently."
+   },
+   {
+    "q": "How do I count rows in a dynamic table?",
+    "a": "Query the row locator after the data has loaded, for example expect(rows).toHaveCount(10) in Playwright or findElements(By.cssSelector('tbody tr')).size() in Selenium. Wait for a known row or loading indicator first so you do not count a half-rendered table."
+   },
+   {
+    "q": "Is there a free page to practice web table automation?",
+    "a": "Yes. This page is free, needs no signup and runs in the browser. It has a dynamic data grid, a task list with positive and negative cases, a pass or fail result box and hints for each task."
+   }
+  ],
+  "ogHeadline": "Web Table Practice",
+  "ogSubline": "Read, sort and filter a dynamic grid for free",
+  "imageAlt": "QA Playground Tables and Lists page showing a sortable data grid with a task checklist",
+  "relatedIds": [
+   "pagination-test",
+   "virtual-table",
+   "dynamic",
+   "locator-traps"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "web table practice for automation testing"
+ },
+ "virtual-table": {
+  "title": "Virtual Scroll Table Testing Practice | QA Playground",
+  "metaDescription": "Free virtual table practice with 10,000 rows and only a few in the DOM. Learn to scroll, search and sort to find rows in Playwright, Selenium or Cypress.",
+  "h1Subtitle": "10,000 rows, a handful in the DOM: scroll to find a row or sort to pick it.",
+  "answer": "A virtual table renders only the rows visible on screen and recycles them as you scroll, so most of the data is never in the DOM. To automate it, scroll in small steps, re-query rows after each step, match by a stable key, and use sorting to bring a target row to the top. This free page has 10,000 rows.",
+  "faqs": [
+   {
+    "q": "What is a virtualized table?",
+    "a": "A virtualized table keeps only the visible rows, plus a small buffer, in the DOM and swaps their content as the user scrolls. It stays fast with thousands of rows, but a row count from the DOM shows the rendered rows, not the total."
+   },
+   {
+    "q": "How do I scroll a virtual list in Playwright?",
+    "a": "Use page.mouse.wheel(0, 400) or set scrollTop with locator.evaluate in bounded steps. After each step, re-query the rows and check for the target text, and stop at a maximum number of steps so a missing row fails the test."
+   },
+   {
+    "q": "Why does my row count only show 20 rows?",
+    "a": "Because the table is virtualized and only the rows in view exist in the DOM. Read the total from an aria-rowcount attribute, a counter in the UI or the API response instead of counting row elements."
+   },
+   {
+    "q": "How do I find a row in a 10,000 row table?",
+    "a": "Prefer a search box, filter or column sort to bring the row into view. If none exists, scroll in steps and match on a stable id. Sorting is often faster and more reliable than scrolling to a fixed position."
+   },
+   {
+    "q": "Is there a free virtual table to practice on?",
+    "a": "Yes. This page has 10,000 rows with only a few in the DOM, tasks with positive and negative cases, a pass or fail box, hints and solutions in four frameworks. It is free and needs no signup."
+   }
+  ],
+  "ogHeadline": "Virtual Table Testing",
+  "ogSubline": "10,000 rows, few in the DOM. Free practice",
+  "imageAlt": "QA Playground Virtual Table page showing a scrolling grid of 10,000 rows with a task list",
+  "relatedIds": [
+   "tables",
+   "pagination-test",
+   "lazy-load",
+   "dynamic"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "virtual scroll table testing"
+ },
+ "widgets": {
+  "title": "OTP Input Automation Practice: Widgets | QA Playground",
+  "metaDescription": "Free practice page to automate OTP boxes, tag inputs and star ratings. Pass/fail result box, hints and solutions for Playwright, Selenium and Cypress.",
+  "h1Subtitle": "Automate OTP boxes, tag inputs and star ratings, the widgets where a plain fill() or sendKeys() call often fails.",
+  "answer": "OTP input automation is the practice of scripting split one-digit code boxes, along with similar custom widgets like tag inputs and star ratings, in a browser test. These widgets move focus, listen to key and paste events, or use non-input elements, so you type digits one at a time or use keyboard APIs. This free page lets you practice all three with pass/fail checks.",
+  "faqs": [
+   {
+    "q": "How do you automate a six-digit OTP input with separate boxes in Playwright?",
+    "a": "Click the first box and call page.keyboard.type('123456'), since focus usually jumps to the next box on each key. If the widget supports paste, dispatch a paste event instead. Alternatively use locator.pressSequentially() on the first box. Then assert each box holds one digit."
+   },
+   {
+    "q": "Why does sendKeys or fill not work on OTP boxes in Selenium?",
+    "a": "Many OTP widgets listen to keydown or input events and move focus themselves. Sending the whole code to one box can drop digits. In Selenium 4, send one character per box, or send keys to the active element so the widget's own focus logic runs between keystrokes."
+   },
+   {
+    "q": "How do you test a tag input field with automation?",
+    "a": "Type a value, press Enter or a comma, then assert a new tag element appears. Test the negative cases as well: duplicate tags, empty input, and removal by the remove button or Backspace. Locate tags by role or text, not by index."
+   },
+   {
+    "q": "How do you click a star rating in Cypress or Playwright?",
+    "a": "Locate the star by its accessible name, label or data attribute, then click it and assert the selected count or aria-checked state. Star widgets often use spans or SVGs rather than inputs, so check the rendered state, not an input value."
+   },
+   {
+    "q": "Is this widgets practice page free and does it need a signup?",
+    "a": "Yes, it is free, needs no signup, and runs in your browser. Each task has positive and negative test cases, a pass/fail result box and per-task hints, with reference solutions in Playwright, Selenium Java, Selenium Python and Cypress."
+   }
+  ],
+  "ogHeadline": "OTP, Tags and Star Ratings",
+  "ogSubline": "Free widget automation practice for QA engineers",
+  "imageAlt": "Share image for the Real-World Widgets practice page showing OTP boxes, tag chips and star ratings",
+  "relatedIds": [
+   "basic",
+   "advanced",
+   "dynamic",
+   "auth-flows"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "otp input automation practice"
+ },
+ "windows": {
+  "title": "Switch Windows and Tabs Practice | QA Playground",
+  "metaDescription": "Free practice page for multiple tabs, self-closing popups and windows found by title. Hints and solutions in Selenium, Playwright and Cypress.",
+  "h1Subtitle": "Open new tabs, catch popups that close themselves and switch to windows by title.",
+  "answer": "Window handling is switching your test's focus between browser tabs and popup windows. Selenium gives each window a handle, and you switch with getWindowHandles() and switchTo().window(handle), often choosing the target by title or URL. Playwright exposes new pages through the context page event or page.waitForEvent('popup'). Cypress cannot switch tabs, so tests remove target=_blank or visit the URL directly.",
+  "faqs": [
+   {
+    "q": "How do you switch to a new tab in Selenium?",
+    "a": "Store the current handle with getWindowHandle(), click the link, then loop through getWindowHandles() and switch to the one that differs. In Selenium 4 you can also call driver.switchTo().newWindow(WindowType.TAB) to open and focus a tab. Switch back with the stored handle."
+   },
+   {
+    "q": "How do you switch to a window by title in Selenium?",
+    "a": "Iterate over driver.getWindowHandles(), call switchTo().window(handle) for each, and compare driver.getTitle() with the expected title. Stop when it matches. If none match, switch back to the original handle so later steps do not run in the wrong window."
+   },
+   {
+    "q": "How do you handle a new tab in Playwright?",
+    "a": "Start waiting before the click: const [newPage] = await Promise.all([context.waitForEvent('page'), page.click('a')]). For window.open popups use page.waitForEvent('popup'). Then call newPage.waitForLoadState() and work with newPage directly. No switching is required."
+   },
+   {
+    "q": "How do you handle a popup that closes itself?",
+    "a": "Grab the handle list before the popup closes, switch to it, read what you need, and switch back to the parent. After it closes, using the old handle throws NoSuchWindowException in Selenium. In Playwright, listen for the page close event."
+   },
+   {
+    "q": "Can Cypress switch between tabs?",
+    "a": "No, Cypress runs inside one tab. Remove the target attribute with invoke('removeAttr', 'target') so the link opens in the same tab, or read the href and cy.visit it. For popups, stub window.open with cy.stub and assert the call."
+   }
+  ],
+  "ogHeadline": "Windows and Tabs Practice",
+  "ogSubline": "Switch handles, popups and titles in Selenium or Playwright",
+  "imageAlt": "QA Playground Windows and Tabs page with buttons that open new tabs and popups, and a pass/fail result box",
+  "relatedIds": [
+   "dialogs",
+   "frames",
+   "deep-dom",
+   "dynamic"
+  ],
+  "schemaType": "LearningResource",
+  "primaryKeyword": "selenium switch between windows tabs practice"
+ }
+}

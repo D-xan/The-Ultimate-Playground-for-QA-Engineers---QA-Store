@@ -29,7 +29,7 @@ class SortableListsTest {
     void setUp() {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("${SITE_URL}#/practice/sortable");
+        driver.get("${SITE_URL}practice/sortable");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
@@ -100,7 +100,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}#/practice/sortable"
+URL = "${SITE_URL}practice/sortable"
 
 # ActionChains.drag_and_drop never fires HTML5 dragstart/drop events, so dispatch them with JavaScript.
 HTML5_DND = """
@@ -178,7 +178,7 @@ const html5Drag = (source, target) => {
 
 describe('Sortable Lists', () => {
   beforeEach(() => {
-    cy.visit('/#/practice/sortable');
+    cy.visit('/practice/sortable');
   });
 
   it('sorts the HTML5 list', () => {

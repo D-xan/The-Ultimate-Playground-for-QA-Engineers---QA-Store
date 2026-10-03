@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/#/practice/deep-dom');
+  await page.goto('/practice/deep-dom');
 });
 
 test('button three iframes deep', async ({ page }) => {
@@ -42,7 +42,7 @@ test('closed shadow widget is defined as soon as the page module loads', async (
     }).observe(document, { childList: true, subtree: true });
   });
   await page.goto('about:blank');
-  await page.goto('/#/practice/deep-dom');
+  await page.goto('/practice/deep-dom');
   await page.locator('closed-shadow-widget').waitFor({ state: 'attached' });
   expect(await page.evaluate(() => customElements.get('closed-shadow-widget') !== undefined)).toBe(true);
   expect(await page.evaluate(() => (window as unknown as { __definedOnInsert?: boolean }).__definedOnInsert)).toBe(true);
