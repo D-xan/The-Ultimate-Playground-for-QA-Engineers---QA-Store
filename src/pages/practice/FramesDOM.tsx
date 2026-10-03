@@ -54,7 +54,7 @@ export default function FramesDOM() {
 
       {/* Browser Windows */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">22. Browser Windows</h2>
+        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">1. Browser Windows</h2>
         <div className="flex gap-4">
           <Button 
             onClick={() => window.open('https://example.com', '_blank')} 
@@ -74,7 +74,7 @@ export default function FramesDOM() {
 
       {/* Iframes */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">23. Frames (iframe)</h2>
+        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">2. Frames (iframe)</h2>
         <div className="-mx-1 mb-4 mt-2"><TaskQuestions groupId="frames" tasks={[
   {
     "title": "Switch context to the iframe and interact with its button",
@@ -114,7 +114,7 @@ export default function FramesDOM() {
 
       {/* Shadow DOM */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">24. Shadow DOM</h2>
+        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">3. Shadow DOM</h2>
         <div className="mb-4 mt-2"><TaskQuestions groupId="shadow-dom" tasks={[
   {
     "title": "Retrieve text from inside the Shadow DOM component",

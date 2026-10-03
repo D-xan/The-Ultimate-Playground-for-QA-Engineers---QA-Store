@@ -17,7 +17,7 @@ export default function Interactions() {
       </div>
 
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">20. Mouse Actions</h2>
+        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">1. Mouse Actions</h2>
         <div className="mb-4 mt-2"><TaskQuestions tasks={[
   {
     "title": "Drag the draggable item into the drop zone",
@@ -137,7 +137,7 @@ export default function Interactions() {
       </section>
 
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">21. Keyboard Actions</h2>
+        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">2. Keyboard Actions</h2>
         <div>
           <h3 className="font-semibold mb-3">Key Event Logger</h3>
           <p className="text-sm text-slate-500 mb-4">Focus the input below and press any key to see the event captured.</p>

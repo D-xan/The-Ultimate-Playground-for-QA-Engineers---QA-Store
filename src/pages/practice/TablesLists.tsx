@@ -36,7 +36,7 @@ export default function TablesLists() {
 
       {/* Tables */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">12. Tables</h2>
+        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">1. Tables</h2>
         <div className="mb-4 mt-2"><TaskQuestions tasks={[
   {
     "title": "Sort the table by 'Price' descending",
@@ -145,7 +145,7 @@ export default function TablesLists() {
 
       {/* Lists */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">13. Lists</h2>
+        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">2. Lists</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
@@ -169,7 +169,7 @@ export default function TablesLists() {
 
       {/* Pagination */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">27. Pagination</h2>
+        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">3. Pagination</h2>
         <div className="flex flex-col items-center gap-4">
           <div className="text-sm text-slate-500" id="pagination-info">Showing page {currentPage} of {totalPages}</div>
           <div className="flex items-center justify-center gap-2">

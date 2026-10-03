@@ -28,7 +28,7 @@ export default function AdvancedInputs() {
 
       {/* Dropdowns */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">5. Dropdowns</h2>
+        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">1. Dropdowns</h2>
         <div className="mb-4 mt-2"><TaskQuestions groupId="dropdowns" tasks={[
   {
     "title": "Search for and select 'India' from the searchable dropdown",
@@ -91,7 +91,7 @@ export default function AdvancedInputs() {
 
       {/* Date & Time */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">6. Date & Time</h2>
+        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">2. Date & Time</h2>
         <div className="mb-4 mt-2"><TaskQuestions groupId="datetime" tasks={[
   {
     "title": "Select a specific date from the date picker",
@@ -125,7 +125,7 @@ export default function AdvancedInputs() {
       {/* File Handling */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">9. File Uploads</h2>
+          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">3. File Uploads</h2>
         <div className="mb-4 mt-2"><TaskQuestions groupId="uploads" tasks={[
   {
     "title": "Upload a dummy file",
@@ -154,7 +154,7 @@ export default function AdvancedInputs() {
         </div>
 
         <div>
-          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">9. Downloads</h2>
+          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">4. Downloads</h2>
           <div className="flex flex-wrap gap-4">
             <Button variant="outline" onClick={() => alert('Download triggered')} id="download-pdf">Download PDF</Button>
             <Button variant="outline" onClick={() => alert('Download triggered')} id="download-csv">Download CSV</Button>
@@ -165,7 +165,7 @@ export default function AdvancedInputs() {
 
       {/* Color & Color Picker */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">37. Advanced Pickers</h2>
+        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">5. Advanced Pickers</h2>
         <div className="mb-4 mt-2"><TaskQuestions groupId="pickers" tasks={[
   {
     "title": "Pick a custom color from the color picker",

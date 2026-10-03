@@ -244,7 +244,7 @@ export default function BasicElements() {
       {/* Sliders & Toggles */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">7. Sliders</h2>
+          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">5. Sliders</h2>
         <div className="mb-4 mt-2"><TaskQuestions groupId="sliders" tasks={[
   {
     "title": "Move the slider to 75",
@@ -279,7 +279,7 @@ export default function BasicElements() {
         </div>
 
         <div>
-          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">8. Toggle Controls</h2>
+          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">6. Toggle Controls</h2>
           <div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" className="sr-only peer" id="toggle-switch-1" />
@@ -292,7 +292,7 @@ export default function BasicElements() {
       
       {/* Links */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">11. Links</h2>
+        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">7. Links</h2>
         <div className="flex gap-4">
           <a href="#" className="text-primary hover:underline" id="link-internal">Internal Anchor Link</a>
           <a href="https://example.com" target="_blank" rel="noreferrer" className="text-primary hover:underline" id="link-external">External Link (New Tab)</a>

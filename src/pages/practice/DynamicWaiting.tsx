@@ -48,7 +48,7 @@ export default function DynamicWaiting() {
 
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-border grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">35. Dynamic Elements</h2>
+          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">1. Dynamic Elements</h2>
         <div className="mb-4 mt-2"><TaskQuestions groupId="dynamic-elements" tasks={[
   {
     "title": "Wait for the dynamic element to appear and verify its text",
@@ -95,7 +95,7 @@ export default function DynamicWaiting() {
         </div>
 
         <div>
-          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">26. Loading States</h2>
+          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">2. Loading States</h2>
         <div className="mb-4 mt-2"><TaskQuestions groupId="loading-states" tasks={[
   {
     "title": "Click the 'Start Process' button and wait for the progress bar to reach 100%",
