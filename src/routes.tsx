@@ -42,6 +42,7 @@ const FlakyPage = React.lazy(() => import('./pages/practice/FlakyPage'));
 const DataGenerator = React.lazy(() => import('./pages/practice/DataGenerator'));
 const ApiPlayground = React.lazy(() => import('./pages/practice/ApiPlayground'));
 const InterviewKit = React.lazy(() => import('./pages/practice/InterviewKit'));
+const Certificate = React.lazy(() => import('./pages/practice/Certificate'));
 const Widgets = React.lazy(() => import('./pages/practice/Widgets'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
@@ -82,6 +83,7 @@ export const AppRoutes = () => {
             <Route path="widgets" element={<Widgets />} />
             <Route path="data-generator" element={<DataGenerator />} />
             <Route path="api-playground" element={<ApiPlayground />} />
+            <Route path="certificate" element={<Certificate />} />
             <Route path="interview" element={<InterviewKit />} />
           </Route>
 
