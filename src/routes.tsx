@@ -54,6 +54,11 @@ const AuthFlows = React.lazy(() => import('./pages/practice/AuthFlows'));
 const CanvasCharts = React.lazy(() => import('./pages/practice/CanvasCharts'));
 const AccessibilityLab = React.lazy(() => import('./pages/practice/AccessibilityLab'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
+const InfoLayout = React.lazy(() => import('./layouts/InfoLayout'));
+const About = React.lazy(() => import('./pages/info/About'));
+const Privacy = React.lazy(() => import('./pages/info/Privacy'));
+const Terms = React.lazy(() => import('./pages/info/Terms'));
+const Contact = React.lazy(() => import('./pages/info/Contact'));
 
 // Role based protection
 const ProtectedRoute = ({ children, requiredRole }: { children: React.ReactNode, requiredRole: string }) => {
@@ -132,6 +137,14 @@ export const AppRoutes = () => {
             <Route path="products" element={<AdminProducts />} />
           </Route>
           
+          {/* About, legal and contact */}
+          <Route element={<InfoLayout />}>
+            <Route path="/about" element={<About />} />
+            <Route path="/privacy-policy" element={<Privacy />} />
+            <Route path="/terms-of-service" element={<Terms />} />
+            <Route path="/contact" element={<Contact />} />
+          </Route>
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

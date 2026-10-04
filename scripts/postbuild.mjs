@@ -12,10 +12,11 @@ const SITE_URL = loadEnv('production', root).VITE_SITE_URL;
 const base = new URL(SITE_URL).pathname;
 const seo = JSON.parse(await readFile(path.join(root, 'src/data/seo.json'), 'utf8'));
 
-const pathForId = (id) => (id === 'home' ? '' : id === 'practice' ? 'practice' : `practice/${id}`);
+const INFO_IDS = ['about', 'privacy-policy', 'terms-of-service', 'contact']; // keep in step with src/seo/seo.ts
+const pathForId = (id) => (id === 'home' ? '' : id === 'practice' || INFO_IDS.includes(id) ? id : `practice/${id}`);
 // GitHub Pages serves /practice/tables from practice/tables.html without a trailing-slash redirect.
 const fileForId = (id) => path.join(dist, id === 'home' ? 'index.html' : `${pathForId(id)}.html`);
-const ids = ['home', 'practice', ...Object.keys(seo).filter((id) => id !== 'home' && id !== 'practice').sort()];
+const ids = ['home', 'practice', ...Object.keys(seo).filter((id) => id !== 'home' && id !== 'practice' && !INFO_IDS.includes(id)).sort(), ...INFO_IDS];
 
 const shell = await readFile(path.join(dist, 'index.html'), 'utf8');
 await writeFile(path.join(dist, '404.html'), shell);
@@ -112,6 +113,10 @@ ${line('home')}
 
 ## Practice pages and tools
 
-${ids.filter((id) => id !== 'home' && id !== 'practice').map(line).join('\n')}
+${ids.filter((id) => id !== 'home' && id !== 'practice' && !INFO_IDS.includes(id)).map(line).join('\n')}
+
+## About
+
+${INFO_IDS.map(line).join('\n')}
 `);
 console.log('wrote 404.html, sitemap.xml, robots.txt, llms.txt');

@@ -47,10 +47,17 @@ export default function Login() {
           <p className="mt-2 text-sm text-slate-500">Sign in to your account</p>
         </div>
 
+        <div data-testid="demo-accounts" className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+          <p className="font-semibold">Demo accounts (test data only)</p>
+          <p className="mt-1">Customer: <code>customer@example.com</code> / <code>customer123</code></p>
+          <p>Admin: <code>admin@example.com</code> / <code>admin123</code></p>
+        </div>
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">Email Address</label>
+            <label htmlFor="login-email" className="mb-2 block text-sm font-medium text-slate-700">Email Address</label>
             <Input
+              id="login-email"
               type="email"
               placeholder="you@example.com"
               {...register('email')}
@@ -59,8 +66,9 @@ export default function Login() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">Password</label>
+            <label htmlFor="login-password" className="mb-2 block text-sm font-medium text-slate-700">Password</label>
             <Input
+              id="login-password"
               type="password"
               placeholder="••••••••"
               {...register('password')}

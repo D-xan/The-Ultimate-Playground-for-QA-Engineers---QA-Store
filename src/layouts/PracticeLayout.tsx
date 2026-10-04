@@ -2,7 +2,8 @@ import { useChallengeMode } from '@/store/useChallengeMode';
 import React, { useEffect, useCallback, useState } from 'react';
 import { Outlet, NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import { PageGuide } from '@/seo/PageGuide';
-import { AppWindow, Store, Save, ArrowRight, RotateCcw, Trash2, Menu, X } from 'lucide-react';
+import { SiteFooter } from '@/components/SiteFooter';
+import { Store, Save, ArrowRight, RotateCcw, Trash2, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useProgressStore } from '../store/useProgressStore';
 import { isPageComplete, pageDone, pageTotal } from '../store/progressLogic';
@@ -16,34 +17,19 @@ const FloatingProgress = () => {
   const location = useLocation();
   const isDashboard = location.pathname === '/practice' || location.pathname === '/practice/';
   
-  let label = "Page Progress";
-  let countStr = "";
-  let progressPercent = 0;
-
-  if (isDashboard) {
-    const totalPages = practiceChallenges.length;
-    let fullyCompletedCount = 0;
-    practiceChallenges.forEach(link => {
-      if (isPageComplete(progress, link.id)) {
-        fullyCompletedCount++;
-      }
-    });
-    progressPercent = totalPages > 0 ? Math.round((fullyCompletedCount / totalPages) * 100) : 0;
-    label = "Overall Progress";
-    countStr = `${fullyCompletedCount} of ${totalPages} Pages`;
-  } else {
-    const challengeId = location.pathname.split('/').pop() || '';
-    const currentTotal = pageTotal(progress, challengeId);
-    if (currentTotal === 0) return null; // TaskQuestions not mounted yet or no tasks
-    const currentCompleted = pageDone(progress, challengeId);
-    progressPercent = Math.round((currentCompleted / currentTotal) * 100);
-    label = "Task Progress";
-    countStr = `${currentCompleted} of ${currentTotal} Tasks`;
-  }
+  // The hub's hero card already shows overall progress, so the pill only appears on challenge pages.
+  if (isDashboard) return null;
+  const challengeId = location.pathname.split('/').pop() || '';
+  const currentTotal = pageTotal(progress, challengeId);
+  if (currentTotal === 0) return null; // TaskQuestions not mounted yet or no tasks
+  const currentCompleted = pageDone(progress, challengeId);
+  const progressPercent = Math.round((currentCompleted / currentTotal) * 100);
+  const label = "Task Progress";
+  const countStr = `${currentCompleted} of ${currentTotal} Tasks`;
 
   return (
-    <div className="absolute top-4 right-4 md:top-6 md:right-8 z-50 bg-white/90 backdrop-blur-md shadow-lg rounded-full px-4 py-2 md:px-5 md:py-2.5 border border-slate-200 flex items-center gap-3 md:gap-4 animate-in fade-in zoom-in-95 duration-300 pointer-events-none">
-      <div className="flex flex-col hidden sm:flex">
+    <div data-testid="task-progress" className="relative mx-4 mt-3 self-end md:absolute md:mx-0 md:mt-0 md:top-6 md:right-8 z-30 bg-white/90 backdrop-blur-md shadow-lg rounded-full px-4 py-2 md:px-5 md:py-2.5 border border-slate-200 flex items-center gap-3 md:gap-4 animate-in fade-in zoom-in-95 duration-300 pointer-events-none">
+      <div className="flex flex-col">
         <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-wider">{label}</span>
         <span className="text-xs md:text-sm font-semibold text-slate-900 leading-tight">{countStr}</span>
       </div>
@@ -157,10 +143,10 @@ export default function PracticeLayout() {
       <div className="flex flex-col md:flex-row h-screen bg-slate-100 overflow-hidden relative">
         {/* Mobile Top Bar */}
         <div className="md:hidden flex items-center justify-between p-4 bg-white border-b border-border shadow-sm z-20">
-          <div className="flex items-center gap-2">
-            <AppWindow className="h-5 w-5 text-primary" />
-            <span className="font-bold text-slate-900">QA Challenges</span>
-          </div>
+          <Link to="/practice" className="flex items-center gap-2">
+            <img src={`${import.meta.env.BASE_URL}brand/randomly-logo-64.webp`} alt="" width={24} height={24} className="h-6 w-6" />
+            <span className="font-bold text-slate-900">QA Playground</span>
+          </Link>
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-slate-600">
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -179,10 +165,12 @@ export default function PracticeLayout() {
           <div className="p-6 border-b border-slate-800 flex justify-between items-center">
             <div>
               <Link to="/practice" className="text-xl font-bold flex items-center gap-2 hover:text-primary transition-colors">
-                <AppWindow className="h-6 w-6 text-primary" />
-                QA Challenges
+                <img src={`${import.meta.env.BASE_URL}brand/randomly-logo-64.webp`} alt="" width={28} height={28} className="h-7 w-7" />
+                QA Playground
               </Link>
-              <p className="text-xs text-slate-400 mt-2">Master your automation scripts</p>
+              <a href="https://randomly.online/" className="mt-2 block text-xs text-slate-400 hover:text-white" data-testid="brand-parent-link">
+                by <span className="font-semibold text-slate-300">Randomly.online</span>
+              </a>
             </div>
             <button className="md:hidden text-slate-400" onClick={() => setIsMobileMenuOpen(false)}>
               <X className="h-5 w-5" />
@@ -235,10 +223,11 @@ export default function PracticeLayout() {
         <main className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden relative">
           <FloatingProgress />
           <SelectorLab />
-          <div className="flex-1 overflow-y-auto p-8 pt-20 md:pt-8">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-8">
             <div className="max-w-6xl mx-auto pb-24">
               <Outlet />
               <PageGuide />
+              <SiteFooter />
             </div>
           </div>
           

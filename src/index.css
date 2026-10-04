@@ -103,3 +103,17 @@
   outline: 2px solid #f59e0b !important;
   outline-offset: 2px;
 }
+
+/* Reading pages (about, privacy, terms, contact) */
+.info-prose h1 { font-size: 1.875rem; font-weight: 800; color: #0f172a; margin-bottom: .5rem; }
+.info-prose h2 { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 2rem 0 .5rem; }
+.info-prose p, .info-prose li { color: #334155; line-height: 1.7; }
+.info-prose p { margin: .75rem 0; }
+.info-prose ul { list-style: disc; padding-left: 1.25rem; margin: .75rem 0; }
+.info-prose li { margin: .25rem 0; }
+.info-prose a { color: #1d4ed8; text-decoration: underline; text-underline-offset: 2px; }
+.info-prose .meta { color: #64748b; font-size: .875rem; }
+html.dark .info-prose h1, html.dark .info-prose h2 { color: #ffffff; }
+html.dark .info-prose p, html.dark .info-prose li { color: #e2e8f0; }
+html.dark .info-prose a { color: #fcd34d; }
+html.dark .info-prose .meta { color: #94a3b8; }

@@ -27,34 +27,34 @@ export default function CustomerLayout() {
         <div className="container mx-auto grid gap-8 px-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <h4 className="mb-4 text-lg font-bold text-slate-900">QA Store</h4>
-            <p className="text-sm text-slate-500">The ultimate frontend automation practice platform masquerading as a premium e-commerce store.</p>
+            <p className="text-sm text-slate-500">A demo shop for automation practice. Nothing here is for sale, and no order is ever charged.</p>
           </div>
           <div>
             <h4 className="mb-4 text-sm font-bold uppercase tracking-wider text-slate-900">Shop</h4>
             <ul className="space-y-2 text-sm text-slate-500">
-              <li><a href="#" className="hover:text-primary">All Products</a></li>
-              <li><a href="#" className="hover:text-primary">Weekly Deals</a></li>
-              <li><a href="#" className="hover:text-primary">New Arrivals</a></li>
+              <li><Link to="/products" className="hover:text-primary">All Products</Link></li>
+              <li><Link to="/deals" className="hover:text-primary">Weekly Deals</Link></li>
+              <li><Link to="/categories" className="hover:text-primary">Categories</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="mb-4 text-sm font-bold uppercase tracking-wider text-slate-900">Support</h4>
+            <h4 className="mb-4 text-sm font-bold uppercase tracking-wider text-slate-900">Help</h4>
             <ul className="space-y-2 text-sm text-slate-500">
-              <li><a href="#" className="hover:text-primary">Track Order</a></li>
-              <li><a href="#" className="hover:text-primary">Returns</a></li>
-              <li><a href="#" className="hover:text-primary">FAQ</a></li>
+              <li><Link to="/orders" className="hover:text-primary">Your Orders</Link></li>
+              <li><Link to="/practice" className="hover:text-primary">Practice challenges</Link></li>
+              <li><Link to="/contact" className="hover:text-primary">Contact</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="mb-4 text-sm font-bold uppercase tracking-wider text-slate-900">Legal</h4>
             <ul className="space-y-2 text-sm text-slate-500">
-              <li><a href="#" className="hover:text-primary">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-primary">Privacy Policy</a></li>
+              <li><Link to="/terms-of-service" className="hover:text-primary">Terms of Service</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-primary">Privacy Policy</Link></li><li><Link to="/about" className="hover:text-primary">About</Link></li>
             </ul>
           </div>
         </div>
         <div className="container mx-auto mt-12 border-t border-border pt-8 text-center text-sm text-slate-400">
-          © {new Date().getFullYear()} QA Automation Playground. All rights reserved.
+          © 2025–{new Date().getFullYear()} Randomly.online. QA Playground is open source under the MIT licence.
         </div>
       </footer>
     </div>

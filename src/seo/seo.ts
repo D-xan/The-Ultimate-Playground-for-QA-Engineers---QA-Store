@@ -21,18 +21,21 @@ export const SITE_NAME = 'QA Playground';
 export const PARENT_SITE = { name: 'Randomly.online', url: 'https://randomly.online/' };
 
 const byId = new Map(challenges.map((c) => [c.id, c]));
+/** About, legal and contact pages: indexed, served at /<id>. */
+export const INFO_IDS = ['about', 'privacy-policy', 'terms-of-service', 'contact'];
 
 /** The SEO entry for a path, or null for pages that should stay out of search (store, admin, popups). */
 export function seoIdForPath(pathname: string): string | null {
   const path = pathname.replace(/\/+$/, '') || '/';
   if (path === '/') return 'home';
   if (path === '/practice') return 'practice';
+  if (INFO_IDS.includes(path.slice(1))) return path.slice(1);
   const m = path.match(/^\/practice\/([^/]+)$/);
   return m && byId.has(m[1]) && SEO[m[1]] ? m[1] : null;
 }
 
 export function pathForId(id: string): string {
-  return id === 'home' ? '' : id === 'practice' ? 'practice' : `practice/${id}`;
+  return id === 'home' ? '' : id === 'practice' || INFO_IDS.includes(id) ? id : `practice/${id}`;
 }
 
 export const urlForId = (id: string) => SITE_URL + pathForId(id);
@@ -54,8 +57,9 @@ const provider = { '@type': 'Organization', name: PARENT_SITE.name, url: PARENT_
 
 function breadcrumbs(id: string): JsonLd {
   const items = [{ name: SITE_NAME, url: SITE_URL }];
-  if (id !== 'home') items.push({ name: 'Practice', url: urlForId('practice') });
-  if (id !== 'home' && id !== 'practice') items.push({ name: byId.get(id)?.label ?? id, url: urlForId(id) });
+  if (INFO_IDS.includes(id)) items.push({ name: SEO[id].ogHeadline, url: urlForId(id) });
+  else if (id !== 'home') items.push({ name: 'Practice', url: urlForId('practice') });
+  if (id !== 'home' && id !== 'practice' && !INFO_IDS.includes(id)) items.push({ name: byId.get(id)?.label ?? id, url: urlForId(id) });
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -85,6 +89,9 @@ function mainEntity(id: string, s: PageSeo, url: string, image: string): JsonLd 
         itemListElement: challenges.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.label, url: urlForId(c.id) })),
       },
     };
+  }
+  if (INFO_IDS.includes(id)) {
+    return { '@context': 'https://schema.org', '@type': s.schemaType, name: s.title, description: s.metaDescription, url, inLanguage: 'en', publisher: provider };
   }
   const c = byId.get(id);
   if (c?.kind === 'tool') {
@@ -121,5 +128,6 @@ export function buildHead(pathname: string): Head {
   const image = `${SITE_URL}og/${id}.png`;
   const jsonLd = [mainEntity(id, s, url, image), breadcrumbs(id)];
   if (id !== 'home' && s.faqs.length) jsonLd.push(faqPage(s));
-  return { title: s.title, description: s.metaDescription, canonical: url, robots: 'index, follow', image, imageAlt: s.imageAlt, ogType: id === 'home' ? 'website' : 'article', jsonLd };
+  const ogType = id === 'home' || INFO_IDS.includes(id) ? 'website' : 'article';
+  return { title: s.title, description: s.metaDescription, canonical: url, robots: 'index, follow', image, imageAlt: s.imageAlt, ogType, jsonLd };
 }
