@@ -1,4 +1,4 @@
-import { SITE_URL } from '@/config/site';
+import { PUBLIC_URL } from '@/config/site';
 
 export const virtualTable = {
   seleniumJava: String.raw`import static org.junit.jupiter.api.Assertions.*;
@@ -19,7 +19,7 @@ class VirtualTableTest {
     void setUp() {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("${SITE_URL}practice/virtual-table");
+        driver.get("${PUBLIC_URL}practice/virtual-table");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
@@ -83,7 +83,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}practice/virtual-table"
+URL = "${PUBLIC_URL}practice/virtual-table"
 ROW_HEIGHT = 40
 
 

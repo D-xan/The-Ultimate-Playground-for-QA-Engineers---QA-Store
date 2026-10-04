@@ -1,4 +1,4 @@
-import { SITE_URL } from '@/config/site';
+import { PUBLIC_URL } from '@/config/site';
 
 export const authFlows = {
   seleniumJava: String.raw`import java.time.Duration;
@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 class AuthFlowsTest {
-    static final String URL = "${SITE_URL}practice/auth-flows";
+    static final String URL = "${PUBLIC_URL}practice/auth-flows";
     WebDriver driver;
     WebDriverWait wait;
 
@@ -98,7 +98,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}practice/auth-flows"
+URL = "${PUBLIC_URL}practice/auth-flows"
 
 
 def open_page():

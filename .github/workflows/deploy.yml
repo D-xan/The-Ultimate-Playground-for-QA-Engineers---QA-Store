@@ -1,4 +1,9 @@
-name: Deploy to GitHub Pages
+name: Deploy
+
+# Two copies of the same site:
+# - Cloudflare Pages serves the canonical qa.randomly.online from the root.
+# - GitHub Pages serves a mirror at d-xan.github.io/<repo>/ for networks that block randomly.online.
+#   Its canonical tags still point at qa.randomly.online.
 
 on:
   push:
@@ -16,7 +21,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  github-pages:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -24,30 +29,74 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-          
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Install Chromium for prerendering
         run: npx playwright install --with-deps chromium
 
+      # base_url is the github.io path, or the custom domain while one is still set in the Pages settings.
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
+
       - name: Build
         run: npm run build
-        
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-        
+        env:
+          VITE_PUBLIC_URL: ${{ steps.pages.outputs.base_url }}/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
-          
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  cloudflare-pages:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      PROJECT: qa-playground
+    steps:
+      - name: Skip until Cloudflare secrets are set
+        if: env.CLOUDFLARE_API_TOKEN == ''
+        run: echo "::notice::CLOUDFLARE_API_TOKEN is not set; skipping the Cloudflare Pages deploy."
+
+      - name: Checkout
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: npm ci
+
+      - name: Install Chromium for prerendering
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: npx playwright install --with-deps chromium
+
+      - name: Build
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: |
+          npx --yes wrangler@4 pages project create "$PROJECT" --production-branch=main 2>/dev/null || true
+          npx --yes wrangler@4 pages deploy dist --project-name="$PROJECT" --branch=main --commit-dirty=true

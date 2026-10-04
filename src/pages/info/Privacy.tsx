@@ -37,8 +37,8 @@ export default function Privacy() {
       <h2>Requests that leave your browser</h2>
       <ul>
         <li>
-          <strong>Hosting.</strong> Pages are served by GitHub Pages, and {new URL(SITE_URL).host} is reached through
-          Cloudflare's DNS. Like any web host, they receive your IP address and browser details when a page
+          <strong>Hosting.</strong> {new URL(SITE_URL).host} is served by Cloudflare Pages, and a mirror copy
+          is served by GitHub Pages. Like any web host, they receive your IP address and browser details when a page
           loads, under their own privacy policies.
         </li>
         <li>

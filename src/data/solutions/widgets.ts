@@ -1,4 +1,4 @@
-import { SITE_URL } from '@/config/site';
+import { PUBLIC_URL } from '@/config/site';
 
 export const widgets = {
   seleniumJava: String.raw`import static org.junit.jupiter.api.Assertions.*;
@@ -19,7 +19,7 @@ class WidgetsTest {
     void setUp() {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("${SITE_URL}practice/widgets");
+        driver.get("${PUBLIC_URL}practice/widgets");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
@@ -96,7 +96,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}practice/widgets"
+URL = "${PUBLIC_URL}practice/widgets"
 
 PASTE_SCRIPT = """
 const el = arguments[0];

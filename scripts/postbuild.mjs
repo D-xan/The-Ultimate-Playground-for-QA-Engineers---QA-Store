@@ -8,8 +8,11 @@ import { chromium } from '@playwright/test';
 
 const root = path.resolve(import.meta.dirname, '..');
 const dist = path.join(root, 'dist');
-const SITE_URL = loadEnv('production', root).VITE_SITE_URL;
-const base = new URL(SITE_URL).pathname;
+const env = loadEnv('production', root);
+const SITE_URL = env.VITE_SITE_URL; // canonical: sitemap, share-image host, llms.txt links
+const PUBLIC_URL = env.VITE_PUBLIC_URL || SITE_URL; // where this copy is served
+const isMirror = PUBLIC_URL !== SITE_URL;
+const base = new URL(PUBLIC_URL).pathname;
 const seo = JSON.parse(await readFile(path.join(root, 'src/data/seo.json'), 'utf8'));
 
 const INFO_IDS = ['about', 'privacy-policy', 'terms-of-service', 'contact']; // keep in step with src/seo/seo.ts
@@ -89,16 +92,15 @@ server.close();
 
 const today = new Date().toISOString().slice(0, 10);
 const url = (id) => SITE_URL + pathForId(id);
-await writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
+// The mirror's canonical tags already point at SITE_URL, so only the canonical copy lists a sitemap.
+if (!isMirror) await writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${ids.map((id) => `  <url><loc>${url(id)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
 </urlset>
 `);
 await writeFile(path.join(dist, 'robots.txt'), `User-agent: *
 Allow: /
-
-Sitemap: ${SITE_URL}sitemap.xml
-`);
+${isMirror ? '' : `\nSitemap: ${SITE_URL}sitemap.xml\n`}`);
 const line = (id) => `- [${seo[id].title.replace(/ \| QA Playground$/, '')}](${url(id)}): ${seo[id].metaDescription}`;
 await writeFile(path.join(dist, 'llms.txt'), `# QA Playground
 
@@ -119,4 +121,4 @@ ${ids.filter((id) => id !== 'home' && id !== 'practice' && !INFO_IDS.includes(id
 
 ${INFO_IDS.map(line).join('\n')}
 `);
-console.log('wrote 404.html, sitemap.xml, robots.txt, llms.txt');
+console.log(`wrote 404.html, ${isMirror ? '' : 'sitemap.xml, '}robots.txt, llms.txt${isMirror ? ` (mirror of ${SITE_URL})` : ''}`);

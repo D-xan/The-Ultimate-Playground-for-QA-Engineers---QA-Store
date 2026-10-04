@@ -6,10 +6,11 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig(({ command, mode, isPreview }) => {
-  const { VITE_SITE_URL } = loadEnv(mode, process.cwd())
+  const { VITE_SITE_URL, VITE_PUBLIC_URL } = loadEnv(mode, process.cwd())
   return {
-    // Builds (and `vite preview`) are served from VITE_SITE_URL's path; the dev server and e2e tests stay at '/'.
-    base: command === 'build' || isPreview ? new URL(VITE_SITE_URL).pathname : '/',
+    // Builds (and `vite preview`) are served from the URL this copy lives at (VITE_PUBLIC_URL, else VITE_SITE_URL);
+    // the dev server and e2e tests stay at '/'.
+    base: command === 'build' || isPreview ? new URL(VITE_PUBLIC_URL || VITE_SITE_URL).pathname : '/',
     plugins: [
       tailwindcss(),
       react()

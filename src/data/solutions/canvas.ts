@@ -1,4 +1,4 @@
-import { SITE_URL } from '@/config/site';
+import { PUBLIC_URL } from '@/config/site';
 
 export const canvas = {
   seleniumJava: String.raw`import java.time.Duration;
@@ -20,7 +20,7 @@ class CanvasChartsTest {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         js = (JavascriptExecutor) driver;
-        driver.get("${SITE_URL}practice/canvas");
+        driver.get("${PUBLIC_URL}practice/canvas");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("main h1")));
     }
 
@@ -94,7 +94,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-URL = "${SITE_URL}practice/canvas"
+URL = "${PUBLIC_URL}practice/canvas"
 
 
 @pytest.fixture
