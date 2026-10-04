@@ -41,3 +41,22 @@ test('start cannot restart the animation while the button is moving', async ({ p
   await expect(page.locator('#moving-button')).not.toHaveClass(/animating/, { timeout: 5000 });
   await expect(page.locator('#start-animation')).toBeEnabled();
 });
+
+test('each solved trap ticks its own task', async ({ page }) => {
+  const done = (id: string) => expect(page.getByTestId(`element-${id}`)).toHaveAttribute('data-done', 'true');
+  await expect(page.getByText('0 of 4 Tasks')).toBeVisible();
+  await page.locator('#overlap-dismiss').click();
+  await page.locator('#overlapped-button').click();
+  await done('overlap');
+  await page.locator('#start-animation').click();
+  await expect(page.locator('#moving-button')).not.toHaveClass(/animating/, { timeout: 5000 });
+  await page.locator('#moving-button').click();
+  await done('moving');
+  await page.locator('#green-button').click();
+  await done('layers');
+  await page.locator('#enable-input').click();
+  await page.locator('#delayed-input').fill('QA');
+  await page.locator('#submit-delayed').click();
+  await done('enabled');
+  await expect(page.getByText('4 of 4 Tasks')).toBeVisible();
+});

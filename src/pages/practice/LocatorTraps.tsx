@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SolutionTabs } from '@/components/practice/SolutionTabs';
-import { TaskQuestions } from '@/components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
-import { HintAccordion } from '@/components/ui/HintAccordion';
 import { ChallengeResult, type ResultState } from '@/components/ui/ChallengeResult';
+import { PracticeElement } from '@/components/practice/PracticeElement';
+import { PracticeSection as Section } from '@/components/practice/PracticeSection';
 
 const shuffle = <T,>(items: T[]): T[] => {
   const copy = [...items];
@@ -88,119 +88,106 @@ export default function LocatorTraps() {
   };
 
   return (
-    <div className="space-y-12 pb-12">
+    <div className="space-y-10 pb-12">
       <div>
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Locator Traps</h1>
-        <p className="text-slate-500">Practice writing locators that survive dynamic IDs, shuffled class lists, invisible characters and shifting layouts.</p>
-        <HintAccordion hints={[
-          "<strong>Selenium:</strong> Avoid <code>By.id</code> for generated IDs. Use <code>By.cssSelector(\"#class-trap .btn-primary\")</code> or XPath <code>contains(@class, 'btn-primary')</code>; use <code>normalize-space()</code> or <code>contains(., 'Me')</code> for text with odd spaces.",
-          "<strong>Playwright:</strong> Prefer <code>getByRole('button', { name })</code> and <code>locator('.btn-primary')</code>. A regex like <code>/Click\\s+Me/</code> matches a non-breaking space.",
-          "<strong>Cypress:</strong> <code>cy.contains('button', /Click\\s+Me/)</code> and <code>cy.get('#class-trap .btn-primary')</code> are order-independent.",
-          "Never rely on position (<code>nth-child</code>, <code>index</code>) when the order or layout can change."
-        ]} />
+        <p className="text-slate-500">Locators that survive generated ids, shuffled class lists, invisible characters and shifting layouts. Each task ticks itself when its result box turns green.</p>
       </div>
 
-      <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">1. Dynamic ID</h2>
-        <div className="mb-4 mt-2"><TaskQuestions groupId="dynamic-id" tasks={[
-          {
-            title: "Click the button without using its ID",
-            description: "The button's id changes on every load and after every click. Locate it by its text or class.",
-            positive: ["Locating by text or the 'dynamic-id-btn' class clicks it and shows success."],
-            negative: ["A locator hard-coded to the current id breaks after a reload or a click."]
-          }
-        ]} /></div>
-        <div className="space-y-4">
-          <button
-            id={dynamicId}
-            type="button"
-            className="dynamic-id-btn rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white"
-            onClick={clickDynamic}
-          >
-            Dynamic ID Button
-          </button>
-          <ChallengeResult testId="result-dynamic-id" state={dynamicResult} message={dynamicResult === 'success' ? 'Clicked without relying on the ID' : 'The ID of this button changes every time'} />
-        </div>
-      </section>
+      <Section n={1} title="Dynamic ID">
+        <PracticeElement
+          id="dynamic-id" label="Generated id"
+          goal="Click the button without using its id. The id changes on every load and after every click."
+          pass={['Locating by text or by the dynamic-id-btn class clicks it']}
+          fail={['A locator copied from DevTools, such as #btn-x7k2pq: it breaks on the next load']}
+          hint="Pick an attribute that stays put: the visible text, the role, or the dynamic-id-btn class."
+          code={{
+            playwright: "await page.getByRole('button', { name: 'Dynamic ID Button' }).click();",
+            seleniumJava: 'driver.findElement(By.cssSelector(".dynamic-id-btn")).click();',
+            seleniumPython: 'driver.find_element(By.CSS_SELECTOR, ".dynamic-id-btn").click()',
+            cypress: "cy.contains('button', 'Dynamic ID Button').click();",
+          }}
+          done={dynamicResult === 'success'}
+        >
+          <button id={dynamicId} type="button" className="dynamic-id-btn rounded-lg bg-primary px-4 py-2 text-sm font-medium text-slate-900" onClick={clickDynamic}>Dynamic ID Button</button>
+          <div className="mt-4"><ChallengeResult testId="result-dynamic-id" state={dynamicResult} message={dynamicResult === 'success' ? 'Clicked without relying on the ID' : 'The ID of this button changes every time'} /></div>
+        </PracticeElement>
+      </Section>
 
-      <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">2. Class Attribute</h2>
-        <div className="mb-4 mt-2"><TaskQuestions groupId="class-attr" tasks={[
-          {
-            title: "Click the btn-primary button",
-            description: "Class order and button order are shuffled. Match the class, not the position or the full class string.",
-            positive: ["A CSS class selector like '.btn-primary' clicks the right button."],
-            negative: ["An exact class string match or an index-based locator picks the wrong button."]
-          }
-        ]} /></div>
-        <div className="space-y-4">
+      <Section n={2} title="Class attribute">
+        <PracticeElement
+          id="class-attr" label="Shuffled classes"
+          goal="Click the button that has the btn-primary class. Button order and class order are shuffled after every click."
+          pass={['A class selector such as .btn-primary picks the right button every time']}
+          fail={['[class="btn btn-primary btn-test"]: the order of classes changes', 'Picking the first button: the order changes too']}
+          hint="CSS class selectors ignore class order. XPath needs contains(concat(' ', @class, ' '), ' btn-primary ')."
+          code={{
+            playwright: "await page.locator('#class-trap .btn-primary').click();",
+            seleniumJava: 'driver.findElement(By.cssSelector("#class-trap .btn-primary")).click();',
+            seleniumPython: 'driver.find_element(By.CSS_SELECTOR, "#class-trap .btn-primary").click()',
+            cypress: "cy.get('#class-trap .btn-primary').click();",
+          }}
+          done={classResult === 'success'}
+        >
           <div id="class-trap" className="flex flex-wrap gap-3">
             {classButtons.map(b => (
-              <button
-                key={b.variant}
-                type="button"
-                className={`${b.classes} rounded-lg px-4 py-2 text-sm font-medium ${variantStyle[b.variant]}`}
-                onClick={() => clickClass(b.variant)}
-              >
-                {b.label}
-              </button>
+              <button key={b.variant} type="button" className={`${b.classes} rounded-lg px-4 py-2 text-sm font-medium ${variantStyle[b.variant]}`} onClick={() => clickClass(b.variant)}>{b.label}</button>
             ))}
           </div>
-          <ChallengeResult testId="result-class-attr" state={classResult} message={classMsg} />
-        </div>
-      </section>
+          <div className="mt-4"><ChallengeResult testId="result-class-attr" state={classResult} message={classMsg} /></div>
+        </PracticeElement>
+      </Section>
 
-      <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">3. Non-breaking Space</h2>
-        <div className="mb-4 mt-2"><TaskQuestions groupId="nbsp" tasks={[
-          {
-            title: "Click the button whose text has a hidden space",
-            description: "The label looks like 'Click Me' but the space is a non-breaking space (U+00A0).",
-            positive: ["Using contains(), normalize-space() or a \\s+ regex finds the button."],
-            negative: ["An exact XPath text()='Click Me' with a normal space finds nothing."]
-          }
-        ]} /></div>
-        <div id="nbsp-section" className="space-y-4">
-          <button
-            type="button"
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white"
-            onClick={() => setNbspResult('success')}
-          >
-            {'Click\u00A0Me'}
-          </button>
-          <ChallengeResult testId="result-nbsp" state={nbspResult} message={nbspResult === 'success' ? 'Matched the non-breaking space' : 'Click the button above'} />
-        </div>
-      </section>
-
-      <section className="bg-white p-6 rounded-2xl shadow-sm border border-border">
-        <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">4. Shifting Content</h2>
-        <div className="mb-4 mt-2"><TaskQuestions groupId="shifting" tasks={[
-          {
-            title: "Click Gallery wherever it moves",
-            description: "Use 'Shift layout' to reshuffle the menu and change its left margin, then click Gallery.",
-            positive: ["Locating by name clicks Gallery regardless of order or offset."],
-            negative: ["Position or coordinate based clicks hit a different item."]
-          }
-        ]} /></div>
-        <div className="space-y-4">
-          <Button id="shift-button" variant="outline" onClick={shift}>Shift layout</Button>
-          <div className="overflow-hidden">
-            <div id="shifting-menu" className="flex flex-wrap gap-2" style={{ marginLeft: `${margin}px` }}>
-              {menu.map(item => (
-                <button
-                  key={item}
-                  type="button"
-                  className="rounded-lg border border-border bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-                  onClick={() => clickMenu(item)}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
+      <Section n={3} title="Non-breaking space">
+        <PracticeElement
+          id="nbsp" label="Hidden space in the text"
+          goal="Click the “Click Me” button. The space in its label is a non-breaking space (U+00A0)."
+          pass={['normalize-space(), contains() or a \\s+ regex finds it']}
+          fail={['XPath text()=\'Click Me\' with a normal space finds nothing']}
+          hint="A non-breaking space is not the same character as a space. Match around it, or normalise it away."
+          code={{
+            playwright: "await page.locator('#nbsp-section button', { hasText: /Click\\s+Me/ }).click();",
+            seleniumJava: '// XPath 1.0 normalize-space() keeps U+00A0, so translate() swaps it for a plain space first\ndriver.findElement(By.xpath("//div[@id=\'nbsp-section\']//button[normalize-space(translate(., \'\\u00A0\', \' \'))=\'Click Me\']")).click();',
+            seleniumPython: 'driver.find_element(By.XPATH, "//div[@id=\'nbsp-section\']//button[contains(., \'Click\') and contains(., \'Me\')]").click()',
+            cypress: "cy.contains('#nbsp-section button', /Click\\s+Me/).click();",
+          }}
+          done={nbspResult === 'success'}
+        >
+          <div id="nbsp-section" className="space-y-4">
+            <button type="button" className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-slate-900" onClick={() => setNbspResult('success')}>{'Click\u00A0Me'}</button>
+            <ChallengeResult testId="result-nbsp" state={nbspResult} message={nbspResult === 'success' ? 'Matched the non-breaking space' : 'Click the button above'} />
           </div>
-          <ChallengeResult testId="result-shifting" state={shiftResult} message={shiftMsg} />
-        </div>
-      </section>
+        </PracticeElement>
+      </Section>
+
+      <Section n={4} title="Shifting content">
+        <PracticeElement
+          id="shifting" label="Menu that moves"
+          goal="Click “Shift layout” to reshuffle the menu and its offset, then click Gallery."
+          pass={['Locating by name clicks Gallery wherever it is']}
+          fail={['nth-child or index locators hit another item', 'Clicking by coordinates']}
+          hint="Scope to the menu and find the button by its name."
+          code={{
+            playwright: "await page.locator('#shift-button').click();\nawait page.locator('#shifting-menu').getByRole('button', { name: 'Gallery' }).click();",
+            seleniumJava: 'driver.findElement(By.id("shift-button")).click();\ndriver.findElement(By.xpath("//div[@id=\'shifting-menu\']/button[.=\'Gallery\']")).click();',
+            seleniumPython: 'driver.find_element(By.ID, "shift-button").click()\ndriver.find_element(By.XPATH, "//div[@id=\'shifting-menu\']/button[.=\'Gallery\']").click()',
+            cypress: "cy.get('#shift-button').click();\ncy.contains('#shifting-menu button', 'Gallery').click();",
+          }}
+          done={shiftResult === 'success'}
+        >
+          <div className="space-y-4">
+            <Button id="shift-button" variant="outline" onClick={shift}>Shift layout</Button>
+            <div className="overflow-hidden">
+              <div id="shifting-menu" className="flex flex-wrap gap-2" style={{ marginLeft: `${margin}px` }}>
+                {menu.map(item => (
+                  <button key={item} type="button" className="rounded-lg border border-border bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100" onClick={() => clickMenu(item)}>{item}</button>
+                ))}
+              </div>
+            </div>
+            <ChallengeResult testId="result-shifting" state={shiftResult} message={shiftMsg} />
+          </div>
+        </PracticeElement>
+      </Section>
 
       <SolutionTabs challengeId="locator-traps" number={5} />
     </div>

@@ -47,3 +47,23 @@ test('closed shadow widget is defined as soon as the page module loads', async (
   expect(await page.evaluate(() => customElements.get('closed-shadow-widget') !== undefined)).toBe(true);
   expect(await page.evaluate(() => (window as unknown as { __definedOnInsert?: boolean }).__definedOnInsert)).toBe(true);
 });
+
+test('each solved part ticks its own task', async ({ page }) => {
+  test.slow();
+  const done = (id: string) => expect(page.getByTestId(`element-${id}`)).toHaveAttribute('data-done', 'true');
+  await expect(page.getByText('0 of 4 Tasks')).toBeVisible();
+  await page.frameLocator('#frame-level-1').frameLocator('#frame-level-2').frameLocator('#frame-level-3').locator('#deep-button').click();
+  await done('nested-frames');
+  const code = await page.frameLocator('#countdown-frame').locator('#launch-code').textContent({ timeout: 10_000 });
+  await page.getByTestId('answer-countdown').fill(code!);
+  await done('countdown');
+  await page.locator('#before-shadow').focus();
+  await page.keyboard.press('Tab');
+  await page.keyboard.type('shadow');
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Enter');
+  await done('closed-shadow');
+  await page.frameLocator('#shadow-frame').locator('#shadow-frame-button').click();
+  await done('shadow-frame');
+  await expect(page.getByText('4 of 4 Tasks')).toBeVisible();
+});

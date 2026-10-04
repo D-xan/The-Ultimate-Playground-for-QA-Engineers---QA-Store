@@ -36,8 +36,8 @@ test('solving a challenge ticks its task without the checkbox', async ({ page })
 
 test('a task group named after its result box is ticked on success', async ({ page }) => {
   await page.goto('/practice/locator-traps');
-  await expect(page.getByTestId('task-toggle-nbsp-0').locator('svg')).not.toHaveClass(/text-green-500/);
+  await expect(page.getByTestId('element-nbsp')).toHaveAttribute('data-done', 'false');
   await page.getByTestId('result-nbsp').locator('xpath=preceding::button[1]').click();
   await expect(page.getByTestId('result-nbsp')).toHaveAttribute('data-state', 'success');
-  await expect(page.getByTestId('task-toggle-nbsp-0').locator('svg')).toHaveClass(/text-green-500/);
+  await expect(page.getByTestId('element-nbsp')).toHaveAttribute('data-done', 'true');
 });

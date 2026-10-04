@@ -28,3 +28,18 @@ test('shifting menu is clicked by name, not position', async ({ page }) => {
   await page.locator('#shifting-menu').getByRole('button', { name: 'Gallery' }).click();
   await expect(page.getByTestId('result-shifting')).toHaveAttribute('data-state', 'success');
 });
+
+test('each solved trap ticks its own task', async ({ page }) => {
+  const done = (id: string) => expect(page.getByTestId(`element-${id}`)).toHaveAttribute('data-done', 'true');
+  await expect(page.getByText('0 of 4 Tasks')).toBeVisible();
+  await page.getByRole('button', { name: 'Dynamic ID Button' }).click();
+  await done('dynamic-id');
+  await page.locator('#class-trap .btn-primary').click();
+  await done('class-attr');
+  await page.locator("xpath=//div[@id='nbsp-section']//button[normalize-space(translate(., ' ', ' '))='Click Me']").click();
+  await done('nbsp');
+  await page.locator('#shift-button').click();
+  await page.locator('#shifting-menu').getByRole('button', { name: 'Gallery' }).click();
+  await done('shifting');
+  await expect(page.getByText('4 of 4 Tasks')).toBeVisible();
+});
