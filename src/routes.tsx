@@ -68,7 +68,7 @@ export const AppRoutes = () => {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <SeoHead />
-      <Suspense fallback={<div className="flex h-screen w-full items-center justify-center">Loading...</div>}>
+      <Suspense fallback={<div data-app-loading className="flex h-screen w-full items-center justify-center">Loading...</div>}>
         <Routes>
           <Route path="/login" element={<Login />} />
           
