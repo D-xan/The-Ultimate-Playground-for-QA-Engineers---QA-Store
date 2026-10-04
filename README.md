@@ -1,6 +1,6 @@
 # The Ultimate Playground for QA Engineers - QA Store
 
-[![GitHub Pages](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-success?style=for-the-badge&logo=github)](https://d-xan.github.io/The-Ultimate-Playground-for-QA-Engineers---QA-Store/)
+[![GitHub Pages](https://img.shields.io/badge/Live%20Demo-qa.randomly.online-success?style=for-the-badge&logo=github)](https://qa.randomly.online/)
 
 Welcome to the **QA Store Playground**, a comprehensive testing environment designed specifically for Automation Engineers and QA professionals! This repository contains a mock e-commerce application alongside a dedicated set of robust automation challenges to help you practice and hone your testing skills.
 
@@ -88,7 +88,7 @@ You have two options for running your automation scripts against this playground
 
 **Option 1: Test against the Live URL (Recommended for quick start)**
 1. Point your automation framework (Selenium, Playwright, Cypress, WebdriverIO) directly to the live environment:
-   👉 `https://d-xan.github.io/The-Ultimate-Playground-for-QA-Engineers---QA-Store/`
+   👉 `https://qa.randomly.online/`
 2. Navigate to the `/practice` route (or click "Start Practicing" from the homepage).
 
 **Option 2: Test Locally (Recommended for modifying the app)**
