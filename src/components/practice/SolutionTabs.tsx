@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { solutions, type Solution } from '@/data/solutions';
 import { Button } from '@/components/ui/Button';
+import { useFrameworkPref } from '@/store/useFrameworkPref';
 
 const TABS: { key: keyof Solution; label: string }[] = [
   { key: 'playwright', label: 'Playwright' },
@@ -17,7 +18,8 @@ interface Props {
 
 export function SolutionTabs({ challengeId, number }: Props) {
   const [revealed, setRevealed] = useState(false);
-  const [active, setActive] = useState<keyof Solution>('playwright');
+  const active = useFrameworkPref((s) => s.framework);
+  const setActive = useFrameworkPref((s) => s.setFramework);
   const [copied, setCopied] = useState(false);
   const solution = solutions[challengeId];
 

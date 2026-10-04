@@ -25,11 +25,12 @@ export const CustomerNavbar = () => {
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden p-2 text-slate-600">
             {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
-          <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
-              <Activity className="h-5 w-5" />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-slate-900 hidden sm:block">QA Store</span>
+          <Link to="/" className="flex items-center gap-2.5 lg:mr-4" aria-label="QA Store by Randomly.online, home">
+            <img src={`${import.meta.env.BASE_URL}brand/randomly-logo-64.webp`} alt="" width={36} height={36} className="h-9 w-9 rounded-full" />
+            <span className="hidden sm:flex flex-col leading-none">
+              <span className="text-lg font-bold tracking-tight text-slate-900">QA Store</span>
+              <span className="mt-0.5 text-[11px] font-medium text-slate-500">by Randomly.online</span>
+            </span>
           </Link>
         </div>
 

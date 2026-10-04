@@ -117,3 +117,12 @@ html.dark .info-prose h1, html.dark .info-prose h2 { color: #ffffff; }
 html.dark .info-prose p, html.dark .info-prose li { color: #e2e8f0; }
 html.dark .info-prose a { color: #fcd34d; }
 html.dark .info-prose .meta { color: #94a3b8; }
+
+/* Practice element panels: ease in when opened, tick pops when a task completes. */
+@keyframes reveal-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@keyframes status-pop { 0% { transform: scale(.6); opacity: 0; } 60% { transform: scale(1.12); } 100% { transform: scale(1); opacity: 1; } }
+.reveal:not([hidden]) { animation: reveal-in .22s ease-out; }
+.status-pop { animation: status-pop .45s cubic-bezier(.34,1.56,.64,1); }
+@media (prefers-reduced-motion: reduce) {
+  .reveal:not([hidden]), .status-pop { animation: none; }
+}
