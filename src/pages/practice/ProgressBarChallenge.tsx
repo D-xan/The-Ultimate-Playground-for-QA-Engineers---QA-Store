@@ -3,12 +3,19 @@ import { SolutionTabs } from '@/components/practice/SolutionTabs';
 import { TaskQuestions } from '../../components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
 import { ChallengeResult, type ResultState } from '@/components/ui/ChallengeResult';
+import { useProgressStore } from '@/store/useProgressStore';
 
 export default function ProgressBarChallenge() {
   const [progress, setProgress] = useState(0);
   const [isStarting, setIsStarting] = useState(false);
   const [message, setMessage] = useState('');
   const [result, setResult] = useState<ResultState>('pending');
+  const completeTask = useProgressStore((s) => s.completeTask);
+
+  // Task 2 passes once the bar runs to 100% and the success message shows.
+  useEffect(() => {
+    if (progress === 100) completeTask('progress-bar', 'main:1');
+  }, [progress, completeTask]);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
@@ -110,6 +117,7 @@ export default function ProgressBarChallenge() {
           </div>
 
           <ChallengeResult
+            task="main:0"
             state={result}
             message={
               result === 'success' ? `Stopped at ${progress}% — target reached`

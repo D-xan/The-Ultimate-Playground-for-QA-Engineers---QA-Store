@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { taskKey, toggle, registerGroup, pageTotal, pageDone, isPageComplete, type ProgressData } from './progressLogic';
+import { taskKey, toggle, complete, registerGroup, pageTotal, pageDone, isPageComplete, type ProgressData } from './progressLogic';
 
 const empty: ProgressData = { completed: {}, totals: {} };
 
@@ -39,5 +39,14 @@ describe('progressLogic', () => {
 
   it('a page with no registered tasks is never complete', () => {
     expect(isPageComplete(empty, 'nothing')).toBe(false);
+  });
+});
+
+describe('complete', () => {
+  it('marks a task done and leaves it done when repeated', () => {
+    let d = registerGroup(empty, 'p', 'otp', 1);
+    d = complete(d, 'p', 'otp:0');
+    expect(pageDone(d, 'p')).toBe(1);
+    expect(complete(d, 'p', 'otp:0')).toBe(d);
   });
 });

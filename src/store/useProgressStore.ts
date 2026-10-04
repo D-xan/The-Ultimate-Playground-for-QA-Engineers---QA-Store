@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { toggle, registerGroup, type ProgressData } from './progressLogic';
+import { toggle, complete, registerGroup, type ProgressData } from './progressLogic';
 
 interface ProgressState extends ProgressData {
   toggleTask: (pageId: string, key: string) => void;
+  completeTask: (pageId: string, key: string) => void;
   registerGroup: (pageId: string, groupId: string, count: number) => void;
   resetProgress: () => void;
 }
@@ -17,6 +18,7 @@ export const useProgressStore = create<ProgressState>()(
       completed: {},
       totals: {},
       toggleTask: (pageId, key) => set((s) => toggle(s, pageId, key)),
+      completeTask: (pageId, key) => set((s) => complete(s, pageId, key)),
       registerGroup: (pageId, groupId, count) => set((s) => registerGroup(s, pageId, groupId, count)),
       resetProgress: () => set({ completed: {} }),
     }),

@@ -11,6 +11,10 @@ export const toggle = (d: ProgressData, pageId: string, key: string): ProgressDa
   return { ...d, completed: { ...d.completed, [pageId]: next } };
 };
 
+/** Marks a task done (never un-marks it), for challenges that detect a pass on their own. */
+export const complete = (d: ProgressData, pageId: string, key: string): ProgressData =>
+  (d.completed[pageId] ?? []).includes(key) ? d : { ...d, completed: { ...d.completed, [pageId]: [...(d.completed[pageId] ?? []), key] } };
+
 export const registerGroup = (d: ProgressData, pageId: string, groupId: string, count: number): ProgressData => {
   if (d.totals[pageId]?.[groupId] === count) return d;
   return { ...d, totals: { ...d.totals, [pageId]: { ...d.totals[pageId], [groupId]: count } } };

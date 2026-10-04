@@ -39,10 +39,11 @@ export const TaskQuestions: React.FC<TaskQuestionsProps> = ({ tasks, groupId = '
 
   return (
     <div className="bg-primary/5 border border-primary/20 rounded-xl p-5 mb-8 mt-6 shadow-sm">
-      <h3 className="font-bold text-primary flex items-center gap-2 mb-4">
+      <h3 className="font-bold text-primary flex items-center gap-2 mb-1">
         <ClipboardList className="w-5 h-5" />
         Challenge Tasks ({tasks.length})
       </h3>
+      <p className="text-xs text-slate-500 mb-4">Tick a task when your script passes it. Tasks with a pass/fail box tick themselves.</p>
       <ul className="space-y-3">
         {tasks.map((task, index) => {
           const key = taskKey(groupId, index);

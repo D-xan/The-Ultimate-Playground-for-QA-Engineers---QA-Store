@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useProgressStore } from '../../store/useProgressStore';
 import { isPageComplete } from '../../store/progressLogic';
-import { AppWindow, Activity, Network, CheckCircle2, ArrowRight } from 'lucide-react';
+import { AppWindow, Activity, Network, CheckCircle2, ArrowRight, Store } from 'lucide-react';
 import { practiceChallenges, tools, challengePath } from '@/data/challenges';
 import { Button } from '@/components/ui/Button';
 
@@ -29,6 +29,14 @@ export default function PracticeDashboard() {
           <p className="text-slate-500 max-w-xl text-lg">
             Master test automation by solving real-world UI challenges. Perfect for Selenium, Playwright, and Cypress.
           </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Link to={challengePath(practiceChallenges[0])} data-testid="hub-start">
+              <Button className="flex items-center gap-2">Start with {practiceChallenges[0].label} <ArrowRight className="h-4 w-4" /></Button>
+            </Link>
+            <Link to="/" data-testid="hub-store-link">
+              <Button variant="outline" className="flex items-center gap-2"><Store className="h-4 w-4" /> Open the QA Store demo</Button>
+            </Link>
+          </div>
         </div>
         <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center gap-4 min-w-[200px]">
           <div className="relative h-16 w-16 flex items-center justify-center">

@@ -2,7 +2,7 @@ import { useChallengeMode } from '@/store/useChallengeMode';
 import React, { useEffect, useCallback, useState } from 'react';
 import { Outlet, NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import { PageGuide } from '@/seo/PageGuide';
-import { AppWindow, ArrowLeft, Save, ArrowRight, RotateCcw, Trash2, Menu, X } from 'lucide-react';
+import { AppWindow, Store, Save, ArrowRight, RotateCcw, Trash2, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useProgressStore } from '../store/useProgressStore';
 import { isPageComplete, pageDone, pageTotal } from '../store/progressLogic';
@@ -224,8 +224,8 @@ export default function PracticeLayout() {
           </nav>
   
           <div className="p-4 border-t border-slate-800">
-            <Link to="/" className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
-              <ArrowLeft className="h-4 w-4" /> Back to Store
+            <Link to="/" data-testid="sidebar-store-link" className="flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors">
+              <Store className="h-4 w-4" /> QA Store demo
             </Link>
           </div>
         </aside>
