@@ -30,7 +30,7 @@ test('solving a challenge ticks its task without the checkbox', async ({ page })
   await page.getByRole('button', { name: 'Start', exact: true }).click();
   await expect.poll(async () => Number(await page.locator('[aria-valuenow]').getAttribute('aria-valuenow')), { timeout: 15000 }).toBeGreaterThanOrEqual(75);
   await page.getByRole('button', { name: 'Stop', exact: true }).click();
-  await expect(page.getByTestId('task-toggle-main-0').locator('svg')).toHaveClass(/text-green-500/);
+  await expect(page.getByTestId('element-progress-75')).toHaveAttribute('data-done', 'true');
   await expect(page.getByText('1 of 2 Tasks')).toBeVisible();
 });
 

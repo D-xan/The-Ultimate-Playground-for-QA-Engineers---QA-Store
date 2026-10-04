@@ -52,7 +52,8 @@ export function PracticeElement({ id, label, goal, pass, fail, hint, code, done 
   const [copied, setCopied] = useState(false);
   const [typed, setTyped] = useState('');
   const uid = useId();
-  const answerOk = !!answer && typed.trim().toLowerCase() === answer.expected.trim().toLowerCase();
+  // An empty box never counts, even while the expected value is still loading.
+  const answerOk = !!answer && typed.trim() !== '' && typed.trim().toLowerCase() === answer.expected.trim().toLowerCase();
 
   useEffect(() => { registerGroup(pageId, `el-${id}`, 1); }, [pageId, id, registerGroup]);
   useEffect(() => { if (done || answerOk) completeTask(pageId, key); }, [done, answerOk, pageId, key, completeTask]);

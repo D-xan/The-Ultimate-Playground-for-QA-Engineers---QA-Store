@@ -1,161 +1,187 @@
-import React, { useState, useEffect } from 'react';
-import { TaskQuestions } from '@/components/ui/TaskQuestions';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
+import { PracticeElement } from '@/components/practice/PracticeElement';
+import { PracticeSection as Section } from '@/components/practice/PracticeSection';
+
+const rand = (min: number, max: number) => min + Math.floor(Math.random() * (max - min + 1));
+const slot = 'min-h-12 border-2 border-dashed border-slate-200 rounded flex items-center justify-center bg-slate-50 p-2';
+const NAMES = ['ada.lovelace', 'grace.hopper', 'alan.turing', 'margaret.hamilton', 'linus.t', 'barbara.liskov'];
+
+/** Timers that are cleared when the page unmounts. */
+function useTimers() {
+  const ids = useRef<ReturnType<typeof setTimeout>[]>([]);
+  useEffect(() => () => ids.current.forEach((id) => { clearTimeout(id); clearInterval(id); }), []);
+  return {
+    after: (ms: number, fn: () => void) => { ids.current.push(setTimeout(fn, ms)); },
+    every: (ms: number, fn: () => void) => { const id = setInterval(fn, ms); ids.current.push(id); return id; },
+  };
+}
 
 export default function DynamicWaiting() {
-  const [delayedElement, setDelayedElement] = useState(false);
-  const [disappearingElement, setDisappearingElement] = useState(true);
+  const timers = useTimers();
+
+  const [delayed, setDelayed] = useState<'idle' | 'loading' | 'ready' | 'clicked'>('idle');
+  const [saving, setSaving] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const [continued, setContinued] = useState<'no' | 'early' | 'yes'>('no');
   const [dynamicId, setDynamicId] = useState('dynamic-btn-initial');
+  const [dynamicClicked, setDynamicClicked] = useState(false);
   const [progress, setProgress] = useState(0);
+  const progressTimer = useRef<ReturnType<typeof setInterval>>(undefined);
+  const [receipt] = useState(() => `R-${rand(10000, 99999)}`);
+  const [profile, setProfile] = useState<'idle' | 'loading' | 'loaded'>('idle');
+  const [username] = useState(() => NAMES[rand(0, NAMES.length - 1)]);
 
-  const startProgressBar = () => {
-    setProgress(0);
-    const interval = setInterval(() => {
-      setProgress(p => {
-        if (p >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return p + 10;
-      });
-    }, 500);
-  };
-
+  // The id keeps changing, so a script holding an old id never finds the button again.
   useEffect(() => {
-    // Reveal an element after 4 seconds
-    const timer1 = setTimeout(() => setDelayedElement(true), 4000);
-    // Hide an element after 6 seconds
-    const timer2 = setTimeout(() => setDisappearingElement(false), 6000);
-    // Change ID every 3 seconds
-    const timer3 = setInterval(() => {
-      setDynamicId(`dynamic-btn-${Math.floor(Math.random() * 10000)}`);
-    }, 3000);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearInterval(timer3);
-    };
+    const id = setInterval(() => setDynamicId(`dynamic-btn-${rand(1000, 9999)}`), 3000);
+    return () => clearInterval(id);
   }, []);
 
+  const startProgress = () => {
+    clearInterval(progressTimer.current);
+    setProgress(0);
+    progressTimer.current = timers.every(400, () => setProgress((p) => {
+      if (p >= 100) { clearInterval(progressTimer.current); return 100; }
+      return p + 10;
+    }));
+  };
+
   return (
-    <div className="space-y-12 pb-12">
+    <div className="space-y-10 pb-12">
       <div>
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Dynamic Elements & Waits</h1>
-        <p className="text-slate-500">Practice Explicit and Implicit waits. Elements here change, appear, and disappear unpredictably.</p>
-        
+        <p className="text-slate-500">Elements that appear late, disappear, change their id, or load behind a skeleton. Each delay is random, so fixed sleeps fail sooner or later. Use explicit waits. Each task ticks itself the moment your script gets it right.</p>
       </div>
 
-      <section className="bg-white p-6 rounded-2xl shadow-sm border border-border grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">1. Dynamic Elements</h2>
-        <div className="mb-4 mt-2"><TaskQuestions groupId="dynamic-elements" tasks={[
-  {
-    "title": "Wait for the dynamic element to appear and verify its text",
-    "description": "Trigger the action that creates an element after a delay. Use an explicit wait to wait for the element to be present in the DOM, then verify its text.",
-    "positive": [
-      "The element appears within the expected timeframe.",
-      "The text matches the expected value."
-    ],
-    "negative": [
-      "The script times out before the element appears.",
-      "The element appears but contains incorrect text."
-    ]
-  }
-]} /></div>
-          <div className="space-y-6">
-            <div>
-              <h3 className="font-semibold mb-2">Elements appearing later</h3>
-              <div className="h-12 border-2 border-dashed border-slate-200 rounded flex items-center justify-center bg-slate-50">
-                {delayedElement ? (
-                  <Button id="btn-delayed" className="bg-success text-white hover:bg-success/90">I am here now!</Button>
-                ) : (
-                  <span className="text-sm text-slate-400 animate-pulse">Wait 4 seconds...</span>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-2">Elements disappearing</h3>
-              <div className="h-12 border-2 border-dashed border-slate-200 rounded flex items-center justify-center bg-slate-50">
-                {disappearingElement ? (
-                  <Button id="btn-disappearing" variant="outline" className="border-warning text-warning hover:bg-warning hover:text-white">I will disappear in 6s</Button>
-                ) : (
-                  <span className="text-sm text-slate-400">Gone!</span>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-2">Dynamic IDs</h3>
-              <p className="text-xs text-slate-500 mb-2">Current ID: {dynamicId}</p>
-              <Button id={dynamicId}>My ID changes every 3s</Button>
+      <Section n={1} title="Appearing and disappearing">
+        <PracticeElement
+          id="btn-delayed" label="Element that appears later"
+          goal="Click “Load”, wait for the “I am here now!” button to appear, and click it."
+          pass={['The button appears after 2 to 5 seconds', 'The click lands on the new button']}
+          fail={['A fixed 3 second sleep: sometimes the button is not there yet', 'Looking for the button straight after clicking Load']}
+          hint="Wait for the button itself to become visible or clickable, with a timeout longer than the longest delay."
+          code={{
+            playwright: "await page.locator('#btn-load-delayed').click();\nawait page.locator('#btn-delayed').click({ timeout: 8000 }); // click() waits for it",
+            seleniumJava: 'driver.findElement(By.id("btn-load-delayed")).click();\nnew WebDriverWait(driver, Duration.ofSeconds(8))\n  .until(ExpectedConditions.elementToBeClickable(By.id("btn-delayed"))).click();',
+            seleniumPython: 'driver.find_element(By.ID, "btn-load-delayed").click()\nWebDriverWait(driver, 8).until(EC.element_to_be_clickable((By.ID, "btn-delayed"))).click()',
+            cypress: "cy.get('#btn-load-delayed').click();\ncy.get('#btn-delayed', { timeout: 8000 }).click();",
+          }}
+          done={delayed === 'clicked'}
+        >
+          <div className="flex flex-wrap items-center gap-3">
+            <Button id="btn-load-delayed" variant="outline" disabled={delayed === 'loading'} onClick={() => { setDelayed('loading'); timers.after(rand(2000, 5000), () => setDelayed('ready')); }}>Load</Button>
+            <div className={`${slot} flex-1`}>
+              {delayed === 'ready' || delayed === 'clicked'
+                ? <Button id="btn-delayed" className="bg-green-600 text-white hover:bg-green-700" onClick={() => setDelayed('clicked')}>{delayed === 'clicked' ? 'Clicked!' : 'I am here now!'}</Button>
+                : <span className="text-sm text-slate-400">{delayed === 'loading' ? <span className="animate-pulse">Loading...</span> : 'Nothing here yet'}</span>}
             </div>
           </div>
-        </div>
+        </PracticeElement>
 
-        <div>
-          <h2 className="text-xl font-bold mb-6 border-b border-border pb-2">2. Loading States</h2>
-        <div className="mb-4 mt-2"><TaskQuestions groupId="loading-states" tasks={[
-  {
-    "title": "Click the 'Start Process' button and wait for the progress bar to reach 100%",
-    "description": "Initiate the process and monitor the progress bar. Wait until its value or style indicates it has reached 100%.",
-    "positive": [
-      "The progress bar steadily increases to 100%.",
-      "A completion message is shown at 100%."
-    ],
-    "negative": [
-      "The progress bar gets stuck before 100%.",
-      "The completion message appears before 100%."
-    ]
-  },
-  {
-    "title": "Assert that the success message appears after loading",
-    "description": "Wait for the loading process to complete and explicitly assert the visibility and text of the success message.",
-    "positive": [
-      "The success message is visible.",
-      "The success message has the correct text."
-    ],
-    "negative": [
-      "The success message never appears.",
-      "The success message is hidden behind other elements."
-    ]
-  }
-]} /></div>
-          <div className="space-y-6">
-            <div>
-              <h3 className="font-semibold mb-2">Progress Bar</h3>
-              <Button onClick={startProgressBar} size="sm" className="mb-4" id="btn-start-progress">Start Task</Button>
-              <div className="w-full bg-slate-200 rounded-full h-4 mb-2">
-                <div 
-                  className="bg-primary h-4 rounded-full transition-all duration-300" 
-                  style={{ width: `${progress}%` }}
-                  id="progress-bar-fill"
-                ></div>
-              </div>
-              <p className="text-sm font-medium" id="progress-text">{progress}% Complete</p>
+        <PracticeElement
+          id="btn-disappearing" label="Element that disappears"
+          goal="Click “Save”, wait for the “Saving...” spinner to disappear, then click “Continue”."
+          pass={['Continue is clicked only after the spinner is gone', 'The page reads “Continued after save”']}
+          fail={['Clicking Continue while it still says Saving: the page records it as too early', 'Waiting for “Saved” text that might render before the spinner is removed']}
+          hint="Wait for the spinner to be hidden or detached. That is a different wait from waiting for something to appear."
+          code={{
+            playwright: "await page.locator('#btn-save').click();\nawait expect(page.locator('#saving-spinner')).toBeHidden({ timeout: 8000 });\nawait page.locator('#btn-continue').click();",
+            seleniumJava: 'driver.findElement(By.id("btn-save")).click();\nnew WebDriverWait(driver, Duration.ofSeconds(8))\n  .until(ExpectedConditions.invisibilityOfElementLocated(By.id("saving-spinner")));\ndriver.findElement(By.id("btn-continue")).click();',
+            seleniumPython: 'driver.find_element(By.ID, "btn-save").click()\nWebDriverWait(driver, 8).until(EC.invisibility_of_element_located((By.ID, "saving-spinner")))\ndriver.find_element(By.ID, "btn-continue").click()',
+            cypress: "cy.get('#btn-save').click();\ncy.get('#saving-spinner', { timeout: 8000 }).should('not.exist');\ncy.get('#btn-continue').click();",
+          }}
+          done={continued === 'yes'}
+        >
+          <div className="flex flex-wrap items-center gap-3">
+            <Button id="btn-save" variant="outline" disabled={saving === 'saving'} onClick={() => { setSaving('saving'); setContinued('no'); timers.after(rand(1500, 4000), () => setSaving('saved')); }}>Save</Button>
+            <div className={`${slot} flex-1`}>
+              {saving === 'saving'
+                ? <span id="saving-spinner" role="status" className="flex items-center gap-2 text-sm text-slate-500"><span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-primary" />Saving...</span>
+                : <span className="text-sm text-slate-500">{saving === 'saved' ? 'Saved' : 'Not saved yet'}</span>}
             </div>
-
-            <div>
-              <h3 className="font-semibold mb-2">Skeleton Loader</h3>
-              <div className="animate-pulse flex space-x-4">
-                <div className="rounded-full bg-slate-200 h-10 w-10"></div>
-                <div className="flex-1 space-y-4 py-1">
-                  <div className="h-2 bg-slate-200 rounded"></div>
-                  <div className="space-y-3">
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="h-2 bg-slate-200 rounded col-span-2"></div>
-                      <div className="h-2 bg-slate-200 rounded col-span-1"></div>
-                    </div>
-                    <div className="h-2 bg-slate-200 rounded"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Button id="btn-continue" onClick={() => setContinued(saving === 'saved' ? 'yes' : 'early')}>Continue</Button>
           </div>
-        </div>
-      </section>
+          {continued !== 'no' && (
+            <p id="continue-result" className={`mt-2 text-sm font-medium ${continued === 'yes' ? 'text-green-700' : 'text-red-600'}`}>
+              {continued === 'yes' ? 'Continued after save' : 'Too early: still saving'}
+            </p>
+          )}
+        </PracticeElement>
 
+        <PracticeElement
+          id="dynamic-id" label="Changing id"
+          goal="Click the button whose id changes every 3 seconds."
+          pass={['The click lands, whatever the id is at that moment']}
+          fail={['Copying the id from DevTools: it is gone 3 seconds later', 'Finding the element once and reusing it after a change']}
+          hint="Do not use the id. Use something that stays the same: the button text, its role, or a data attribute."
+          code={{
+            playwright: "await page.getByRole('button', { name: 'My ID changes every 3s' }).click();",
+            seleniumJava: 'driver.findElement(By.xpath("//button[normalize-space()=\'My ID changes every 3s\']")).click();',
+            seleniumPython: 'driver.find_element(By.XPATH, "//button[normalize-space()=\'My ID changes every 3s\']").click()',
+            cypress: "cy.contains('button', 'My ID changes every 3s').click();",
+          }}
+          done={dynamicClicked}
+        >
+          <p className="text-xs text-slate-500 mb-2">Current ID: <code>{dynamicId}</code></p>
+          <Button id={dynamicId} onClick={() => setDynamicClicked(true)}>My ID changes every 3s</Button>
+          {dynamicClicked && <p className="mt-2 text-sm font-medium text-green-700" data-testid="dynamic-result">Clicked</p>}
+        </PracticeElement>
+      </Section>
+
+      <Section n={2} title="Loading states">
+        <PracticeElement
+          id="progress-task" label="Progress to 100%"
+          goal="Start the task, wait for 100%, then type the receipt number that appears in the answer box."
+          pass={['The receipt appears only at 100%', 'The answer matches it']}
+          fail={['Reading the receipt early: it is not there yet', 'Polling the bar width in pixels instead of the text or aria value']}
+          hint="Wait for the progress text to read “100% Complete”, or for the receipt itself to be visible."
+          code={{
+            playwright: "await page.locator('#btn-start-progress').click();\nawait expect(page.locator('#progress-text')).toHaveText('100% Complete', { timeout: 10000 });\nconst receipt = await page.locator('#progress-receipt').textContent();\nawait page.getByTestId('answer-progress-task').fill(receipt!.match(/R-\\d+/)![0]);",
+            seleniumJava: 'driver.findElement(By.id("btn-start-progress")).click();\nnew WebDriverWait(driver, Duration.ofSeconds(10))\n  .until(ExpectedConditions.textToBe(By.id("progress-text"), "100% Complete"));\nString receipt = driver.findElement(By.id("progress-receipt")).getText().replaceAll(".*(R-\\\\d+).*", "$1");',
+            seleniumPython: 'driver.find_element(By.ID, "btn-start-progress").click()\nWebDriverWait(driver, 10).until(EC.text_to_be_present_in_element((By.ID, "progress-text"), "100% Complete"))\nreceipt = re.search(r"R-\\d+", driver.find_element(By.ID, "progress-receipt").text).group()',
+            cypress: "cy.get('#btn-start-progress').click();\ncy.get('#progress-text', { timeout: 10000 }).should('have.text', '100% Complete');\ncy.get('#progress-receipt').invoke('text')\n  .then((t) => cy.get('[data-testid=answer-progress-task]').type(t.match(/R-\\d+/)[0]));",
+          }}
+          answer={{ prompt: 'Receipt:', expected: receipt }}
+        >
+          <Button onClick={startProgress} size="sm" className="mb-4" id="btn-start-progress">Start Task</Button>
+          <div className="w-full bg-slate-200 rounded-full h-4 mb-2" role="progressbar" aria-label="Task progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}>
+            <div className="bg-primary h-4 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} id="progress-bar-fill" />
+          </div>
+          <p className="text-sm font-medium" id="progress-text">{progress}% Complete</p>
+          {progress === 100 && <p className="mt-1 text-sm text-green-700" id="progress-receipt">Done. Receipt {receipt}</p>}
+        </PracticeElement>
+
+        <PracticeElement
+          id="skeleton" label="Skeleton loader"
+          goal="Load the profile, wait for the skeleton to be replaced by real content, and type the username in the answer box."
+          pass={['The answer matches the loaded username']}
+          fail={['Reading text while the skeleton is showing: it has none', 'Waiting on the skeleton’s animation instead of the content']}
+          hint="Wait for the real content element, not for the placeholder to change."
+          code={{
+            playwright: "await page.locator('#btn-load-profile').click();\nconst name = await page.locator('#profile-username').textContent({ timeout: 8000 });\nawait page.getByTestId('answer-skeleton').fill(name!);",
+            seleniumJava: 'driver.findElement(By.id("btn-load-profile")).click();\nString name = new WebDriverWait(driver, Duration.ofSeconds(8))\n  .until(ExpectedConditions.visibilityOfElementLocated(By.id("profile-username"))).getText();',
+            seleniumPython: 'driver.find_element(By.ID, "btn-load-profile").click()\nname = WebDriverWait(driver, 8).until(EC.visibility_of_element_located((By.ID, "profile-username"))).text',
+            cypress: "cy.get('#btn-load-profile').click();\ncy.get('#profile-username', { timeout: 8000 }).invoke('text')\n  .then((t) => cy.get('[data-testid=answer-skeleton]').type(t));",
+          }}
+          answer={{ prompt: 'Username:', expected: username }}
+        >
+          <Button id="btn-load-profile" variant="outline" size="sm" className="mb-4" disabled={profile === 'loading'} onClick={() => { setProfile('loading'); timers.after(rand(1500, 4000), () => setProfile('loaded')); }}>Load profile</Button>
+          {profile === 'loaded' ? (
+            <div className="flex items-center gap-4" id="profile-card">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-bold text-slate-900">{username[0].toUpperCase()}</div>
+              <div><p className="font-semibold text-slate-900" id="profile-username">{username}</p><p className="text-xs text-slate-500">QA engineer</p></div>
+            </div>
+          ) : (
+            <div className={`flex space-x-4 ${profile === 'loading' ? 'animate-pulse' : ''}`} id="profile-skeleton" aria-busy={profile === 'loading'}>
+              <div className="rounded-full bg-slate-200 h-10 w-10" />
+              <div className="flex-1 space-y-3 py-1">
+                <div className="h-2 bg-slate-200 rounded w-1/3" />
+                <div className="h-2 bg-slate-200 rounded w-1/4" />
+              </div>
+            </div>
+          )}
+        </PracticeElement>
+      </Section>
     </div>
   );
 }

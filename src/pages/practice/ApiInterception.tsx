@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
-import { TaskQuestions } from '@/components/ui/TaskQuestions';
+import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
+import { PracticeElement } from '@/components/practice/PracticeElement';
+import { PracticeSection as Section } from '@/components/practice/PracticeSection';
+
+/** What the page has seen come back, so each task can tick itself. */
+interface Seen { mocked: boolean; s404: boolean; s500: boolean; mutated: boolean; aborted: boolean }
+const roleOf = (body: string) => { try { return JSON.parse(body)?.role; } catch { return undefined; } };
 
 export default function ApiInterception() {
   const [method, setMethod] = useState('GET');
@@ -10,6 +15,8 @@ export default function ApiInterception() {
   
   const [response, setResponse] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [seen, setSeen] = useState<Seen>({ mocked: false, s404: false, s500: false, mutated: false, aborted: false });
+  const note = (patch: Partial<Seen>) => setSeen((prev) => ({ ...prev, ...patch }));
 
   const handleSend = async () => {
     setLoading(true);
@@ -45,6 +52,11 @@ export default function ApiInterception() {
         data = await res.text();
       }
       
+      const sentRole = options.body ? roleOf(String(options.body)) : undefined;
+      if (res.status === 200 && data?.message === 'Intercepted!') note({ mocked: true });
+      if (res.status === 404) note({ s404: true });
+      if (res.status === 500) note({ s500: true });
+      if (sentRole === 'user' && data?.role === 'admin') note({ mutated: true });
       setResponse({
         status: res.status,
         statusText: res.statusText,
@@ -53,6 +65,7 @@ export default function ApiInterception() {
       });
     } catch (e: any) {
       const endTime = performance.now();
+      note({ aborted: true });
       setResponse({
         error: true,
         message: e.message || 'Network connection aborted or failed',
@@ -72,52 +85,15 @@ export default function ApiInterception() {
   };
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-10 pb-12">
       <div>
         <h1 className="text-3xl font-bold text-slate-900 mb-2">API Testing & Network Interception</h1>
         <p className="text-slate-500">
-          A fully functional mini-API client. Use your automation tool (Playwright, Cypress, Selenium CDPs) to intercept these requests, modify payloads, and simulate all HTTP methods and error codes!
+          A working mini API client. Use your tool’s network layer to mock responses, force error codes, rewrite requests and cut the connection. The page checks what came back, so each task ticks itself once your interception works.
         </p>
       </div>
 
-      <div className="mb-4">
-        <TaskQuestions tasks={[
-          {
-            "title": "Mock a GET Request (200 OK)",
-            "description": "Send a GET request to any URL. Intercept it and return a 200 status code with a custom JSON body `{ \"message\": \"Intercepted!\" }`.",
-            "positive": [
-              "The response body displays your custom JSON.",
-              "The status code displays as 200 OK."
-            ],
-            "negative": [
-              "The original response from the server is displayed."
-            ]
-          },
-          {
-            "title": "Simulate Error Codes (404 & 500)",
-            "description": "Send a request and intercept it to force a 404 Not Found, and then a 500 Internal Server Error.",
-            "positive": [
-              "The status badge turns amber for 404 and red for 500.",
-              "The UI accurately reflects the mocked status codes."
-            ],
-            "negative": [
-              "The request passes through to the real API and returns a 200 or 201."
-            ]
-          },
-          {
-            "title": "Modify Request Payload (POST/PUT)",
-            "description": "Set the Method to POST. Enter `{\"role\": \"user\"}` in the body. Intercept the request outbound, change the role to `\"admin\"`, and let it hit a mock server (e.g. `https://jsonplaceholder.typicode.com/posts`).",
-            "positive": [
-              "The response from the server echoes back the modified `\"role\": \"admin\"` body.",
-              "The assertion verifies the payload was mutated mid-flight."
-            ],
-            "negative": [
-              "The server echoes back the original `\"role\": \"user\"` payload."
-            ]
-          }
-        ]} />
-      </div>
-
+      <Section n={1} title="API client">
       {/* Postman-like UI */}
       <div className="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden flex flex-col h-[700px]">
         {/* Top URL Bar */}
@@ -249,6 +225,77 @@ export default function ApiInterception() {
           
         </div>
       </div>
+      </Section>
+
+      <Section n={2} title="Tasks">
+        <PracticeElement
+          id="api-mock" label="Mock a response"
+          goal={'Send a GET request and make it come back as 200 with the body {"message": "Intercepted!"}, without the request reaching the real server.'}
+          pass={['The status reads 200', 'The response body shows your JSON']}
+          fail={['Registering the mock after clicking Send', 'A URL pattern that does not match, so the real post comes back']}
+          hint="Register the route or intercept before you click Send. Match the URL with a glob such as **/posts/**."
+          code={{
+            playwright: "await page.route('**/posts/**', (route) => route.fulfill({ status: 200, json: { message: 'Intercepted!' } }));\nawait page.locator('#api-send-btn').click();\nawait expect(page.locator('#api-response-body')).toContainText('Intercepted!');",
+            seleniumJava: '// Selenium 4 (Chromium): NetworkInterceptor answers matching requests itself\ntry (NetworkInterceptor ni = new NetworkInterceptor(driver, Route.matching(req -> req.getUri().contains("/posts/"))\n    .to(() -> req -> new HttpResponse().setStatus(200)\n      .addHeader("Content-Type", "application/json")\n      .setContent(Contents.utf8String("{\\"message\\":\\"Intercepted!\\"}"))))) {\n  driver.findElement(By.id("api-send-btn")).click();\n  wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("api-response-body"), "Intercepted!"));\n}',
+            seleniumPython: '# Selenium has no built-in mocking in Python; selenium-wire adds it\ndef interceptor(request):\n    if "/posts/" in request.url:\n        request.create_response(status_code=200, headers={"Content-Type": "application/json"},\n                                body=b\'{"message": "Intercepted!"}\')\ndriver.request_interceptor = interceptor\ndriver.find_element(By.ID, "api-send-btn").click()',
+            cypress: "cy.intercept('GET', '**/posts/**', { statusCode: 200, body: { message: 'Intercepted!' } });\ncy.get('#api-send-btn').click();\ncy.get('#api-response-body').should('contain', 'Intercepted!');",
+          }}
+          done={seen.mocked}
+        >
+          <p className="text-sm text-slate-600">Use the API client above.</p>
+        </PracticeElement>
+
+        <PracticeElement
+          id="api-errors" label="Force error codes"
+          goal="Make one request come back as 404 and another as 500."
+          pass={['The status badge turns amber for 404 and red for 500', 'Both codes have been seen']}
+          fail={['Pointing the URL at a missing page on the real server: that tests their server, not your mock', 'Leaving the first route active so the second request still gets 404']}
+          hint="Fulfil with a status code only. Remove or replace the first route before the second request."
+          code={{
+            playwright: "await page.route('**/posts/**', (r) => r.fulfill({ status: 404, body: 'Not found' }));\nawait page.locator('#api-send-btn').click();\nawait expect(page.locator('#api-status')).toContainText('404');\nawait page.unroute('**/posts/**');\nawait page.route('**/posts/**', (r) => r.fulfill({ status: 500, body: 'Server error' }));\nawait page.locator('#api-send-btn').click();\nawait expect(page.locator('#api-status')).toContainText('500');",
+            seleniumJava: 'for (int code : new int[] {404, 500}) {\n  try (NetworkInterceptor ni = new NetworkInterceptor(driver, Route.matching(req -> req.getUri().contains("/posts/"))\n      .to(() -> req -> new HttpResponse().setStatus(code)))) {\n    driver.findElement(By.id("api-send-btn")).click();\n    wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("api-status"), String.valueOf(code)));\n  }\n}',
+            seleniumPython: 'for code in (404, 500):\n    driver.request_interceptor = lambda req, c=code: req.create_response(status_code=c, body=b"")\n    driver.find_element(By.ID, "api-send-btn").click()\n    wait.until(EC.text_to_be_present_in_element((By.ID, "api-status"), str(code)))',
+            cypress: "cy.intercept('**/posts/**', { statusCode: 404 }).as('first');\ncy.get('#api-send-btn').click();\ncy.get('#api-status').should('contain', '404');\ncy.intercept('**/posts/**', { statusCode: 500 }); // the newest intercept wins\ncy.get('#api-send-btn').click();\ncy.get('#api-status').should('contain', '500');",
+          }}
+          done={seen.s404 && seen.s500}
+        >
+          <p className="text-sm text-slate-600">Seen so far: <span data-testid="api-codes-seen">{[seen.s404 && '404', seen.s500 && '500'].filter(Boolean).join(', ') || 'none'}</span></p>
+        </PracticeElement>
+
+        <PracticeElement
+          id="api-mutate" label="Rewrite a request in flight"
+          goal={'Set the method to POST with the body {"role": "user"}. Change role to admin on the way out, so the server echoes back admin.'}
+          pass={['The textarea still says user', 'The response echoes "role": "admin"']}
+          fail={['Editing the textarea instead: the page checks it still says user', 'Mocking the response: rewrite the request and let it through']}
+          hint="Intercept, read the outgoing body, change it, then continue the request with the new body. jsonplaceholder echoes what it receives."
+          code={{
+            playwright: "await page.route('**/posts', async (route) => {\n  const body = { ...route.request().postDataJSON(), role: 'admin' };\n  await route.continue({ postData: JSON.stringify(body) });\n});\nawait page.locator('#api-method-select').selectOption('POST');\nawait page.locator('#api-url-input').fill('https://jsonplaceholder.typicode.com/posts');\nawait page.locator('#api-body-textarea').fill('{\"role\": \"user\"}');\nawait page.locator('#api-send-btn').click();\nawait expect(page.locator('#api-response-body')).toContainText('\"role\": \"admin\"');",
+            seleniumJava: '// A Filter sees each request and can pass on a changed copy\nFilter toAdmin = next -> req -> {\n  if (req.getMethod() == HttpMethod.POST && req.getUri().endsWith("/posts"))\n    req.setContent(Contents.utf8String(Contents.string(req).replace("\\"user\\"", "\\"admin\\"")));\n  return next.execute(req);\n};\ntry (NetworkInterceptor ni = new NetworkInterceptor(driver, toAdmin)) {\n  // choose POST, set the URL and body, click Send\n}',
+            seleniumPython: 'import json\ndef interceptor(request):\n    if request.method == "POST" and request.url.endswith("/posts"):\n        body = json.loads(request.body)\n        body["role"] = "admin"\n        request.body = json.dumps(body).encode()\n        del request.headers["Content-Length"]\n        request.headers["Content-Length"] = str(len(request.body))\ndriver.request_interceptor = interceptor  # selenium-wire',
+            cypress: "cy.intercept('POST', '**/posts', (req) => { req.body.role = 'admin'; });\ncy.get('#api-method-select').select('POST');\ncy.get('#api-url-input').clear().type('https://jsonplaceholder.typicode.com/posts');\ncy.get('#api-body-textarea').clear().type('{\"role\": \"user\"}', { parseSpecialCharSequences: false });\ncy.get('#api-send-btn').click();\ncy.get('#api-response-body').should('contain', '\"role\": \"admin\"');",
+          }}
+          done={seen.mutated}
+        >
+          <p className="text-sm text-slate-600">Use the API client above.</p>
+        </PracticeElement>
+
+        <PracticeElement
+          id="api-abort" label="Cut the connection"
+          goal="Make the request fail at the network level, as if the user went offline."
+          pass={['The client shows “Network Error” instead of a status code']}
+          fail={['Returning a 500: that is a server answer, not a dropped connection']}
+          hint="Abort the request in your interceptor instead of fulfilling it."
+          code={{
+            playwright: "await page.route('**/posts/**', (route) => route.abort('internetdisconnected'));\nawait page.locator('#api-send-btn').click();\nawait expect(page.locator('#api-status-error')).toHaveText('Network Error');",
+            seleniumJava: '// Chromium DevTools: emulate going offline\nDevTools dt = ((HasDevTools) driver).getDevTools();\ndt.createSession();\ndt.send(Network.enable(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()));\ndt.send(Network.emulateNetworkConditions(true, 0, -1, -1, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()));\ndriver.findElement(By.id("api-send-btn")).click();',
+            seleniumPython: 'driver.set_network_conditions(offline=True, latency=0, download_throughput=0, upload_throughput=0)\ndriver.find_element(By.ID, "api-send-btn").click()\nwait.until(EC.visibility_of_element_located((By.ID, "api-status-error")))',
+            cypress: "cy.intercept('**/posts/**', { forceNetworkError: true });\ncy.get('#api-send-btn').click();\ncy.get('#api-status-error').should('have.text', 'Network Error');",
+          }}
+          done={seen.aborted}
+        >
+          <p className="text-sm text-slate-600">Use the API client above.</p>
+        </PracticeElement>
+      </Section>
     </div>
   );
 }

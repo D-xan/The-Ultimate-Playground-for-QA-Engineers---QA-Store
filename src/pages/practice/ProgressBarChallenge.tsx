@@ -1,21 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { SolutionTabs } from '@/components/practice/SolutionTabs';
-import { TaskQuestions } from '../../components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
 import { ChallengeResult, type ResultState } from '@/components/ui/ChallengeResult';
-import { useProgressStore } from '@/store/useProgressStore';
+import { PracticeElement } from '@/components/practice/PracticeElement';
+import { PracticeSection as Section } from '@/components/practice/PracticeSection';
 
 export default function ProgressBarChallenge() {
   const [progress, setProgress] = useState(0);
   const [isStarting, setIsStarting] = useState(false);
   const [message, setMessage] = useState('');
   const [result, setResult] = useState<ResultState>('pending');
-  const completeTask = useProgressStore((s) => s.completeTask);
+  const [reached100, setReached100] = useState(false);
 
-  // Task 2 passes once the bar runs to 100% and the success message shows.
-  useEffect(() => {
-    if (progress === 100) completeTask('progress-bar', 'main:1');
-  }, [progress, completeTask]);
+  useEffect(() => { if (progress === 100) setReached100(true); }, [progress]);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
@@ -52,89 +49,79 @@ export default function ProgressBarChallenge() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex justify-between items-start">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Progress Bar Challenge</h1>
-          <p className="text-slate-600 max-w-2xl">
-            Test your automation script's ability to wait for a dynamic element to reach a specific state. 
-            Progress bars are common in web apps and often require smart waits instead of hardcoded sleeps.
-          </p>
-        </div>
+    <div className="space-y-10 pb-12">
+      <div>
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">Progress Bar Challenge</h1>
+        <p className="text-slate-500 max-w-3xl">
+          Wait for a moving element to reach a state. The bar grows by a random step every half second, so a fixed sleep stops it at a different place each run. Each task ticks itself the moment your script gets it right.
+        </p>
       </div>
 
-      <TaskQuestions 
-        tasks={[
-          {
-            title: "Wait for 75%",
-            description: "Click 'Start' and write a script that waits exactly until the progress bar hits 75% or higher, then click 'Stop'.",
-            positive: ["Script successfully stops the progress bar when it is >= 75%"],
-            negative: ["Script uses hardcoded Thread.sleep() instead of explicit/fluent waits"]
-          },
-          {
-            title: "Wait for 100% and Verify Message",
-            description: "Click 'Start' and wait for the progress bar to reach 100%. Then verify the success message appears.",
-            positive: ["Script waits for progress to be 100%", "Script asserts 'Process Completed Successfully!'"],
-            negative: ["Script fails with TimeoutException", "Script asserts too early before message appears"]
-          }
-        ]} 
-      />
-
-      <div className="bg-white rounded-xl border border-border shadow-sm p-8">
-        <h2 className="text-xl font-bold text-slate-900 mb-6">1. Interactive Progress Bar</h2>
-        
-        <div className="max-w-md mx-auto space-y-6">
-          <div className="bg-slate-100 rounded-full h-6 w-full overflow-hidden relative shadow-inner">
-            <div 
-              className="bg-primary h-full transition-all duration-300 ease-out flex items-center justify-end px-2"
-              style={{ width: `${progress}%` }}
-              id="progress-bar-fill"
-              role="progressbar"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={progress}
-            >
-              {progress > 5 && <span className="text-white text-xs font-bold">{progress}%</span>}
+      <Section n={1} title="Interactive progress bar">
+        <PracticeElement
+          id="progress-75" label="Stop at 75% or more"
+          goal="Click Start, wait until the bar reaches at least 75%, then click Stop."
+          pass={['The result box turns green: “Stopped at N% — target reached”', 'The wait reads the bar’s aria-valuenow, not its width']}
+          fail={['A fixed sleep: the bar’s speed is random', 'Stopping below 75% turns the result red']}
+          hint="Poll the aria-valuenow attribute with a short interval and click Stop as soon as it is 75 or more."
+          code={{
+            playwright: "await page.locator('#start-button').click();\nawait expect.poll(async () =>\n  Number(await page.locator('#progress-bar-fill').getAttribute('aria-valuenow')),\n  { timeout: 15000, intervals: [100] }).toBeGreaterThanOrEqual(75);\nawait page.locator('#stop-button').click();",
+            seleniumJava: 'driver.findElement(By.id("start-button")).click();\nnew WebDriverWait(driver, Duration.ofSeconds(15)).pollingEvery(Duration.ofMillis(100))\n  .until(d -> Integer.parseInt(d.findElement(By.id("progress-bar-fill")).getDomAttribute("aria-valuenow")) >= 75);\ndriver.findElement(By.id("stop-button")).click();',
+            seleniumPython: 'driver.find_element(By.ID, "start-button").click()\nWebDriverWait(driver, 15, poll_frequency=0.1).until(\n    lambda d: int(d.find_element(By.ID, "progress-bar-fill").get_attribute("aria-valuenow")) >= 75)\ndriver.find_element(By.ID, "stop-button").click()',
+            cypress: "cy.get('#start-button').click();\ncy.get('#progress-bar-fill', { timeout: 15000 })\n  .should(($el) => expect(Number($el.attr('aria-valuenow'))).to.be.at.least(75));\ncy.get('#stop-button').click();",
+          }}
+          done={result === 'success'}
+        >
+          <div className="space-y-6">
+            <div className="bg-slate-100 rounded-full h-6 w-full overflow-hidden relative shadow-inner">
+              <div
+                className="bg-primary h-full transition-all duration-300 ease-out flex items-center justify-end px-2"
+                style={{ width: `${progress}%` }}
+                id="progress-bar-fill"
+                role="progressbar"
+                aria-label="Process progress"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={progress}
+              >
+                {progress > 5 && <span className="text-slate-900 text-xs font-bold">{progress}%</span>}
+              </div>
+            </div>
+            <div className="flex gap-4 justify-center">
+              <Button id="start-button" onClick={handleStart} disabled={isStarting && progress < 100}>Start</Button>
+              <Button id="stop-button" variant="outline" onClick={handleStop} disabled={!isStarting}>Stop</Button>
+            </div>
+            <ChallengeResult
+              state={result}
+              message={
+                result === 'success' ? `Stopped at ${progress}% — target reached`
+                : result === 'failure' ? `Stopped at ${progress}% — too early, target is 75%`
+                : 'Start the bar, then stop it at 75% or more'
+              }
+            />
+            <div className="h-8 text-center">
+              {message && <p id="success-message" className="text-green-600 font-bold animate-in fade-in zoom-in">{message}</p>}
             </div>
           </div>
-          
-          <div className="flex gap-4 justify-center">
-            <Button 
-              id="start-button"
-              onClick={handleStart} 
-              disabled={isStarting && progress < 100}
-            >
-              Start
-            </Button>
-            <Button 
-              id="stop-button"
-              variant="outline" 
-              onClick={handleStop}
-              disabled={!isStarting}
-            >
-              Stop
-            </Button>
-          </div>
+        </PracticeElement>
 
-          <ChallengeResult
-            task="main:0"
-            state={result}
-            message={
-              result === 'success' ? `Stopped at ${progress}% — target reached`
-              : result === 'failure' ? `Stopped at ${progress}% — too early, target is 75%`
-              : 'Start the bar, then stop it at 75% or more'
-            }
-          />
-
-          <div className="h-8 text-center">
-            {message && (
-              <p id="success-message" className="text-green-600 font-bold animate-in fade-in zoom-in">
-                {message}
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
+        <PracticeElement
+          id="progress-100" label="Wait for 100% and the message"
+          goal="Click Start, let the bar run to 100%, and assert “Process Completed Successfully!”."
+          pass={['The script waits for the message, not a set time', 'The message text matches exactly']}
+          fail={['Asserting the message straight after Start', 'A timeout shorter than the run: it can take up to 10 seconds']}
+          hint="Wait for the success message to be visible with a generous timeout. Use the bar above."
+          code={{
+            playwright: "await page.locator('#start-button').click();\nawait expect(page.locator('#success-message')).toHaveText('Process Completed Successfully!', { timeout: 15000 });",
+            seleniumJava: 'driver.findElement(By.id("start-button")).click();\nnew WebDriverWait(driver, Duration.ofSeconds(15)).until(\n  ExpectedConditions.textToBe(By.id("success-message"), "Process Completed Successfully!"));',
+            seleniumPython: 'driver.find_element(By.ID, "start-button").click()\nWebDriverWait(driver, 15).until(\n    EC.text_to_be_present_in_element((By.ID, "success-message"), "Process Completed Successfully!"))',
+            cypress: "cy.get('#start-button').click();\ncy.get('#success-message', { timeout: 15000 }).should('have.text', 'Process Completed Successfully!');",
+          }}
+          done={reached100}
+        >
+          <p className="text-sm text-slate-600">Use the progress bar above.</p>
+        </PracticeElement>
+      </Section>
 
       <SolutionTabs challengeId="progress-bar" number={2} />
     </div>

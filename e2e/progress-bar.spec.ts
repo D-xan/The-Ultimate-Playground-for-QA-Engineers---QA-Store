@@ -15,3 +15,11 @@ test('waiting for 100% shows the completion message', async ({ page }) => {
   await page.locator('#start-button').click();
   await expect(page.locator('#success-message')).toHaveText('Process Completed Successfully!', { timeout: 15_000 });
 });
+
+test('reaching 100% ticks the second task', async ({ page }) => {
+  await page.goto('/practice/progress-bar');
+  await page.locator('#start-button').click();
+  await expect(page.locator('#success-message')).toHaveText('Process Completed Successfully!', { timeout: 15_000 });
+  await expect(page.getByTestId('element-progress-100')).toHaveAttribute('data-done', 'true');
+  await expect(page.getByTestId('element-progress-75')).toHaveAttribute('data-done', 'false');
+});
