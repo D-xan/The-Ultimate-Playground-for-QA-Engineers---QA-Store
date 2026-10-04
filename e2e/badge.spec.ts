@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { practiceChallenges } from '../src/data/challenges';
 
 test('locked until every challenge is passed', async ({ page }) => {
-  await page.goto('/practice/certificate');
+  await page.goto('/practice/completion-badge');
   await expect(page.locator('#badge-locked')).toBeVisible();
   await expect(page.locator('#challenge-grid li[data-status="pending"]')).toHaveCount(practiceChallenges.length);
   await expect(page.locator('#badge-preview')).toHaveAttribute('aria-label', new RegExp(`0 of ${practiceChallenges.length} challenges passed`));
@@ -16,7 +16,7 @@ test('previews and downloads once every challenge is passed', async ({ page }) =
     const completed = Object.fromEntries(ids.map((id) => [id, ['main:0']]));
     localStorage.setItem('qa-playground-progress-v3', JSON.stringify({ state: { totals, completed }, version: 0 }));
   }, ids);
-  await page.goto('/practice/certificate');
+  await page.goto('/practice/completion-badge');
   await expect(page.locator('#challenge-grid li[data-status="passed"]')).toHaveCount(ids.length);
   await expect(page.locator('#download-badge')).toBeDisabled();
   await page.locator('#badge-name').fill('Ada Lovelace');

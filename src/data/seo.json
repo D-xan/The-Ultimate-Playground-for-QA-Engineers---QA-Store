@@ -311,7 +311,7 @@
     "schemaType": "LearningResource",
     "primaryKeyword": "canvas automation testing practice"
   },
-  "certificate": {
+  "completion-badge": {
     "title": "Free QA Automation Completion Badge | QA Playground",
     "metaDescription": "Pass every QA automation challenge on the playground and unlock a free badge with your name. Download it and share it on LinkedIn. No sign-up needed.",
     "h1Subtitle": "Pass every challenge and unlock a free badge with your name on it.",
@@ -872,7 +872,7 @@
       },
       {
         "q": "Is the practice site really free and without signup?",
-        "a": "Yes. Every challenge is free, needs no account and runs in the browser. You can automate it against the live URL from your own machine, and a certificate is available once you finish all challenges."
+        "a": "Yes. Every challenge is free, needs no account and runs in the browser. You can automate it against the live URL from your own machine, and a completion badge unlocks once you pass every challenge."
       },
       {
         "q": "What should a beginner practice first in test automation?",

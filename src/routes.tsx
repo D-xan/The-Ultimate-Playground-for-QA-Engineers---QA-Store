@@ -108,7 +108,7 @@ export const AppRoutes = () => {
             <Route path="a11y" element={<AccessibilityLab />} />
             <Route path="data-generator" element={<DataGenerator />} />
             <Route path="api-playground" element={<ApiPlayground />} />
-            <Route path="certificate" element={<Badge />} />
+            <Route path="completion-badge" element={<Badge />} />
             <Route path="interview" element={<InterviewKit />} />
           </Route>
 
