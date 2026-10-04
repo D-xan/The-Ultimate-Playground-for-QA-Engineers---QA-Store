@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Heart, ShoppingCart, Star, Eye } from 'lucide-react';
 import { useCart } from '@/store/useCart';
 import { Button } from '@/components/ui/Button';
+import { asset } from '@/utils/asset';
 
 export interface ProductCardProps {
   product: any; // We'll type this properly later or assume db.json schema
@@ -32,8 +33,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     >
       <div className="relative aspect-square overflow-hidden rounded-xl bg-slate-100 mb-4">
         <img 
-          src={product.images ? product.images[0] : product.image} 
+          src={asset(product.images ? product.images[0] : product.image)} 
           alt={product.name} 
+          loading="lazy"
+          width={400}
+          height={400}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         
@@ -69,7 +73,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       </div>
 
       <div className="flex flex-1 flex-col">
-        <div className="mb-1 text-xs text-muted">{product.brandId /* Mock brand mapping later */}</div>
+        <div className="mb-1 text-xs text-muted">{product.brand}</div>
         <h3 className="mb-2 line-clamp-2 text-sm font-semibold text-slate-800 group-hover:text-primary transition-colors">
           {product.name}
         </h3>

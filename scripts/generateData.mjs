@@ -1,3 +1,4 @@
+// After regenerating, run scripts/generateImages.mjs: it swaps the faker image URLs for self-hosted images.
 import { faker } from '@faker-js/faker';
 import fs from 'fs';
 import path from 'path';
@@ -38,7 +39,7 @@ const products = generate(1000, () => {
     rating: faker.number.float({ min: 1, max: 5, multipleOf: 0.1 }),
     reviewsCount: faker.number.int({ min: 0, max: 1000 }),
     categoryId: faker.helpers.arrayElement(categories).id,
-    brandId: faker.helpers.arrayElement(brands).id,
+    ...(({ id, name }) => ({ brandId: id, brand: name }))(faker.helpers.arrayElement(brands)),
     images: [
       faker.image.urlLoremFlickr({ category: 'product' }),
       faker.image.urlLoremFlickr({ category: 'product' }),

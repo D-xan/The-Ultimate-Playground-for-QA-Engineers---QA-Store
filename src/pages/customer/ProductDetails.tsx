@@ -4,6 +4,7 @@ import { api } from '@/utils/api';
 import { useCart } from '@/store/useCart';
 import { Button } from '@/components/ui/Button';
 import { ShoppingCart, Star, Heart, ArrowLeft, Truck, ShieldCheck, ArrowRight } from 'lucide-react';
+import { asset } from '@/utils/asset';
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
@@ -66,7 +67,7 @@ export default function ProductDetails() {
         {/* Images */}
         <div className="space-y-4">
           <div className="aspect-square rounded-2xl bg-slate-100 overflow-hidden border border-border">
-            <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />
+            <img src={asset(product.images[0])} alt={product.name} width={400} height={400} className="h-full w-full object-cover" />
           </div>
           <div className="grid grid-cols-3 gap-4">
             {product.images.slice(1, 4).map((img: string, i: number) => (
@@ -79,7 +80,7 @@ export default function ProductDetails() {
 
         {/* Details */}
         <div className="flex flex-col">
-          <div className="mb-2 text-sm font-bold uppercase tracking-wider text-primary">{product.brandId}</div>
+          <div className="mb-2 text-sm font-bold uppercase tracking-wider text-primary">{product.brand}</div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">{product.name}</h1>
           
           <div className="flex items-center gap-4 mb-6">

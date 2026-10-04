@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400" role="img" aria-label="Table">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eff6ff"/><stop offset="1" stop-color="#dbeafe"/></linearGradient></defs>
+<rect width="400" height="400" fill="url(#g)"/>
+<svg x="115.99999999999999" y="88" xmlns="http://www.w3.org/2000/svg" width="168" height="168" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"  aria-hidden="true"><path d="M10.293 2.293a1 1 0 0 1 1.414 0l2.5 2.5 5.994 1.227a1 1 0 0 1 .506 1.687l-7 7a1 1 0 0 1-1.687-.506l-1.227-5.994-2.5-2.5a1 1 0 0 1 0-1.414z"></path><path d="m14.207 4.793-3.414 3.414"></path><path d="M3 20a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"></path><path d="m9.086 6.5-4.793 4.793a1 1 0 0 0-.18 1.17L7 18"></path></svg>
+<text x="50%" y="336" text-anchor="middle" font-family="system-ui, sans-serif" font-size="28.000000000000004" font-weight="600" fill="#1d4ed8" opacity="0.8">Table</text>
+</svg>

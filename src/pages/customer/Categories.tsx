@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '@/utils/api';
+import { asset } from '@/utils/asset';
 
 export default function Categories() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -41,7 +42,7 @@ export default function Categories() {
             >
               {cat.image && (
                 <img 
-                  src={cat.image} 
+                  src={asset(cat.image)} 
                   alt={cat.name} 
                   className="absolute inset-0 h-full w-full object-cover opacity-30 transition-transform duration-500 group-hover:scale-110 group-hover:opacity-40"
                 />

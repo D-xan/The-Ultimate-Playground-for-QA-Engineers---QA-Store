@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
 import { getTestId } from '@/utils/testUtils';
 import { taxRate } from '@/utils/bugHunt';
+import { asset } from '@/utils/asset';
 
 export default function Cart() {
   const { items, removeItem, updateQuantity, getTotal } = useCart();
@@ -40,7 +41,7 @@ export default function Cart() {
               data-testid={getTestId(`cart-item-${item.productId}`)}
               className="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white border border-border rounded-2xl shadow-sm"
             >
-              <img src={item.image} alt={item.name} className="w-24 h-24 object-cover rounded-xl bg-slate-100" />
+              <img src={asset(item.image)} alt={item.name} className="w-24 h-24 object-cover rounded-xl bg-slate-100" />
               
               <div className="flex-1 text-center sm:text-left">
                 <h3 className="font-semibold text-slate-900">{item.name}</h3>
