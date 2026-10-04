@@ -96,3 +96,25 @@ test('synthetic pointer events (as Cypress sends them) also sort the hold list',
   });
   expect(await texts(items)).toEqual([before[1], before[0], ...before.slice(2)]);
 });
+
+test('each sorted list ticks its own task', async ({ page }) => {
+  const done = (id: string) => expect(page.getByTestId(`element-${id}`)).toHaveAttribute('data-done', 'true');
+  await expect(page.getByText('0 of 3 Tasks')).toBeVisible();
+  const items = page.getByTestId('html5-item');
+  const goal = ['Step 1', 'Step 2', 'Step 3', 'Step 4', 'Step 5'];
+  for (let i = 0; i < goal.length; i++) {
+    if ((await items.nth(i).innerText()).trim() === goal[i]) continue;
+    await items.filter({ hasText: goal[i] }).dragTo(items.nth(i));
+  }
+  await done('html5');
+  const hold = page.getByTestId('hold-item');
+  for (const [i, want] of ['A', 'B', 'C', 'D', 'E'].entries()) {
+    if ((await hold.nth(i).innerText()).trim() === want) continue;
+    await holdDrag(page, hold.filter({ hasText: new RegExp(`^${want}$`) }), hold.nth(i));
+  }
+  await done('hold');
+  await page.getByTestId('card').filter({ hasText: 'Write tests' }).dragTo(page.locator('#col-done'));
+  await page.getByTestId('card').filter({ hasText: 'Fix bug #42' }).dragTo(page.locator('#col-progress'));
+  await done('kanban');
+  await expect(page.getByText('3 of 3 Tasks')).toBeVisible();
+});

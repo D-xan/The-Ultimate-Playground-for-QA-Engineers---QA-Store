@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SolutionTabs } from '@/components/practice/SolutionTabs';
-import { TaskQuestions } from '@/components/ui/TaskQuestions';
 import { Button } from '@/components/ui/Button';
-import { HintAccordion } from '@/components/ui/HintAccordion';
 import { ChallengeResult, type ResultState } from '@/components/ui/ChallengeResult';
+import { PracticeElement } from '@/components/practice/PracticeElement';
+import { PracticeSection as Section } from '@/components/practice/PracticeSection';
 import { targetAt, isHit, SALES, TARGET_W, TARGET_H, TARGET_R, type Point } from '@/utils/canvasMath';
 
-const SECTION = 'bg-white p-6 rounded-2xl shadow-sm border border-border';
-const H2 = 'text-xl font-bold mb-6 border-b border-border pb-2';
 
 const DRAW_W = 600;
 const DRAW_H = 200;
@@ -182,135 +180,144 @@ export default function CanvasCharts() {
   const hoveredBar = hovered === null ? null : SALES[hovered];
 
   return (
-    <div className="space-y-12 pb-12">
+    <div className="space-y-10 pb-12">
       <div>
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Canvas &amp; Charts</h1>
-        <p className="text-slate-500">Practice testing things that have no DOM: a moving target drawn on a canvas, a line you have to draw, and a chart whose values only appear in a tooltip.</p>
-        <HintAccordion hints={[
-          "A canvas is one element. There is nothing inside it to locate, so you click by coordinates relative to the canvas.",
-          "This page exposes <code>window.qaCanvas.target()</code>, which returns the target's position in CSS pixels from the canvas's top-left corner. Real canvas apps often add a hook like this for tests.",
-          "<strong>Playwright:</strong> <code>page.mouse.move(x, y, { steps: 20 })</code> sends the intermediate moves a drawing needs. <strong>Selenium:</strong> <code>clickAndHold</code> then several <code>moveByOffset</code> calls (offsets are from the element's centre).",
-          "Chart values are not in the DOM until you hover a bar. Hover each bar and read the tooltip."
-        ]} />
+        <p className="text-slate-500">Canvas has no DOM inside it, so locators stop at its edge. Click by coordinates, draw with the mouse, and read chart values from tooltips. Each task ticks itself when its result box turns green.</p>
       </div>
 
-      <section className={SECTION}>
-        <h2 className={H2}>1. Moving Target</h2>
-        <div className="mb-4 mt-2"><TaskQuestions groupId="target" tasks={[
-          {
-            title: "Hit the target three times",
-            description: "Click the moving red circle three times. Clicks that miss are counted too.",
-            positive: ["Three hits turn the result green."],
-            negative: ["Clicking where the target used to be is a miss."],
-            hint: "Call window.qaCanvas.target() right before each click and click at the canvas's left + x, top + y."
-          }
-        ]} /></div>
-        <canvas
-          ref={targetRef}
-          id="target-canvas"
-          data-testid="target-canvas"
-          onPointerDown={onTargetDown}
-          aria-label="Moving target"
-          role="img"
-          style={{ aspectRatio: `${TARGET_W} / ${TARGET_H}` }}
-          className="block w-full max-w-[600px] h-auto rounded-xl border border-border cursor-crosshair touch-none"
-        />
-        <p className="mt-4 mb-4 text-sm text-slate-600">Hits: <strong id="canvas-hits" data-testid="canvas-hits">{hits}</strong> · Misses: <strong id="canvas-misses" data-testid="canvas-misses">{misses}</strong></p>
-        <ChallengeResult testId="result-target" state={targetDone ? 'success' : 'pending'} message={targetDone ? 'Three hits' : `Hit the target ${HITS_NEEDED} times`} />
-      </section>
-
-      <section className={SECTION}>
-        <h2 className={H2}>2. Draw a Line</h2>
-        <div className="mb-4 mt-2"><TaskQuestions groupId="draw" tasks={[
-          {
-            title: "Connect the boxes",
-            description: "Press inside Start, drag to End in one continuous stroke and release inside End.",
-            positive: ["A continuous stroke from Start to End turns the result green."],
-            negative: ["Jumping straight to End without the moves in between fails.", "Starting or ending outside the boxes fails."],
-            hint: "Press inside Start, move to End in ten or more small steps, then release. One big jump is ignored."
-          }
-        ]} /></div>
-        <canvas
-          ref={drawRef}
-          id="draw-canvas"
-          data-testid="draw-canvas"
-          onPointerDown={onDrawDown}
-          onPointerMove={onDrawMove}
-          onPointerUp={onDrawUp}
-          aria-label="Drawing area"
-          role="img"
-          style={{ aspectRatio: `${DRAW_W} / ${DRAW_H}` }}
-          className="block w-full max-w-[600px] h-auto rounded-xl border border-border cursor-crosshair touch-none"
-        />
-        <div className="mt-4 space-y-4">
-          <Button id="clear-draw" data-testid="clear-draw" variant="outline" onClick={clearDraw}>Clear</Button>
-          <ChallengeResult testId="result-draw" state={drawResult} message={drawResult === 'success' ? 'Line drawn' : drawResult === 'failure' ? 'Draw one continuous line from the left box to the right box' : 'Draw a line from Start to End'} />
-        </div>
-      </section>
-
-      <section className={SECTION}>
-        <h2 className={H2}>3. Chart Tooltip</h2>
-        <div className="mb-4 mt-2"><TaskQuestions groupId="chart" tasks={[
-          {
-            title: "Find the best month",
-            description: "Hover the bars to read each month's sales, then enter the month with the highest sales.",
-            positive: ["Hovering a bar shows a tooltip such as 'Mar: 4,210'.", "Entering the peak month turns the result green."],
-            negative: ["The values are not in the page until you hover."],
-            hint: "Hover each bar, wait for the tooltip to name that month, and keep the largest number."
-          }
-        ]} /></div>
-        <div className="relative max-w-[600px]">
-          {hoveredBar && (
-            <div
-              id="chart-tooltip"
-              data-testid="chart-tooltip"
-              role="tooltip"
-              style={{ left: `${Math.min(88, Math.max(12, ((hovered! + 0.5) / SALES.length) * 100))}%` }}
-              className="pointer-events-none absolute top-0 -translate-x-1/2 rounded-md bg-slate-900 px-2 py-1 text-xs font-medium text-white"
-            >
-              {hoveredBar.month}: {hoveredBar.value.toLocaleString('en-US')}
-            </div>
-          )}
-          <svg id="sales-chart" data-testid="sales-chart" viewBox={`0 0 ${CHART_W} ${CHART_H}`} className="w-full h-auto" role="img" aria-label="Monthly sales">
-            {SALES.map((s, i) => {
-              const h = (s.value / CHART_MAX) * 200;
-              return (
-                <g key={s.month}>
-                  <rect
-                    data-month={s.month}
-                    x={i * BAR_SLOT + 8}
-                    y={230 - h}
-                    width={BAR_SLOT - 16}
-                    height={h}
-                    rx={4}
-                    tabIndex={0}
-                    aria-label={s.month}
-                    onMouseEnter={() => setHovered(i)}
-                    onFocus={() => setHovered(i)}
-                    onMouseLeave={() => setHovered(null)}
-                    onBlur={() => setHovered(null)}
-                    className={hovered === i ? 'fill-primary' : 'fill-primary/60'}
-                  />
-                  <text x={i * BAR_SLOT + BAR_SLOT / 2} y={252} textAnchor="middle" className="fill-slate-500 text-[13px]">{s.month}</text>
-                </g>
-              );
-            })}
-          </svg>
-        </div>
-        <div className="flex flex-wrap items-center gap-3 mt-4 mb-4">
-          <input
-            id="peak-month"
-            data-testid="peak-month"
-            value={peak}
-            onChange={(e) => setPeak(e.target.value)}
-            placeholder="Month, e.g. Mar"
-            aria-label="Peak month"
-            className="w-full max-w-xs px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+      <Section n={1} title="Moving Target">
+        <PracticeElement
+          id="target" label="Moving target"
+          goal={"Click the moving red circle three times. Clicks that miss are counted too."}
+          pass={["Three hits turn the result green."]}
+          fail={["Clicking where the target used to be is a miss."]}
+          hint={"Call window.qaCanvas.target() right before each click and click at the canvas's left + x, top + y."}
+          code={{
+            playwright: "// The page exposes the target's position: window.qaCanvas.target() returns {x, y}\nconst canvas = page.locator('#target-canvas');\nawait canvas.evaluate((el) => el.scrollIntoView({ block: 'center' }));\nfor (let i = 0; i < 3; i++) {\n  const box = (await canvas.boundingBox())!;\n  const t = await page.evaluate(() => (window as any).qaCanvas.target());\n  await page.mouse.click(box.x + t.x, box.y + t.y);\n}\nawait expect(page.locator('#canvas-hits')).toHaveText('3');",
+            seleniumJava: "WebElement canvas = driver.findElement(By.id(\"target-canvas\"));\nJavascriptExecutor js = (JavascriptExecutor) driver;\njs.executeScript(\"arguments[0].scrollIntoView({block: 'center'})\", canvas);\nfor (int i = 0; i < 3; i++) {\n  Map<String, Number> t = (Map<String, Number>) js.executeScript(\"return window.qaCanvas.target()\");\n  // moveToElement offsets are from the element's centre\n  int dx = t.get(\"x\").intValue() - canvas.getSize().getWidth() / 2;\n  int dy = t.get(\"y\").intValue() - canvas.getSize().getHeight() / 2;\n  new Actions(driver).moveToElement(canvas, dx, dy).click().perform();\n}",
+            seleniumPython: "canvas = driver.find_element(By.ID, \"target-canvas\")\ndriver.execute_script(\"arguments[0].scrollIntoView({block: 'center'})\", canvas)\nfor _ in range(3):\n    t = driver.execute_script(\"return window.qaCanvas.target()\")\n    dx = t[\"x\"] - canvas.size[\"width\"] / 2   # offsets are from the centre\n    dy = t[\"y\"] - canvas.size[\"height\"] / 2\n    ActionChains(driver).move_to_element_with_offset(canvas, dx, dy).click().perform()",
+            cypress: "Cypress._.times(3, () => {\n  cy.window().then((win) => {\n    const t = win.qaCanvas.target();\n    cy.get('#target-canvas').click(t.x, t.y); // x, y from the top-left corner\n  });\n});\ncy.get('#canvas-hits').should('have.text', '3');",
+          }}
+          done={targetDone}
+        >
+          <canvas
+            ref={targetRef}
+            id="target-canvas"
+            data-testid="target-canvas"
+            onPointerDown={onTargetDown}
+            aria-label="Moving target"
+            role="img"
+            style={{ aspectRatio: `${TARGET_W} / ${TARGET_H}` }}
+            className="block w-full max-w-[600px] h-auto rounded-xl border border-border cursor-crosshair touch-none"
           />
-          <Button id="check-peak" data-testid="check-peak" onClick={checkPeak}>Check</Button>
-        </div>
-        <ChallengeResult testId="result-chart" state={peakResult} message={peakResult === 'success' ? 'That is the best month' : peakResult === 'failure' ? 'Not the best month' : 'Enter the month with the highest sales'} />
-      </section>
+          <p className="mt-4 mb-4 text-sm text-slate-600">Hits: <strong id="canvas-hits" data-testid="canvas-hits">{hits}</strong> · Misses: <strong id="canvas-misses" data-testid="canvas-misses">{misses}</strong></p>
+          <ChallengeResult testId="result-target" state={targetDone ? 'success' : 'pending'} message={targetDone ? 'Three hits' : `Hit the target ${HITS_NEEDED} times`} />
+        </PracticeElement>
+      </Section>
+
+      <Section n={2} title="Draw a Line">
+        <PracticeElement
+          id="draw" label="Draw a line"
+          goal={"Press inside Start, drag to End in one continuous stroke and release inside End."}
+          pass={["A continuous stroke from Start to End turns the result green."]}
+          fail={["Jumping straight to End without the moves in between fails.","Starting or ending outside the boxes fails."]}
+          hint={"Press inside Start, move to End in ten or more small steps, then release. One big jump is ignored."}
+          code={{
+            playwright: "const canvas = page.locator('#draw-canvas');\nawait canvas.evaluate((el) => el.scrollIntoView({ block: 'center' }));\nconst b = (await canvas.boundingBox())!;\nawait page.mouse.move(b.x + b.width * 0.1, b.y + b.height / 2);\nawait page.mouse.down();\nawait page.mouse.move(b.x + b.width * 0.9, b.y + b.height / 2, { steps: 20 }); // a stroke needs steps\nawait page.mouse.up();",
+            seleniumJava: "WebElement canvas = driver.findElement(By.id(\"draw-canvas\"));\nint w = canvas.getSize().getWidth();\nActions a = new Actions(driver).moveToElement(canvas, (int) (-w * 0.4), 0).clickAndHold();\nfor (int i = 0; i < 16; i++) a.moveByOffset((int) (w * 0.05), 0); // many small moves, not one jump\na.release().perform();",
+            seleniumPython: "canvas = driver.find_element(By.ID, \"draw-canvas\")\nw = canvas.size[\"width\"]\nchain = ActionChains(driver).move_to_element_with_offset(canvas, -w * 0.4, 0).click_and_hold()\nfor _ in range(16):\n    chain.move_by_offset(w * 0.05, 0)\nchain.release().perform()",
+            cypress: "cy.get('#draw-canvas').then(($c) => {\n  const { width, height } = $c[0].getBoundingClientRect();\n  cy.wrap($c).trigger('pointerdown', width * 0.1, height / 2, { pointerId: 1 });\n  for (let i = 2; i <= 9; i++) cy.wrap($c).trigger('pointermove', width * 0.1 * i, height / 2, { pointerId: 1 });\n  cy.wrap($c).trigger('pointerup', width * 0.9, height / 2, { pointerId: 1 });\n});",
+          }}
+          done={drawResult === 'success'}
+        >
+          <canvas
+            ref={drawRef}
+            id="draw-canvas"
+            data-testid="draw-canvas"
+            onPointerDown={onDrawDown}
+            onPointerMove={onDrawMove}
+            onPointerUp={onDrawUp}
+            aria-label="Drawing area"
+            role="img"
+            style={{ aspectRatio: `${DRAW_W} / ${DRAW_H}` }}
+            className="block w-full max-w-[600px] h-auto rounded-xl border border-border cursor-crosshair touch-none"
+          />
+          <div className="mt-4 space-y-4">
+            <Button id="clear-draw" data-testid="clear-draw" variant="outline" onClick={clearDraw}>Clear</Button>
+            <ChallengeResult testId="result-draw" state={drawResult} message={drawResult === 'success' ? 'Line drawn' : drawResult === 'failure' ? 'Draw one continuous line from the left box to the right box' : 'Draw a line from Start to End'} />
+          </div>
+        </PracticeElement>
+      </Section>
+
+      <Section n={3} title="Chart Tooltip">
+        <PracticeElement
+          id="chart" label="Chart tooltip"
+          goal={"Hover the bars to read each month's sales, then enter the month with the highest sales."}
+          pass={["Hovering a bar shows a tooltip such as 'Mar: 4,210'.","Entering the peak month turns the result green."]}
+          fail={["The values are not in the page until you hover."]}
+          hint={"Hover each bar, wait for the tooltip to name that month, and keep the largest number."}
+          code={{
+            playwright: "const bars = page.locator('#sales-chart [data-month]');\nlet best = { month: '', value: -1 };\nfor (let i = 0; i < (await bars.count()); i++) {\n  const month = (await bars.nth(i).getAttribute('data-month'))!;\n  await bars.nth(i).hover();\n  await expect(page.locator('#chart-tooltip')).toContainText(month);\n  const value = Number((await page.locator('#chart-tooltip').innerText()).replace(/\\D/g, ''));\n  if (value > best.value) best = { month, value };\n}\nawait page.locator('#peak-month').fill(best.month);\nawait page.locator('#check-peak').click();",
+            seleniumJava: "String bestMonth = \"\"; int best = -1;\nfor (WebElement bar : driver.findElements(By.cssSelector(\"#sales-chart [data-month]\"))) {\n  String month = bar.getDomAttribute(\"data-month\");\n  new Actions(driver).moveToElement(bar).perform();\n  wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id(\"chart-tooltip\"), month));\n  int value = Integer.parseInt(driver.findElement(By.id(\"chart-tooltip\")).getText().replaceAll(\"\\\\D\", \"\"));\n  if (value > best) { best = value; bestMonth = month; }\n}\ndriver.findElement(By.id(\"peak-month\")).sendKeys(bestMonth);\ndriver.findElement(By.id(\"check-peak\")).click();",
+            seleniumPython: "best_month, best = \"\", -1\nfor bar in driver.find_elements(By.CSS_SELECTOR, \"#sales-chart [data-month]\"):\n    month = bar.get_attribute(\"data-month\")\n    ActionChains(driver).move_to_element(bar).perform()\n    wait.until(EC.text_to_be_present_in_element((By.ID, \"chart-tooltip\"), month))\n    value = int(re.sub(r\"\\D\", \"\", driver.find_element(By.ID, \"chart-tooltip\").text))\n    if value > best:\n        best_month, best = month, value\ndriver.find_element(By.ID, \"peak-month\").send_keys(best_month)\ndriver.find_element(By.ID, \"check-peak\").click()",
+            cypress: "let best = { month: '', value: -1 };\ncy.get('#sales-chart [data-month]').each(($bar) => {\n  const month = $bar.attr('data-month');\n  cy.wrap($bar).trigger('mouseover');\n  cy.get('#chart-tooltip').should('contain', month).invoke('text').then((t) => {\n    const value = Number(t.replace(/\\D/g, ''));\n    if (value > best.value) best = { month, value };\n  });\n}).then(() => {\n  cy.get('#peak-month').type(best.month);\n  cy.get('#check-peak').click();\n});",
+          }}
+          done={peakResult === 'success'}
+        >
+          <div className="relative max-w-[600px]">
+            {hoveredBar && (
+              <div
+                id="chart-tooltip"
+                data-testid="chart-tooltip"
+                role="tooltip"
+                style={{ left: `${Math.min(88, Math.max(12, ((hovered! + 0.5) / SALES.length) * 100))}%` }}
+                className="pointer-events-none absolute top-0 -translate-x-1/2 rounded-md bg-slate-900 px-2 py-1 text-xs font-medium text-white"
+              >
+                {hoveredBar.month}: {hoveredBar.value.toLocaleString('en-US')}
+              </div>
+            )}
+            <svg id="sales-chart" data-testid="sales-chart" viewBox={`0 0 ${CHART_W} ${CHART_H}`} className="w-full h-auto" role="img" aria-label="Monthly sales">
+              {SALES.map((s, i) => {
+                const h = (s.value / CHART_MAX) * 200;
+                return (
+                  <g key={s.month}>
+                    <rect
+                      data-month={s.month}
+                      x={i * BAR_SLOT + 8}
+                      y={230 - h}
+                      width={BAR_SLOT - 16}
+                      height={h}
+                      rx={4}
+                      tabIndex={0}
+                      aria-label={s.month}
+                      onMouseEnter={() => setHovered(i)}
+                      onFocus={() => setHovered(i)}
+                      onMouseLeave={() => setHovered(null)}
+                      onBlur={() => setHovered(null)}
+                      className={hovered === i ? 'fill-primary' : 'fill-primary/60'}
+                    />
+                    <text x={i * BAR_SLOT + BAR_SLOT / 2} y={252} textAnchor="middle" className="fill-slate-500 text-[13px]">{s.month}</text>
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 mt-4 mb-4">
+            <input
+              id="peak-month"
+              data-testid="peak-month"
+              value={peak}
+              onChange={(e) => setPeak(e.target.value)}
+              placeholder="Month, e.g. Mar"
+              aria-label="Peak month"
+              className="w-full max-w-xs px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <Button id="check-peak" data-testid="check-peak" onClick={checkPeak}>Check</Button>
+          </div>
+          <ChallengeResult testId="result-chart" state={peakResult} message={peakResult === 'success' ? 'That is the best month' : peakResult === 'failure' ? 'Not the best month' : 'Enter the month with the highest sales'} />
+        </PracticeElement>
+      </Section>
 
       <SolutionTabs challengeId="canvas" number={4} />
     </div>

@@ -76,3 +76,25 @@ test('using the mouse fails the keyboard challenge', async ({ page }) => {
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('result-keyboard')).toHaveAttribute('data-state', 'failure');
 });
+
+test('each solved part ticks its own task', async ({ page }) => {
+  const done = (id: string) => expect(page.getByTestId(`element-${id}`)).toHaveAttribute('data-done', 'true');
+  await expect(page.getByText('0 of 3 Tasks')).toBeVisible();
+  const { violations } = await scan(page, '#a11y-broken');
+  for (const v of violations) await page.locator(`#rule-${v.id}`).check();
+  await page.locator('#check-a11y').click();
+  await done('axe');
+  // axe is now in the page, which is what the fixed-form task listens for
+  expect((await scan(page, '#a11y-fixed')).violations).toEqual([]);
+  await done('fixed');
+  await page.locator('#kb-name').focus();
+  await page.keyboard.type('Ada');
+  for (const key of ['Tab', 'ArrowDown', 'ArrowDown', 'Tab', 'Space', 'Tab', 'Enter']) await page.keyboard.press(key);
+  await expect(page.locator('#kb-dialog')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#kb-confirm')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await done('keyboard');
+  await expect(page.getByText('3 of 3 Tasks')).toBeVisible();
+});

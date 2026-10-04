@@ -21,7 +21,7 @@ const FloatingProgress = () => {
   if (isDashboard) return null;
   const challengeId = location.pathname.split('/').pop() || '';
   const currentTotal = pageTotal(progress, challengeId);
-  if (currentTotal === 0) return null; // TaskQuestions not mounted yet or no tasks
+  if (currentTotal === 0) return null; // no task elements registered yet, or a page without tasks
   const currentCompleted = pageDone(progress, challengeId);
   const progressPercent = Math.round((currentCompleted / currentTotal) * 100);
   const label = "Task Progress";

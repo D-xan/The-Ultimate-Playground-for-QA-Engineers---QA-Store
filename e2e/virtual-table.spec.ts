@@ -33,3 +33,16 @@ test('the last row renders at the bottom', async ({ page }) => {
   await grid.evaluate((el) => { el.scrollTop = el.scrollHeight; });
   await expect(grid.locator('[data-row-id="10000"]')).toBeVisible();
 });
+
+test('each solved part ticks its own task', async ({ page }) => {
+  const done = (id: string) => expect(page.getByTestId(`element-${id}`)).toHaveAttribute('data-done', 'true');
+  await expect(page.getByText('0 of 2 Tasks')).toBeVisible();
+  const grid = page.locator('#virtual-grid');
+  await grid.evaluate((el) => { el.scrollTop = (7342 - 1) * 40; });
+  await grid.locator('[data-row-id="7342"]').getByRole('button', { name: 'Select' }).click();
+  await done('find');
+  await page.locator('#sort-score').click();
+  await page.locator('#virtual-grid [data-row-id]').first().getByRole('button', { name: 'Select' }).click();
+  await done('sort');
+  await expect(page.getByText('2 of 2 Tasks')).toBeVisible();
+});

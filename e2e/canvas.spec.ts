@@ -69,3 +69,37 @@ test('synthetic pointer events (as Cypress sends them) also draw', async ({ page
   });
   await expect(page.getByTestId('result-draw')).toHaveAttribute('data-state', 'success');
 });
+
+test('each solved canvas task ticks its own element', async ({ page }) => {
+  const done = (id: string) => expect(page.getByTestId(`element-${id}`)).toHaveAttribute('data-done', 'true');
+  await expect(page.getByText('0 of 3 Tasks')).toBeVisible();
+  const target = page.locator('#target-canvas');
+  await centre(target);
+  for (let i = 0; i < 3; i++) {
+    const box = (await target.boundingBox())!;
+    const t = await page.evaluate(() => (window as unknown as { qaCanvas: { target(): { x: number; y: number } } }).qaCanvas.target());
+    await page.mouse.click(box.x + t.x, box.y + t.y);
+  }
+  await done('target');
+  const canvas = page.locator('#draw-canvas');
+  await centre(canvas);
+  const b = (await canvas.boundingBox())!;
+  await page.mouse.move(b.x + b.width * 0.1, b.y + b.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(b.x + b.width * 0.9, b.y + b.height / 2, { steps: 20 });
+  await page.mouse.up();
+  await done('draw');
+  const bars = page.locator('#sales-chart [data-month]');
+  let best = { month: '', value: -1 };
+  for (let i = 0; i < (await bars.count()); i++) {
+    const month = (await bars.nth(i).getAttribute('data-month'))!;
+    await bars.nth(i).hover();
+    await expect(page.locator('#chart-tooltip')).toContainText(month);
+    const value = Number((await page.locator('#chart-tooltip').innerText()).replace(/\D/g, ''));
+    if (value > best.value) best = { month, value };
+  }
+  await page.locator('#peak-month').fill(best.month);
+  await page.locator('#check-peak').click();
+  await done('chart');
+  await expect(page.getByText('3 of 3 Tasks')).toBeVisible();
+});

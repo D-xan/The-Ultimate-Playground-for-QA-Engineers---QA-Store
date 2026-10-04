@@ -69,3 +69,27 @@ test('saved page state does not desync the bug hunt toggle', async ({ page }) =>
   await expect(page.locator('#bug-hunt-toggle')).not.toBeChecked();
   await expect(page.getByText('Bug Hunt mode off')).toBeVisible();
 });
+
+test('switching Bug Hunt on and reporting all six bugs ticks both tasks', async ({ page }) => {
+  await page.goto('/practice/bug-hunt');
+  const done = (id: string) => expect(page.getByTestId(`element-${id}`)).toHaveAttribute('data-done', 'true');
+  await expect(page.getByText('0 of 2 Tasks')).toBeVisible();
+  await page.locator('#bug-hunt-toggle').check();
+  await done('setup');
+  const bugs: [string, string][] = [
+    ['Cart', 'Subtotal ignores the quantity of the last item'],
+    ['Cart', 'Tax labelled 8% is charged at 18%'],
+    ['Products', 'Weekly Deals shows the smallest discounts first'],
+    ['Search', 'Search is case-sensitive'],
+    ['Cart', 'Removing an item removes the first line instead'],
+    ['Checkout', 'Checkout accepts an email address without @'],
+  ];
+  for (const [i, [area, symptom]] of bugs.entries()) {
+    await page.locator('#bug-area').selectOption(area);
+    await page.locator('#bug-symptom').selectOption(symptom);
+    await page.locator('#report-bug').click();
+    await expect(page.locator('#bugs-found')).toHaveText(`${i + 1} / 6 found`);
+  }
+  await done('report');
+  await expect(page.getByText('2 of 2 Tasks')).toBeVisible();
+});

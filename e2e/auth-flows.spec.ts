@@ -88,3 +88,27 @@ test('after logging out of a restored session, a fresh login is not "restored"',
   await login(page);
   await expect(page.locator('#session-restored')).toBeHidden();
 });
+
+test('each solved flow ticks its own task', async ({ page, browser }) => {
+  test.setTimeout(60_000);
+  const done = (p: Page, id: string) => expect(p.getByTestId(`element-${id}`)).toHaveAttribute('data-done', 'true');
+  await expect(page.getByText('0 of 3 Tasks')).toBeVisible();
+  await login(page, true);
+  await done(page, '2fa');
+  await page.locator('#start-wizard').click();
+  await page.locator('#wizard-next').click();
+  await expect(page.locator('#wizard-next')).toBeEnabled({ timeout: 12_000 });
+  await page.locator('#wizard-next').click();
+  await page.locator('#reauth-password').fill('Passw0rd!');
+  await page.locator('#reauth-submit').click();
+  await expect(page.locator('#wizard-step')).toHaveText('Step 2 of 3');
+  await page.locator('#wizard-next').click();
+  await page.locator('#wizard-finish').click();
+  await done(page, 'session');
+  const ctx = await browser.newContext({ storageState: await page.context().storageState() });
+  const fresh = await ctx.newPage();
+  await fresh.goto(new URL(page.url()).origin + PATH);
+  await done(fresh, 'remember');
+  await expect(fresh.getByText('3 of 3 Tasks')).toBeVisible();
+  await ctx.close();
+});
