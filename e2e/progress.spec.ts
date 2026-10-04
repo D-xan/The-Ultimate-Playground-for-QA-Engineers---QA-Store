@@ -1,19 +1,19 @@
 import { test, expect } from '@playwright/test';
 
-test('groups on one page are independent', async ({ page }) => {
+test('solving one element ticks only that element', async ({ page }) => {
   await page.goto('/practice/basic');
-  await page.getByTestId('task-toggle-buttons-0').click();
-  await expect(page.getByTestId('task-toggle-buttons-0').locator('svg')).toHaveClass(/text-green-500/);
-  await expect(page.getByTestId('task-toggle-inputs-0').locator('svg')).not.toHaveClass(/text-green-500/);
+  await page.locator('#radio-no').check();
+  await expect(page.getByTestId('element-basic-radio')).toHaveAttribute('data-done', 'true');
+  await expect(page.getByTestId('element-basic-textarea')).toHaveAttribute('data-done', 'false');
 });
 
 test('Reset All clears task progress', async ({ page }) => {
   await page.goto('/practice/basic');
-  await page.getByTestId('task-toggle-inputs-0').click();
-  await expect(page.getByTestId('task-toggle-inputs-0').locator('svg')).toHaveClass(/text-green-500/);
+  await page.locator('#radio-no').check();
+  await expect(page.getByTestId('element-basic-radio')).toHaveAttribute('data-done', 'true');
   await page.getByRole('button', { name: 'Reset All' }).click();
   await page.waitForLoadState('load');
-  await expect(page.getByTestId('task-toggle-inputs-0').locator('svg')).not.toHaveClass(/text-green-500/);
+  await expect(page.getByTestId('element-basic-radio')).toHaveAttribute('data-done', 'false');
 });
 
 test('old v2 progress data does not break the portal', async ({ page }) => {
