@@ -45,3 +45,22 @@ test('star rating', async ({ page }) => {
   await expect(page.locator('#rating-value')).toHaveText('4/5');
   await expect(page.getByRole('radio', { name: '4 stars' })).toHaveAttribute('aria-checked', 'true');
 });
+
+test('every Widgets task ticks itself when solved', async ({ page }) => {
+  const done = (id: string) => expect(page.getByTestId(`element-${id}`)).toHaveAttribute('data-done', 'true');
+  await expect(page.getByText('0 of 3 Tasks')).toBeVisible();
+  await page.locator('#otp-0').click();
+  await page.keyboard.type('482915');
+  await page.locator('#verify-otp').click();
+  await done('otp');
+
+  const input = page.locator('#tag-input');
+  for (const t of ['selenium', 'playwright', 'cypress']) { await input.fill(t); await input.press('Enter'); }
+  await expect(page.getByTestId('element-tags')).toHaveAttribute('data-done', 'false');
+  await page.getByRole('button', { name: 'Remove playwright' }).click();
+  await done('tags');
+
+  await page.getByRole('radio', { name: '4 stars' }).click();
+  await done('star-rating');
+  await expect(page.getByText('3 of 3 Tasks')).toBeVisible();
+});
