@@ -4,6 +4,7 @@ const done = (page: Page, id: string) => expect(page.getByTestId(`element-${id}`
 const notDone = (page: Page, id: string) => expect(page.getByTestId(`element-${id}`)).toHaveAttribute('data-done', 'false');
 
 test('every Basic Elements task ticks itself when solved', async ({ page }) => {
+  test.slow(); // thirteen tasks plus a 3 second loading button
   await page.goto('/practice/basic');
   await expect(page.getByText('0 of 13 Tasks')).toBeVisible();
 
@@ -40,9 +41,9 @@ test('every Basic Elements task ticks itself when solved', async ({ page }) => {
   await page.locator('#basic-textarea').fill('Line one\nLine two\nLine three');
   await done(page, 'basic-textarea');
 
-  for (const id of ['btn-normal', 'btn-submit', 'btn-reset', 'btn-fab']) {
+  for (const [id, name] of [['btn-normal', 'Normal Button'], ['btn-submit', 'Submit Button'], ['btn-reset', 'Reset Button'], ['btn-fab', 'FAB (+)']]) {
     await page.locator(`#${id}`).click();
-    await expect(page.locator('#button-message')).toBeVisible();
+    await expect(page.locator('#button-message')).toHaveText(`Successfully clicked: ${name}`);
   }
   await expect(page.locator('#btn-disabled')).toBeDisabled();
   await done(page, 'basic-buttons');

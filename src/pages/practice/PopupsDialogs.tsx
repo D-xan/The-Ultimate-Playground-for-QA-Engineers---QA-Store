@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { PracticeElement } from '@/components/practice/PracticeElement';
 import { PracticeSection as Section } from '@/components/practice/PracticeSection';
@@ -19,6 +19,7 @@ export default function PopupsDialogs() {
   const [escaped, setEscaped] = useState(false);
   const [toast, setToast] = useState('');
   const [tooltip, setTooltip] = useState(false);
+  const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     if (!modalOpen) return;
@@ -30,7 +31,9 @@ export default function PopupsDialogs() {
 
   const showToast = (text: string, ms = 3000) => {
     setToast(text);
-    setTimeout(() => setToast(''), ms);
+    // A new toast restarts the timer, so an older one cannot hide it early.
+    clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(''), ms);
   };
 
   return (

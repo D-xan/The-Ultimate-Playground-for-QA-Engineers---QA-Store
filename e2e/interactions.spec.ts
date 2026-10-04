@@ -21,7 +21,7 @@ test('every Interactions task ticks itself when solved', async ({ page }) => {
   await page.getByRole('menuitem', { name: 'Copy link' }).click();
   await done(page, 'box-right-click');
 
-  await expect(page.locator('#hover-reveal-btn')).toHaveCount(0);
+  await expect(page.locator('#hover-reveal-btn')).toBeHidden();
   await page.locator('#box-hover').hover();
   await page.locator('#hover-reveal-btn').click();
   await done(page, 'box-hover');

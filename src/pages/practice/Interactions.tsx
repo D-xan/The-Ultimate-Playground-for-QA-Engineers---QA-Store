@@ -64,7 +64,7 @@ export default function Interactions() {
           id="box-hover" label="Hover to reveal"
           goal="Hover over the box to reveal its hidden button, then click that button."
           pass={['The button appears only while hovering', 'Clicking it shows “Hover action done”']}
-          fail={['Clicking the button before hovering: it is not rendered yet', 'Moving the mouse away first: the button disappears']}
+          fail={['Clicking the button before hovering: it stays hidden until then', 'Moving the mouse away first: the button disappears']}
           hint="Hover first, wait for the button to be visible, then click it. The pointer stays over the box while you click."
           code={{
             playwright: "await page.locator('#box-hover').hover();\nawait page.locator('#hover-reveal-btn').click();",
@@ -77,8 +77,9 @@ export default function Interactions() {
           <div className={`${box} cursor-pointer transition-colors hover:bg-primary/20`} id="box-hover"
             onMouseOver={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
             <p>{hovering ? 'Hovering!' : 'Hover over me'}</p>
-            {hovering && <Button className="mt-3" id="hover-reveal-btn" onClick={() => setHoverAction(true)}>Hidden action</Button>}
-            {hoverAction && <p className="mt-2 text-sm font-medium text-green-700" data-testid="hover-result">Hover action done</p>}
+            {/* Hidden, not removed, so the box keeps its size and nothing below it shifts. */}
+            <Button className={`mt-3 ${hovering ? '' : 'invisible'}`} id="hover-reveal-btn" onClick={() => setHoverAction(true)}>Hidden action</Button>
+            <p className={`mt-2 text-sm font-medium text-green-700 ${hoverAction ? '' : 'invisible'}`} data-testid="hover-result">Hover action done</p>
           </div>
         </PracticeElement>
 

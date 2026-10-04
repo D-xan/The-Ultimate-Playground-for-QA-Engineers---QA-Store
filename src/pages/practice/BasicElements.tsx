@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { PracticeElement } from '@/components/practice/PracticeElement';
@@ -25,7 +25,7 @@ function validate(name: Field, value: string) {
     case 'email': return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? '' : 'Invalid email format (e.g. name@domain.com)';
     case 'number': return isNaN(Number(value)) || Number(value) < 10 || Number(value) > 100 ? 'Number must be between 10 and 100' : '';
     case 'phone': return /^\+?[\d\s-]{10,15}$/.test(value) ? '' : 'Invalid phone number format (10-15 digits)';
-    case 'url': return /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(value) ? '' : 'Invalid URL format (e.g. https://example.com)';
+    case 'url': return /^(https?:\/\/)?[\da-z.-]+\.[a-z.]{2,6}[/\w .-]*\/?$/.test(value) ? '' : 'Invalid URL format (e.g. https://example.com)';
     case 'search': return /[^a-zA-Z0-9\s]/.test(value) ? 'Search cannot contain special characters' : '';
   }
 }
@@ -44,6 +44,7 @@ export default function BasicElements() {
   const [textarea, setTextarea] = useState('');
   const [clicked, setClicked] = useState<string[]>([]);
   const [message, setMessage] = useState<string | null>(null);
+  const messageTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const [loading, setLoading] = useState(false);
   const [loadingClicks, setLoadingClicks] = useState(0);
   const [checks, setChecks] = useState({ single: false, a: false, b: false });
@@ -61,7 +62,9 @@ export default function BasicElements() {
   const click = (name: string) => {
     setClicked((c) => (c.includes(name) ? c : [...c, name]));
     setMessage(name);
-    setTimeout(() => setMessage(null), 3000);
+    // Each click restarts the timer, so an earlier click cannot hide a newer message.
+    clearTimeout(messageTimer.current);
+    messageTimer.current = setTimeout(() => setMessage(null), 3000);
   };
 
   const clickLoading = () => {

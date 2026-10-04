@@ -73,7 +73,7 @@ export function PracticeElement({ id, label, goal, pass, fail, hint, code, done 
     <div
       data-testid={`element-${id}`}
       data-done={isDone}
-      className={`group relative grid gap-5 overflow-hidden rounded-2xl border bg-white p-5 pl-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:p-6 sm:pl-7 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-6 ${isDone ? 'border-green-300 dark:border-green-500/40' : 'border-border hover:border-primary/40'}`}
+      className={`group relative grid gap-5 overflow-hidden rounded-2xl border bg-white p-5 pl-6 shadow-sm transition-shadow duration-300 hover:shadow-lg sm:p-6 sm:pl-7 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-6 ${isDone ? 'border-green-300 dark:border-green-500/40' : 'border-border hover:border-primary/40'}`}
     >
       {/* Status rail: amber while open, green once the task ticks. */}
       <span aria-hidden className={`absolute inset-y-0 left-0 w-1 transition-colors duration-500 ${isDone ? 'bg-green-500' : 'bg-primary/50 group-hover:bg-primary'}`} />

@@ -6,7 +6,7 @@ for (const c of challenges) {
     await page.goto(`/practice/${c.id}`);
     await expect(page.locator('main h1').first()).toBeVisible();
     const texts = await page.locator('main h2').allInnerTexts();
-    const nums = texts.map((t) => t.match(/^(\d+)\.\s/)?.[1]).filter(Boolean).map(Number);
+    const nums = texts.map((t) => t.match(/^(\d+)\s*\.\s*/)?.[1]).filter(Boolean).map(Number);
     expect(nums).toEqual(nums.map((_, i) => i + 1));
   });
 }
