@@ -4,9 +4,10 @@ interface SearchableDropdownProps {
   options: string[];
   placeholder?: string;
   id?: string;
+  onChange?: (value: string) => void;
 }
 
-export function SearchableDropdown({ options, placeholder = "Search...", id }: SearchableDropdownProps) {
+export function SearchableDropdown({ options, placeholder = "Search...", id, onChange }: SearchableDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
@@ -42,6 +43,7 @@ export function SearchableDropdown({ options, placeholder = "Search...", id }: S
             setSearchTerm(e.target.value);
             setIsOpen(true);
             setSelectedValue(""); // Clear selected if typing
+            onChange?.("");
           }}
           onFocus={() => setIsOpen(true)}
         />
@@ -60,6 +62,7 @@ export function SearchableDropdown({ options, placeholder = "Search...", id }: S
                   className="px-3 py-2 hover:bg-primary/10 cursor-pointer text-sm"
                   onClick={() => {
                     setSelectedValue(option);
+                    onChange?.(option);
                     setSearchTerm(option);
                     setIsOpen(false);
                   }}

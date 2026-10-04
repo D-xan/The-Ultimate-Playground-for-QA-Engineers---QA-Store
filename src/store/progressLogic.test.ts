@@ -50,3 +50,11 @@ describe('complete', () => {
     expect(complete(d, 'p', 'otp:0')).toBe(d);
   });
 });
+
+describe('element groups', () => {
+  it('drop the section task lists a converted page used to have', () => {
+    let d = registerGroup(empty, 'advanced', 'dropdowns', 1);
+    d = registerGroup(d, 'advanced', 'el-color-picker', 1);
+    expect(pageTotal(d, 'advanced')).toBe(1);
+  });
+});

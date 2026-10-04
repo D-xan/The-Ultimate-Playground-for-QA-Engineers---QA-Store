@@ -15,9 +15,15 @@ export const toggle = (d: ProgressData, pageId: string, key: string): ProgressDa
 export const complete = (d: ProgressData, pageId: string, key: string): ProgressData =>
   (d.completed[pageId] ?? []).includes(key) ? d : { ...d, completed: { ...d.completed, [pageId]: [...(d.completed[pageId] ?? []), key] } };
 
+/** Per-element groups (`el-*`) replace a page's older section task lists, so registering one drops those. */
+const isElementGroup = (groupId: string) => groupId.startsWith('el-');
+
 export const registerGroup = (d: ProgressData, pageId: string, groupId: string, count: number): ProgressData => {
-  if (d.totals[pageId]?.[groupId] === count) return d;
-  return { ...d, totals: { ...d.totals, [pageId]: { ...d.totals[pageId], [groupId]: count } } };
+  const current = d.totals[pageId] ?? {};
+  const stale = isElementGroup(groupId) ? Object.keys(current).filter((g) => !isElementGroup(g)) : [];
+  if (current[groupId] === count && stale.length === 0) return d;
+  const totals = Object.fromEntries(Object.entries(current).filter(([g]) => !stale.includes(g)));
+  return { ...d, totals: { ...d.totals, [pageId]: { ...totals, [groupId]: count } } };
 };
 
 export const pageTotal = (d: ProgressData, pageId: string) =>

@@ -131,6 +131,7 @@ export default function PracticeLayout() {
 
   const handleResetPage = () => {
     localStorage.removeItem(`qa-state-${location.pathname}`);
+    useProgressStore.getState().resetPage(location.pathname.split('/').pop() || '');
     window.location.reload();
   };
 

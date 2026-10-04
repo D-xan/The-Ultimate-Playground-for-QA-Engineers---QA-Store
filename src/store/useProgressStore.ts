@@ -7,6 +7,7 @@ interface ProgressState extends ProgressData {
   completeTask: (pageId: string, key: string) => void;
   registerGroup: (pageId: string, groupId: string, count: number) => void;
   resetProgress: () => void;
+  resetPage: (pageId: string) => void;
 }
 
 // v2 keyed tasks by page only, so its data is ambiguous; drop it.
@@ -21,6 +22,7 @@ export const useProgressStore = create<ProgressState>()(
       completeTask: (pageId, key) => set((s) => complete(s, pageId, key)),
       registerGroup: (pageId, groupId, count) => set((s) => registerGroup(s, pageId, groupId, count)),
       resetProgress: () => set({ completed: {} }),
+      resetPage: (pageId) => set((s) => ({ completed: { ...s.completed, [pageId]: [] } })),
     }),
     { name: 'qa-playground-progress-v3' }
   )
