@@ -27,7 +27,7 @@ export default function About() {
       <h2>What is inside</h2>
       <ul>
         <li><Link to="/practice">Practice pages</Link> from basic forms up to closed shadow roots, each with reference solutions in Playwright, Selenium Java, Selenium Python and Cypress.</li>
-        <li>Tools: a test data generator, a mock REST API, an interview question bank and a certificate you can earn.</li>
+        <li>Tools: a test data generator, a mock REST API, an interview question bank and a completion badge you unlock by passing every challenge.</li>
         <li><Link to="/">The QA Store demo</Link>, a full shop with search, cart, checkout and an admin area, for end-to-end flows. A Bug Hunt mode plants real defects in it for you to find.</li>
       </ul>
 

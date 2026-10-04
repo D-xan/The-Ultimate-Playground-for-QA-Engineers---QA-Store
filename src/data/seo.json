@@ -312,35 +312,35 @@
     "primaryKeyword": "canvas automation testing practice"
   },
   "certificate": {
-    "title": "Free QA Automation Practice Certificate | QA Playground",
-    "metaDescription": "Finish every QA automation challenge on the playground and download your free completion certificate. No signup, no payment, runs in your browser.",
-    "h1Subtitle": "Complete every challenge and download a free certificate of practice.",
-    "answer": "The QA Playground certificate is a free completion certificate you earn by finishing every automation challenge on the site. Each challenge needs real work with Selenium, Playwright or Cypress against a live page, and progress is tracked in your browser. It is a record of practice, not an accredited qualification such as ISTQB.",
+    "title": "Free QA Automation Completion Badge | QA Playground",
+    "metaDescription": "Pass every QA automation challenge on the playground and unlock a free badge with your name. Download it and share it on LinkedIn. No sign-up needed.",
+    "h1Subtitle": "Pass every challenge and unlock a free badge with your name on it.",
+    "answer": "The QA Playground completion badge is a free image you unlock by passing every automation challenge on the site. Each challenge needs a real Selenium, Playwright or Cypress script against a live page, and your progress is saved in your browser. The badge records self-paced practice. It is not an accredited qualification such as ISTQB.",
     "faqs": [
       {
-        "q": "How do I get the QA Playground certificate?",
-        "a": "Complete every challenge on the practice hub so each shows a passed result. When all are done, the certificate page unlocks and you can download it. Progress is stored in your browser, so use the same browser."
+        "q": "How do I unlock the QA Playground badge?",
+        "a": "Pass every challenge on the practice hub. The badge page shows each challenge as a tile and turns it yellow once it passes. When every tile is yellow, type your name and download the badge."
       },
       {
-        "q": "Is the certificate free?",
-        "a": "Yes. There is no fee, no signup and no email required. You enter the name you want printed and download the certificate directly from your browser."
+        "q": "Is the badge free?",
+        "a": "Yes. There is no fee, no sign-up and no email. The badge is drawn in your browser, and your name is never sent to a server."
       },
       {
-        "q": "Is this an accredited QA certification?",
-        "a": "No. It shows you completed hands-on practice tasks. Accredited options like ISTQB Foundation Level need a proctored exam. Use this certificate as a portfolio item alongside your GitHub tests, not as a formal credential."
+        "q": "Is this a QA certification?",
+        "a": "No. It shows you finished hands-on practice tasks, not that you passed a proctored exam. Use it to share your progress, and point to your test code on GitHub as the real evidence of skill. For a formal credential, look at ISTQB Foundation Level."
       },
       {
         "q": "Does my progress save if I close the browser?",
-        "a": "Progress is saved in your browser's local storage, so it survives closing the tab. It is lost if you clear site data or switch browsers or devices, so finish and download in one place."
+        "a": "Progress is saved in your browser's local storage, so it survives closing the tab. It is lost if you clear site data or switch browsers or devices, so finish and download in the same browser."
       },
       {
-        "q": "Which challenges count toward the certificate?",
-        "a": "All practice challenges on the hub count, from Basic Elements and Dialogs to Canvas, Accessibility and Auth Flows. Each needs a passing result in its result box."
+        "q": "How do I share the badge on LinkedIn?",
+        "a": "Download the badge, then click Post on LinkedIn. A new post opens with text filled in. Add the downloaded image to the post and publish it."
       }
     ],
-    "ogHeadline": "Free QA Practice Certificate",
-    "ogSubline": "Finish every challenge and download it free",
-    "imageAlt": "QA Playground certificate of completion for finishing all automation challenges",
+    "ogHeadline": "Free QA Completion Badge",
+    "ogSubline": "Pass every challenge and unlock your badge",
+    "imageAlt": "QA Playground completion badge with a ticked tile for every automation challenge",
     "relatedIds": [
       "basic",
       "advanced",
@@ -348,7 +348,7 @@
       "interview"
     ],
     "schemaType": "LearningResource",
-    "primaryKeyword": "free QA automation certificate"
+    "primaryKeyword": "QA automation practice badge"
   },
   "click-traps": {
     "title": "Element Click Intercepted Practice Page | QA Playground",

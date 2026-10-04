@@ -43,7 +43,7 @@ const FlakyPage = React.lazy(() => import('./pages/practice/FlakyPage'));
 const DataGenerator = React.lazy(() => import('./pages/practice/DataGenerator'));
 const ApiPlayground = React.lazy(() => import('./pages/practice/ApiPlayground'));
 const InterviewKit = React.lazy(() => import('./pages/practice/InterviewKit'));
-const Certificate = React.lazy(() => import('./pages/practice/Certificate'));
+const Badge = React.lazy(() => import('./pages/practice/Badge'));
 const Widgets = React.lazy(() => import('./pages/practice/Widgets'));
 const BugHunt = React.lazy(() => import('./pages/practice/BugHunt'));
 const WindowsTabs = React.lazy(() => import('./pages/practice/WindowsTabs'));
@@ -108,7 +108,7 @@ export const AppRoutes = () => {
             <Route path="a11y" element={<AccessibilityLab />} />
             <Route path="data-generator" element={<DataGenerator />} />
             <Route path="api-playground" element={<ApiPlayground />} />
-            <Route path="certificate" element={<Certificate />} />
+            <Route path="certificate" element={<Badge />} />
             <Route path="interview" element={<InterviewKit />} />
           </Route>
 

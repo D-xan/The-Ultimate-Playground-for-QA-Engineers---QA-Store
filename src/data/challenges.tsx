@@ -39,7 +39,7 @@ export const challenges: Challenge[] = [
   { id: 'data-generator', label: 'Test Data Generator', desc: 'Unlimited fake users, orders and cards as CSV, JSON or SQL', icon: Database, difficulty: 'Beginner', kind: 'tool' },
   { id: 'api-playground', label: 'API Playground', desc: 'Mock REST API with auth, status codes, delays and rate limits', icon: Server, difficulty: 'Intermediate', kind: 'tool' },
   { id: 'interview', label: 'Interview Kit', desc: '60+ QA and SDET interview questions with answers and flashcards', icon: GraduationCap, difficulty: 'Beginner', kind: 'tool' },
-  { id: 'certificate', label: 'Certificate', desc: 'Finish every challenge and download your certificate', icon: Award, difficulty: 'Beginner', kind: 'tool' },
+  { id: 'certificate', label: 'Completion Badge', desc: 'Pass every challenge and download a badge with your name', icon: Award, difficulty: 'Beginner', kind: 'tool' },
 ];
 
 export const practiceChallenges: Challenge[] = challenges.filter(c => c.kind !== 'tool');

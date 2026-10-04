@@ -46,7 +46,7 @@ export default function Privacy() {
           The default is jsonplaceholder.typicode.com, a public test API, which sees that request.
         </li>
         <li>
-          <strong>Links out.</strong> Links to GitHub, LinkedIn (the certificate share button) and Randomly.online
+          <strong>Links out.</strong> Links to GitHub, LinkedIn (the badge share button) and Randomly.online
           take you to those sites, which have their own policies.
         </li>
       </ul>
