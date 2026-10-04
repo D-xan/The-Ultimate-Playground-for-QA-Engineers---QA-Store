@@ -14,6 +14,7 @@ const PUBLIC_URL = env.VITE_PUBLIC_URL || SITE_URL; // where this copy is served
 const isMirror = PUBLIC_URL !== SITE_URL;
 const base = new URL(PUBLIC_URL).pathname;
 const seo = JSON.parse(await readFile(path.join(root, 'src/data/seo.json'), 'utf8'));
+const shots = JSON.parse(await readFile(path.join(root, 'src/data/screenshots.json'), 'utf8'));
 
 const INFO_IDS = ['about', 'privacy-policy', 'terms-of-service', 'contact']; // keep in step with src/seo/seo.ts
 const pathForId = (id) => (id === 'home' ? '' : id === 'practice' || INFO_IDS.includes(id) ? id : `practice/${id}`);
@@ -94,8 +95,12 @@ const today = new Date().toISOString().slice(0, 10);
 const url = (id) => SITE_URL + pathForId(id);
 // The mirror's canonical tags already point at SITE_URL, so only the canonical copy lists a sitemap.
 if (!isMirror) await writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${ids.map((id) => `  <url><loc>${url(id)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${ids.map((id) => {
+  // Each page lists its own screenshot and share image so both can be found in image search.
+  const images = [shots[id] && `${SITE_URL}shots/${shots[id].file}`, `${SITE_URL}og/${id}.png`].filter(Boolean);
+  return `  <url><loc>${url(id)}</loc><lastmod>${today}</lastmod>${images.map((i) => `<image:image><image:loc>${i}</image:loc></image:image>`).join('')}</url>`;
+}).join('\n')}
 </urlset>
 `);
 await writeFile(path.join(dist, 'robots.txt'), `User-agent: *

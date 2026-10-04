@@ -1,6 +1,7 @@
 import { challenges } from '@/data/challenges';
 import { SITE_URL } from '@/config/site';
 import seoData from '@/data/seo.json';
+import screenshotData from '@/data/screenshots.json';
 
 export interface PageSeo {
   title: string;
@@ -40,6 +41,36 @@ export function pathForId(id: string): string {
 
 export const urlForId = (id: string) => SITE_URL + pathForId(id);
 
+export interface Screenshot { url: string; path: string; alt: string; caption: string; width: number; height: number }
+const SHOTS = screenshotData as Record<string, { file: string; width: number; height: number }>;
+
+/** The page's own screenshot (written by scripts/captureScreenshots.mjs), or null. `path` is relative to the build base. */
+export function screenshotFor(id: string): Screenshot | null {
+  const shot = SHOTS[id];
+  if (!shot) return null;
+  const c = byId.get(id);
+  const caption = c ? `${c.label}: ${c.desc}.` : SEO[id].h1Subtitle;
+  const alt = c ? `Screenshot of the ${c.label} ${c.kind === 'tool' ? 'tool' : 'practice page'} on QA Playground. ${c.desc}.` : `Screenshot of the QA Playground practice hub. ${SEO[id].h1Subtitle}`;
+  return { url: `${SITE_URL}shots/${shot.file}`, path: `shots/${shot.file}`, alt, caption, width: shot.width, height: shot.height };
+}
+
+function imageObject(shot: Screenshot): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ImageObject',
+    contentUrl: shot.url,
+    url: shot.url,
+    caption: shot.caption,
+    description: shot.alt,
+    width: shot.width,
+    height: shot.height,
+    encodingFormat: 'image/webp',
+    creditText: SITE_NAME,
+    creator: provider,
+    copyrightNotice: PARENT_SITE.name,
+  };
+}
+
 type JsonLd = Record<string, unknown>;
 
 export interface Head {
@@ -75,7 +106,7 @@ function faqPage(s: PageSeo): JsonLd {
   };
 }
 
-function mainEntity(id: string, s: PageSeo, url: string, image: string): JsonLd {
+function mainEntity(id: string, s: PageSeo, url: string, image: string | string[]): JsonLd {
   const base = { '@context': 'https://schema.org', name: s.title.replace(/ \| QA Playground$/, ''), description: s.metaDescription, url, image, isAccessibleForFree: true, inLanguage: 'en', provider };
   if (id === 'home') {
     return { ...base, '@type': 'WebSite', name: SITE_NAME, publisher: provider };
@@ -126,8 +157,10 @@ export function buildHead(pathname: string): Head {
   const s = SEO[id];
   const url = urlForId(id);
   const image = `${SITE_URL}og/${id}.png`;
-  const jsonLd = [mainEntity(id, s, url, image), breadcrumbs(id)];
+  const shot = screenshotFor(id);
+  const jsonLd = [mainEntity(id, s, url, shot ? [image, shot.url] : image), breadcrumbs(id)];
   if (id !== 'home' && s.faqs.length) jsonLd.push(faqPage(s));
+  if (shot) jsonLd.push(imageObject(shot));
   const ogType = id === 'home' || INFO_IDS.includes(id) ? 'website' : 'article';
   return { title: s.title, description: s.metaDescription, canonical: url, robots: 'index, follow', image, imageAlt: s.imageAlt, ogType, jsonLd };
 }

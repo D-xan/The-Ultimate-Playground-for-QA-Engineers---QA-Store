@@ -1,0 +1,142 @@
+{
+  "practice": {
+    "file": "selenium-practice-website.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "a11y": {
+    "file": "accessibility-testing-practice-page.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "advanced": {
+    "file": "date-picker-range-slider-file-upload-automation-practice.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "api-interception": {
+    "file": "api-mocking-practice-playwright.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "api-playground": {
+    "file": "mock-rest-api-for-testing-practice.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "auth-flows": {
+    "file": "login-flow-automation-practice.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "basic": {
+    "file": "selenium-practice-form-inputs-buttons.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "bug-hunt": {
+    "file": "bug-hunt-practice-website-for-testers.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "canvas": {
+    "file": "canvas-automation-testing-practice.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "certificate": {
+    "file": "qa-automation-practice-badge.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "click-traps": {
+    "file": "element-click-intercepted-practice-page.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "data-generator": {
+    "file": "test-data-generator-for-qa.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "deep-dom": {
+    "file": "nested-iframe-and-closed-shadow-root-practice.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "dialogs": {
+    "file": "selenium-alert-popup-practice.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "dynamic": {
+    "file": "dynamic-waits-selenium-practice.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "flaky": {
+    "file": "flaky-test-practice-page.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "frames": {
+    "file": "iframe-and-shadow-dom-practice-page.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "interactions": {
+    "file": "selenium-drag-and-drop-practice.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "interview": {
+    "file": "qa-automation-interview-questions-and-answers.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "lazy-load": {
+    "file": "lazy-loading-automation-testing-practice.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "locator-traps": {
+    "file": "dynamic-id-locator-practice-page.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "pagination-test": {
+    "file": "pagination-testing-practice-site.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "progress-bar": {
+    "file": "progress-bar-automation-testing-practice.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "sortable": {
+    "file": "drag-and-drop-sortable-list-automation-practice.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "tables": {
+    "file": "web-table-practice-for-automation-testing.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "virtual-table": {
+    "file": "virtual-scroll-table-testing.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "widgets": {
+    "file": "otp-input-automation-practice.webp",
+    "width": 1200,
+    "height": 750
+  },
+  "windows": {
+    "file": "selenium-switch-between-windows-tabs-practice.webp",
+    "width": 1200,
+    "height": 750
+  }
+}

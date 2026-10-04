@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { seoIdForPath, buildHead } from './seo';
+import { seoIdForPath, buildHead, screenshotFor } from './seo';
 import { challenges } from '@/data/challenges';
 import { SITE_URL } from '@/config/site';
 import seo from '@/data/seo.json';
@@ -41,5 +41,19 @@ describe('buildHead', () => {
     const h = buildHead('/');
     expect(h.canonical).toBe(SITE_URL);
     expect(h.jsonLd.map((j) => j['@type'])).toContain('WebSite');
+  });
+});
+
+describe('page screenshots', () => {
+  it('every practice page and tool has a screenshot with a descriptive file name, alt text and an ImageObject', () => {
+    for (const c of challenges) {
+      const shot = screenshotFor(c.id);
+      expect(shot, c.id).not.toBeNull();
+      expect(shot!.url).toMatch(new RegExp(`^${SITE_URL}shots/[a-z0-9-]+\\.webp$`));
+      expect(shot!.alt).toContain(c.label);
+      const img = buildHead(`/practice/${c.id}`).jsonLd.find((j) => j['@type'] === 'ImageObject');
+      expect(img?.contentUrl).toBe(shot!.url);
+      expect(img?.width).toBe(1200);
+    }
   });
 });

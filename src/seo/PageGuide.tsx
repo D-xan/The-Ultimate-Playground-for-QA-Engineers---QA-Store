@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
 import { challenges } from '@/data/challenges';
-import { SEO, seoIdForPath, PARENT_SITE } from './seo';
+import { SEO, seoIdForPath, screenshotFor, PARENT_SITE } from './seo';
 
 const RANDOMLY_TOOLS: Record<string, { name: string; path: string }> = {
   json: { name: 'JSON Formatter', path: 'dev-tools/json-formatter' },
@@ -39,12 +39,28 @@ export function PageGuide() {
   const s = SEO[id];
   const related = id === 'practice' ? s.relatedIds : s.relatedIds.filter((r) => r !== id);
   const tools = (TOOLS_FOR[id] ?? DEFAULT_TOOLS).map((k) => RANDOMLY_TOOLS[k]);
+  const shot = screenshotFor(id);
 
   return (
     <section data-testid="page-guide" aria-labelledby="page-guide-title" className="mt-12 bg-white p-6 rounded-2xl shadow-sm border border-border space-y-8">
       <div>
         <h2 id="page-guide-title" className="text-xl font-bold mb-3">{id === 'practice' ? 'About QA Playground' : `About this ${label(id)} page`}</h2>
         <p className="text-slate-700 leading-relaxed">{s.answer}</p>
+        {shot && (
+          <figure className="mt-6 max-w-3xl">
+            <img
+              data-testid="page-screenshot"
+              src={`${import.meta.env.BASE_URL}${shot.path}`}
+              alt={shot.alt}
+              width={shot.width}
+              height={shot.height}
+              loading="lazy"
+              decoding="async"
+              className="w-full h-auto rounded-xl border border-border"
+            />
+            <figcaption className="mt-2 text-sm text-slate-500">{shot.caption}</figcaption>
+          </figure>
+        )}
       </div>
 
       <div>
