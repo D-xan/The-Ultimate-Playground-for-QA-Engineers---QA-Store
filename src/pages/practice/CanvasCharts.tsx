@@ -277,7 +277,7 @@ export default function CanvasCharts() {
                 {hoveredBar.month}: {hoveredBar.value.toLocaleString('en-US')}
               </div>
             )}
-            <svg id="sales-chart" data-testid="sales-chart" viewBox={`0 0 ${CHART_W} ${CHART_H}`} className="w-full h-auto" role="img" aria-label="Monthly sales">
+            <svg id="sales-chart" data-testid="sales-chart" viewBox={`0 0 ${CHART_W} ${CHART_H}`} className="w-full h-auto" role="group" aria-label="Monthly sales">
               {SALES.map((s, i) => {
                 const h = (s.value / CHART_MAX) * 200;
                 return (
@@ -290,6 +290,7 @@ export default function CanvasCharts() {
                       height={h}
                       rx={4}
                       tabIndex={0}
+                      role="img"
                       aria-label={s.month}
                       onMouseEnter={() => setHovered(i)}
                       onFocus={() => setHovered(i)}

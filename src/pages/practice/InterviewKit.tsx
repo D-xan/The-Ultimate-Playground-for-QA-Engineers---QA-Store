@@ -8,7 +8,7 @@ type Mode = 'list' | 'flashcards';
 
 const chip = (active: boolean) =>
   `px-3 h-9 rounded-full border text-sm font-medium transition-colors ${
-    active ? 'bg-primary text-white border-primary' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
+    active ? 'bg-primary text-stone-900 border-primary' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
   }`;
 
 const inTopic = (topic: Topic | null): Question[] => (topic ? questions.filter((q) => q.topic === topic) : questions);

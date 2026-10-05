@@ -46,6 +46,7 @@ export default function Wishlist() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <h2 className="sr-only">Saved products</h2>
           {wishlist.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

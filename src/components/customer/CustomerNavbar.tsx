@@ -4,7 +4,6 @@ import { useAuth } from '@/store/useAuth';
 import { useCart } from '@/store/useCart';
 import { useTheme } from '@/store/useTheme';
 import { ShoppingCart, Heart, User, LogOut, Settings, Search, Menu, X, Package, Activity, Sun, Moon } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
 
 export const CustomerNavbar = () => {
   const { user, logout } = useAuth();
@@ -22,13 +21,13 @@ export const CustomerNavbar = () => {
         
         {/* Logo & Mobile Menu */}
         <div className="flex items-center gap-4">
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden p-2 text-slate-600">
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden p-2 text-slate-600" aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'} aria-expanded={isMobileMenuOpen}>
             {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
           <Link to="/" className="flex items-center gap-2.5 lg:mr-4" aria-label="QA Store by Randomly.online, home">
             <img src={`${import.meta.env.BASE_URL}brand/randomly-logo-64.webp`} alt="" width={36} height={36} className="h-9 w-9 rounded-full" />
             <span className="hidden sm:flex flex-col leading-none">
-              <span className="text-lg font-bold tracking-tight text-slate-900">QA Store</span>
+              <span className="text-lg font-bold tracking-tight text-slate-900">QA Store</span>{' '}
               <span className="mt-0.5 text-[11px] font-medium text-slate-500">by Randomly.online</span>
             </span>
           </Link>
@@ -68,11 +67,11 @@ export const CustomerNavbar = () => {
             {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
 
-          <Link to="/wishlist" className="p-2 text-slate-600 hover:bg-slate-100 rounded-full transition-colors relative">
+          <Link to="/wishlist" aria-label="Wishlist" className="p-2 text-slate-600 hover:bg-slate-100 rounded-full transition-colors relative">
             <Heart className="h-5 w-5" />
           </Link>
           
-          <Link to="/cart" className="p-2 text-slate-600 hover:bg-slate-100 rounded-full transition-colors relative">
+          <Link to="/cart" aria-label={cartCount > 0 ? `Cart, ${cartCount} items` : 'Cart'} className="p-2 text-slate-600 hover:bg-slate-100 rounded-full transition-colors relative">
             <ShoppingCart className="h-5 w-5" />
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-danger text-[10px] font-bold text-white">
@@ -125,8 +124,8 @@ export const CustomerNavbar = () => {
               )}
             </div>
           ) : (
-            <Link to="/login">
-              <Button size="sm" className="hidden sm:flex rounded-full">Sign In</Button>
+            <Link to="/login" className="hidden sm:inline-flex h-8 px-3 items-center justify-center rounded-full bg-primary text-stone-900 text-xs font-medium shadow-sm hover:bg-primary-hover transition-colors">
+              Sign In
             </Link>
           )}
         </div>

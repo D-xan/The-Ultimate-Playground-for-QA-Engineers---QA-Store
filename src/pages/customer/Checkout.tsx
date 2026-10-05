@@ -66,7 +66,7 @@ export default function Checkout() {
         {[1, 2, 3].map((s) => (
           <div 
             key={s} 
-            className={`flex h-10 w-10 items-center justify-center rounded-full font-bold text-sm border-4 border-white ${step >= s ? 'bg-primary text-white' : 'bg-slate-200 text-slate-500'}`}
+            className={`flex h-10 w-10 items-center justify-center rounded-full font-bold text-sm border-4 border-white ${step >= s ? 'bg-primary text-stone-900' : 'bg-slate-200 text-slate-500'}`}
           >
             {s}
           </div>

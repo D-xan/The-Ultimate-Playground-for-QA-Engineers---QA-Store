@@ -143,7 +143,7 @@ export default function PracticeDashboard() {
                   </div>
                 )}
                 <div className="flex items-start gap-4 mb-4">
-                  <div className={`p-3 rounded-lg ${completed ? 'bg-primary text-white' : 'bg-slate-100 text-slate-600 group-hover:bg-primary group-hover:text-white transition-colors'}`}>
+                  <div className={`p-3 rounded-lg ${completed ? 'bg-primary text-stone-900' : 'bg-slate-100 text-slate-600 group-hover:bg-primary group-hover:text-white transition-colors'}`}>
                     <challenge.icon className="h-5 w-5" />
                   </div>
                   <div>

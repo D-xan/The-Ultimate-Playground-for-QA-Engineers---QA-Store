@@ -18,7 +18,7 @@ export function SiteFooter({ dark = false }: { dark?: boolean }) {
         <a href={REPO_URL} className={muted}>GitHub</a>
         <a href={PARENT_URL} className={muted}>Randomly.online</a>
       </nav>
-      <p className={`mt-3 text-center text-xs ${dark ? 'text-slate-500' : 'text-slate-400'}`}>
+      <p className={`mt-3 text-center text-xs ${dark ? 'text-slate-400' : 'text-slate-500'}`}>
         © 2025–{new Date().getFullYear()} Randomly.online. QA Playground is free and open source under the MIT licence.
       </p>
     </footer>

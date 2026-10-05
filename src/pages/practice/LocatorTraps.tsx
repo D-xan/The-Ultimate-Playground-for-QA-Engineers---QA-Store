@@ -29,9 +29,9 @@ const CLASS_BUTTONS: ClassButton[] = [
 const MENU_ITEMS = ['Home', 'About', 'Gallery', 'Contact', 'Portfolio'];
 
 const variantStyle: Record<string, string> = {
-  'btn-primary': 'bg-primary text-white',
+  'btn-primary': 'bg-primary text-stone-900',
   'btn-secondary': 'bg-slate-600 text-white',
-  'btn-warning': 'bg-amber-500 text-white',
+  'btn-warning': 'bg-amber-500 text-stone-900',
 };
 
 const buildClassButtons = () =>
@@ -109,7 +109,7 @@ export default function LocatorTraps() {
           }}
           done={dynamicResult === 'success'}
         >
-          <button id={dynamicId} type="button" className="dynamic-id-btn rounded-lg bg-primary px-4 py-2 text-sm font-medium text-slate-900" onClick={clickDynamic}>Dynamic ID Button</button>
+          <button id={dynamicId} type="button" className="dynamic-id-btn rounded-lg bg-primary px-4 py-2 text-sm font-medium text-stone-900" onClick={clickDynamic}>Dynamic ID Button</button>
           <div className="mt-4"><ChallengeResult testId="result-dynamic-id" state={dynamicResult} message={dynamicResult === 'success' ? 'Clicked without relying on the ID' : 'The ID of this button changes every time'} /></div>
         </PracticeElement>
       </Section>
@@ -154,7 +154,7 @@ export default function LocatorTraps() {
           done={nbspResult === 'success'}
         >
           <div id="nbsp-section" className="space-y-4">
-            <button type="button" className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-slate-900" onClick={() => setNbspResult('success')}>{'Click\u00A0Me'}</button>
+            <button type="button" className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-stone-900" onClick={() => setNbspResult('success')}>{'Click\u00A0Me'}</button>
             <ChallengeResult testId="result-nbsp" state={nbspResult} message={nbspResult === 'success' ? 'Matched the non-breaking space' : 'Click the button above'} />
           </div>
         </PracticeElement>

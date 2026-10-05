@@ -73,7 +73,7 @@ export default function DynamicWaiting() {
             <div className={`${slot} flex-1`}>
               {delayed === 'ready' || delayed === 'clicked'
                 ? <Button id="btn-delayed" className="bg-green-600 text-white hover:bg-green-700" onClick={() => setDelayed('clicked')}>{delayed === 'clicked' ? 'Clicked!' : 'I am here now!'}</Button>
-                : <span className="text-sm text-slate-400">{delayed === 'loading' ? <span className="animate-pulse">Loading...</span> : 'Nothing here yet'}</span>}
+                : <span className="text-sm text-slate-500">{delayed === 'loading' ? <span className="animate-pulse">Loading...</span> : 'Nothing here yet'}</span>}
             </div>
           </div>
         </PracticeElement>
@@ -168,7 +168,7 @@ export default function DynamicWaiting() {
           <Button id="btn-load-profile" variant="outline" size="sm" className="mb-4" disabled={profile === 'loading'} onClick={() => { setProfile('loading'); timers.after(rand(1500, 4000), () => setProfile('loaded')); }}>Load profile</Button>
           {profile === 'loaded' ? (
             <div className="flex items-center gap-4" id="profile-card">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-bold text-slate-900">{username[0].toUpperCase()}</div>
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-bold text-stone-900">{username[0].toUpperCase()}</div>
               <div><p className="font-semibold text-slate-900" id="profile-username">{username}</p><p className="text-xs text-slate-500">QA engineer</p></div>
             </div>
           ) : (

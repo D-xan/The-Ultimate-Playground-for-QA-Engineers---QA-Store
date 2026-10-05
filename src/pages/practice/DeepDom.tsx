@@ -14,7 +14,7 @@ const wrap = (body: string) =>
   `<!doctype html><html><body style="font-family:sans-serif;margin:8px">${body}</body></html>`;
 
 const nestedFrame = (id: string, inner: string) =>
-  `<iframe id="${id}" style="width:100%;height:${id === 'frame-level-2' ? '110' : '70'}px;border:1px dashed #94a3b8" srcdoc="${escapeAttr(inner)}"></iframe>`;
+  `<iframe id="${id}" title="${id}" style="width:100%;height:${id === 'frame-level-2' ? '110' : '70'}px;border:1px dashed #94a3b8" srcdoc="${escapeAttr(inner)}"></iframe>`;
 
 const LEVEL_3 = wrap(
   `<button id="deep-button" style="padding:6px 12px">Click me, three frames deep</button>

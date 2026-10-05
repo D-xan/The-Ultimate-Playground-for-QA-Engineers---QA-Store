@@ -133,7 +133,7 @@ export default function ProductDetails() {
                   <button 
                     key={s}
                     onClick={() => setSelectedSize(s)}
-                    className={`h-10 w-14 rounded-lg border text-sm font-bold transition-all ${selectedSize === s ? 'border-primary bg-primary text-white' : 'border-border text-slate-600 hover:border-slate-400'}`}
+                    className={`h-10 w-14 rounded-lg border text-sm font-bold transition-all ${selectedSize === s ? 'border-primary bg-primary text-stone-900' : 'border-border text-slate-600 hover:border-slate-400'}`}
                   >
                     {s}
                   </button>

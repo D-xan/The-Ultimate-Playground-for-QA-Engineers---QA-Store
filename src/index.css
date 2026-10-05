@@ -7,7 +7,7 @@
   --color-primary: #eab308; /* Yellow 500 */
   --color-primary-hover: #ca8a04; /* Yellow 600 */
   --color-accent: #f59e0b; /* Amber 500 */
-  --color-danger: #ef4444;
+  --color-danger: #dc2626; /* red-600: white text on it is 4.8:1 */
   --color-warning: #f97316;
   --color-success: #22c55e;
   
@@ -17,6 +17,12 @@
   --color-text-muted: #64748b;
   --color-border: rgba(226, 232, 240, 0.8);
 }
+
+/* Contrast, WCAG AA 4.5:1. The brand yellow, slate-500 and the danger red are too light as TEXT on
+   the light surfaces (1.7, 4.3 and 4.6 on #f1f5f9). Dark mode keeps them: they pass on dark surfaces. */
+html:not(.dark) .text-primary { color: #854d0e; }
+html:not(.dark) .text-slate-500 { color: #566479; }
+html:not(.dark) .text-danger { color: #b91c1c; }
 
 @layer base {
   :root {

@@ -58,7 +58,7 @@ export function PracticeElement({ id, label, goal, pass, fail, hint, code, done 
   useEffect(() => { registerGroup(pageId, `el-${id}`, 1); }, [pageId, id, registerGroup]);
   useEffect(() => { if (done || answerOk) completeTask(pageId, key); }, [done, answerOk, pageId, key, completeTask]);
 
-  const toggle = (on: boolean) => `inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${on ? 'border-primary bg-primary text-slate-900 shadow-sm shadow-primary/30' : 'border-border text-slate-600 hover:border-primary/60 hover:text-slate-900'}`;
+  const toggle = (on: boolean) => `inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${on ? 'border-primary bg-primary text-stone-900 shadow-sm shadow-primary/30' : 'border-border text-slate-600 hover:border-primary/60 hover:text-slate-900'}`;
 
   const copy = async () => {
     try {
@@ -157,7 +157,7 @@ export function PracticeElement({ id, label, goal, pass, fail, hint, code, done 
             <div role="tablist" aria-label="Framework" className="flex min-w-0 flex-1 gap-1 overflow-x-auto">
               {FRAMEWORKS.filter((f) => code[f.key]).map((f) => (
                 <button key={f.key} type="button" role="tab" aria-selected={tab === f.key} onClick={() => { setTab(f.key); setCopied(false); }}
-                  className={`shrink-0 whitespace-nowrap rounded-md px-2 py-1 text-xs font-medium transition-colors ${tab === f.key ? 'bg-primary text-slate-900' : 'text-slate-300 hover:bg-slate-700 hover:text-white'}`}>
+                  className={`shrink-0 whitespace-nowrap rounded-md px-2 py-1 text-xs font-medium transition-colors ${tab === f.key ? 'bg-primary text-stone-900' : 'text-slate-300 hover:bg-slate-700 hover:text-white'}`}>
                   {f.label}
                 </button>
               ))}

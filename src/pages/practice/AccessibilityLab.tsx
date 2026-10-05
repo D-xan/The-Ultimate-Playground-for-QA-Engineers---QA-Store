@@ -214,7 +214,7 @@ export default function AccessibilityLab() {
                 className="max-w-sm rounded-lg border border-border p-1 focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 {TOOLS.map((t, i) => (
-                  <li key={t} id={`kb-tool-${i}`} role="option" aria-selected={tool === i} onClick={() => setTool(i)} className={`rounded-md px-3 py-1.5 text-sm ${tool === i ? 'bg-primary text-white' : 'text-slate-700'}`}>{t}</li>
+                  <li key={t} id={`kb-tool-${i}`} role="option" aria-selected={tool === i} onClick={() => setTool(i)} className={`rounded-md px-3 py-1.5 text-sm ${tool === i ? 'bg-primary text-stone-900' : 'text-slate-700'}`}>{t}</li>
                 ))}
               </ul>
             </div>

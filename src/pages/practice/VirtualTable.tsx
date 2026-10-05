@@ -92,28 +92,24 @@ export default function VirtualTable() {
 
       <Section n={3} title="The Table">
         <div className="rounded-xl border border-border overflow-hidden">
-          <div className={`${COLS} h-10 bg-slate-50 border-b border-border text-xs font-semibold uppercase text-slate-500`}>
-            <span>ID</span>
-            <span>Name</span>
-            <span className="hidden sm:block">Email</span>
-            <button
-              type="button"
-              id="sort-score"
-              data-testid="sort-score"
-              role="columnheader"
-              aria-sort={sort}
-              onClick={cycleSort}
-              className="flex items-center gap-1 uppercase hover:text-slate-900"
-            >
-              Score <SortIcon className="h-3 w-3" aria-hidden="true" />
-            </button>
-            <span className="sr-only">Action</span>
+          {/* The header sits outside the scrolling grid; aria-owns makes it the grid's first row for assistive tech. */}
+          <div id="virtual-grid-header" role="row" className={`${COLS} h-10 bg-slate-50 border-b border-border text-xs font-semibold uppercase text-slate-500`}>
+            <span role="columnheader">ID</span>
+            <span role="columnheader">Name</span>
+            <span role="columnheader" className="hidden sm:block">Email</span>
+            <div role="columnheader" id="sort-score" data-testid="sort-score" aria-sort={sort} className="flex">
+              <button type="button" onClick={cycleSort} className="flex w-full items-center gap-1 uppercase hover:text-slate-900">
+                Score <SortIcon className="h-3 w-3" aria-hidden="true" />
+              </button>
+            </div>
+            <span role="columnheader"><span className="sr-only">Action</span></span>
           </div>
           <div
             ref={gridRef}
             id="virtual-grid"
             data-testid="virtual-grid"
             role="grid"
+            aria-owns="virtual-grid-header"
             aria-rowcount={rows.length}
             aria-label="People"
             onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}

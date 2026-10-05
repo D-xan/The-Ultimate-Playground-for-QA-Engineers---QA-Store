@@ -64,11 +64,15 @@ export default function Products() {
           <p className="text-xl">No products found in this category.</p>
         </div>
       ) : (
+        <>
+        {/* Cards use h3 titles; this keeps the heading outline h1 > h2 > h3. */}
+        <h2 className="sr-only">Results</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
+        </>
       )}
     </div>
   );

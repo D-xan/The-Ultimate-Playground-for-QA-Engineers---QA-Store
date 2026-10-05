@@ -111,7 +111,7 @@ export default function FlakyPage() {
           done={unreliable === 'success'}
         >
           <div className="space-y-4">
-            <button id="load-data" type="button" onClick={loadData} className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-slate-900">Load data</button>
+            <button id="load-data" type="button" onClick={loadData} className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-stone-900">Load data</button>
             {loading && <p id="flaky-loading" className="text-sm text-slate-500">Loading...</p>}
             {outcome === 'error' && <p id="flaky-error" className="text-sm text-red-600">Server error 503 — try again</p>}
             {outcome === 'data' && <ul id="flaky-data" className="list-disc pl-6 text-sm text-slate-700">{ITEMS.map(item => <li key={item}>{item}</li>)}</ul>}

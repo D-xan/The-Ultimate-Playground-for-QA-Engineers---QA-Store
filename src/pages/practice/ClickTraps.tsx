@@ -135,7 +135,7 @@ export default function ClickTraps() {
                 id="moving-button"
                 type="button"
                 onClick={clickMoving}
-                className={`rounded-lg bg-primary px-4 py-2 text-sm font-medium text-slate-900 ${moving ? 'animating' : ''}`}
+                className={`rounded-lg bg-primary px-4 py-2 text-sm font-medium text-stone-900 ${moving ? 'animating' : ''}`}
                 style={{ transform: atEnd ? 'translateX(min(240px, 40vw))' : 'translateX(0)', transition: `transform ${MOVE_MS}ms linear` }}
               >
                 Catch me

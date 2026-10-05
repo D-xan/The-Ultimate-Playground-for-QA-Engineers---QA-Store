@@ -220,7 +220,7 @@ export default function BasicElements() {
             <Button type="submit" variant="outline" id="btn-submit" onClick={() => click('Submit Button')}>Submit Button</Button>
             <Button type="reset" variant="outline" id="btn-reset" onClick={() => click('Reset Button')}>Reset Button</Button>
             <Button disabled id="btn-disabled">Disabled Button</Button>
-            <button type="button" aria-label="Add" className="h-12 w-12 rounded-full bg-primary text-white shadow-lg flex items-center justify-center hover:scale-105 transition-transform" id="btn-fab" onClick={() => click('FAB (+)')}>+</button>
+            <button type="button" aria-label="Add" className="h-12 w-12 rounded-full bg-primary text-stone-900 shadow-lg flex items-center justify-center hover:scale-105 transition-transform" id="btn-fab" onClick={() => click('FAB (+)')}>+</button>
           </div>
           {message && (
             <div className="mt-4 p-3 bg-green-50 text-green-700 text-sm font-medium rounded-lg border border-green-200" id="button-message" role="status">

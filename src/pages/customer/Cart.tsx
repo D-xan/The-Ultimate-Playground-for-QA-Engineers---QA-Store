@@ -35,6 +35,7 @@ export default function Cart() {
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
+          <h2 className="sr-only">Items in your cart</h2>
           {items.map((item) => (
             <div 
               key={item.id} 

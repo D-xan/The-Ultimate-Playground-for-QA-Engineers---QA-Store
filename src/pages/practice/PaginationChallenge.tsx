@@ -65,7 +65,7 @@ export default function PaginationChallenge() {
                 <Button variant="outline" disabled={page === 1} onClick={() => goTo(page - 1)} id="pagination-prev">Previous</Button>
                 {pageNumbers().map((p, i) => p === '...'
                   ? <span key={`dots-${i}`} className="px-2 text-slate-400">...</span>
-                  : <Button key={p} variant="outline" aria-current={page === p ? 'page' : undefined} className={page === p ? 'bg-primary text-slate-900 hover:bg-primary/90 border-primary' : ''} onClick={() => goTo(p)} id={`pagination-${p}`}>{p}</Button>)}
+                  : <Button key={p} variant="outline" aria-current={page === p ? 'page' : undefined} className={page === p ? 'bg-primary text-stone-900 hover:bg-primary/90 border-primary' : ''} onClick={() => goTo(p)} id={`pagination-${p}`}>{p}</Button>)}
                 <Button variant="outline" disabled={page === totalPages} onClick={() => goTo(page + 1)} id="pagination-next">Next</Button>
               </div>
             </nav>

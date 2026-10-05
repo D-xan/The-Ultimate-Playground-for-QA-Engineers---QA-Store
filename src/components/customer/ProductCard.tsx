@@ -49,7 +49,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             </span>
           )}
           {product.stock < 10 && (
-            <span className="rounded bg-warning px-2 py-1 text-[10px] font-bold text-white">
+            <span className="rounded bg-warning px-2 py-1 text-[10px] font-bold text-stone-900">
               Low Stock
             </span>
           )}
@@ -58,13 +58,15 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         {/* Hover Actions */}
         <div className={`absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-2 transition-all duration-300 ${isHovered ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
           <button 
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-700 shadow-md hover:bg-primary hover:text-white transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-700 shadow-md hover:bg-primary hover:text-stone-900 transition-colors"
+            aria-label="Add to wishlist"
             onClick={(e) => { e.preventDefault(); /* Wishlist logic */ }}
           >
             <Heart className="h-4 w-4" />
           </button>
           <button 
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-700 shadow-md hover:bg-primary hover:text-white transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-700 shadow-md hover:bg-primary hover:text-stone-900 transition-colors"
+            aria-label="Quick view"
             onClick={(e) => { e.preventDefault(); /* Quick View logic */ }}
           >
             <Eye className="h-4 w-4" />
@@ -94,6 +96,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           <Button 
             size="icon" 
             className="h-10 w-10 rounded-full" 
+            aria-label={`Add ${product.name} to cart`}
             onClick={handleAddToCart}
           >
             <ShoppingCart className="h-4 w-4" />

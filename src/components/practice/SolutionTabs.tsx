@@ -53,7 +53,7 @@ export function SolutionTabs({ challengeId, number }: Props) {
                 aria-selected={active === t.key}
                 aria-controls="solution-panel"
                 onClick={() => { setActive(t.key); setCopied(false); }}
-                className={`rounded-lg px-4 py-2 text-sm font-medium border ${active === t.key ? 'bg-primary text-white border-primary' : 'border-border text-slate-700 hover:bg-slate-50'}`}
+                className={`rounded-lg px-4 py-2 text-sm font-medium border ${active === t.key ? 'bg-primary text-stone-900 border-primary' : 'border-border text-slate-700 hover:bg-slate-50'}`}
               >
                 {t.label}
               </button>

@@ -42,7 +42,7 @@ export default function TablesLists() {
   };
 
   const outOfStock = staticRows.find((r) => r.stock === 'Out of Stock')!;
-  const pageBtn = (p: number) => <Button key={p} variant="outline" aria-current={page === p ? 'page' : undefined} className={page === p ? 'bg-primary text-slate-900 hover:bg-primary/90 border-primary' : ''} onClick={() => goTo(p)} id={`pagination-${p}`}>{p}</Button>;
+  const pageBtn = (p: number) => <Button key={p} variant="outline" aria-current={page === p ? 'page' : undefined} className={page === p ? 'bg-primary text-stone-900 hover:bg-primary/90 border-primary' : ''} onClick={() => goTo(p)} id={`pagination-${p}`}>{p}</Button>;
 
   return (
     <div className="space-y-10 pb-12">

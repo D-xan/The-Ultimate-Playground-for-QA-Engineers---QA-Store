@@ -103,6 +103,7 @@ export default function ApiInterception() {
             value={method}
             onChange={(e) => setMethod(e.target.value)}
             id="api-method-select"
+            aria-label="HTTP method"
           >
             <option value="GET">GET</option>
             <option value="POST">POST</option>
@@ -206,7 +207,7 @@ export default function ApiInterception() {
             
             <div className="flex-1 p-4 overflow-auto bg-[#1e1e1e] text-[#d4d4d4]" id="api-response-body">
               {!response ? (
-                <div className="h-full flex items-center justify-center text-slate-500 italic font-sans">
+                <div className="h-full flex items-center justify-center text-slate-400 italic font-sans">
                   Hit Send to get a response
                 </div>
               ) : response.error ? (

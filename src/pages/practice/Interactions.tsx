@@ -98,7 +98,7 @@ export default function Interactions() {
           done={dropped}
         >
           <div className="flex flex-wrap gap-4">
-            <div className="w-24 h-24 bg-primary text-slate-900 font-semibold flex items-center justify-center rounded-lg cursor-grab active:cursor-grabbing"
+            <div className="w-24 h-24 bg-primary text-stone-900 font-semibold flex items-center justify-center rounded-lg cursor-grab active:cursor-grabbing"
               draggable onDragStart={(e) => e.dataTransfer.setData('text/plain', 'dragged')} id="draggable-item">
               Drag Me
             </div>

@@ -69,7 +69,7 @@ export default function Home() {
               to="/practice"
               id="home-view-challenges"
               data-testid="home-view-challenges"
-              className="group relative isolate inline-flex h-14 items-center gap-2 rounded-full bg-primary px-8 text-lg font-bold text-slate-900 shadow-[0_0_0_4px_rgba(234,179,8,0.25),0_10px_30px_-5px_rgba(234,179,8,0.6)] transition-all hover:-translate-y-0.5 hover:bg-yellow-400 hover:shadow-[0_0_0_6px_rgba(234,179,8,0.3),0_14px_36px_-6px_rgba(234,179,8,0.7)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
+              className="group relative isolate inline-flex h-14 items-center gap-2 rounded-full bg-primary px-8 text-lg font-bold text-stone-900 shadow-[0_0_0_4px_rgba(234,179,8,0.25),0_10px_30px_-5px_rgba(234,179,8,0.6)] transition-all hover:-translate-y-0.5 hover:bg-yellow-400 hover:shadow-[0_0_0_6px_rgba(234,179,8,0.3),0_14px_36px_-6px_rgba(234,179,8,0.7)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
             >
               <span aria-hidden className="absolute -inset-1.5 -z-10 rounded-full bg-primary/50 blur-lg animate-pulse motion-reduce:animate-none"></span>
               <Target className="h-5 w-5" />
@@ -101,7 +101,7 @@ export default function Home() {
             <div key={title} className="flex items-start gap-4 p-6 rounded-2xl bg-white border border-border transition-colors hover:border-primary/50">
               <div className={`p-3 rounded-xl ${tone}`}><Icon className="h-6 w-6" /></div>
               <div>
-                <h3 className="font-bold text-slate-900 mb-1">{title}</h3>
+                <h2 className="font-bold text-slate-900 mb-1">{title}</h2>
                 <p className="text-sm text-slate-500">{text}</p>
               </div>
             </div>

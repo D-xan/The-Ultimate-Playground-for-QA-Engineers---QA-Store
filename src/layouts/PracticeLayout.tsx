@@ -147,7 +147,7 @@ export default function PracticeLayout() {
             <img src={`${import.meta.env.BASE_URL}brand/randomly-logo-64.webp`} alt="" width={24} height={24} className="h-6 w-6" />
             <span className="font-bold text-slate-900">QA Playground</span>
           </Link>
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-slate-600">
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-slate-600" aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'} aria-expanded={isMobileMenuOpen}>
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
@@ -192,7 +192,7 @@ export default function PracticeLayout() {
                       className={({ isActive }) =>
                         `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                           isActive 
-                            ? 'bg-primary text-white' 
+                            ? 'bg-primary text-stone-900' 
                             : 'text-slate-300 hover:bg-slate-800 hover:text-white'
                         }`
                       }

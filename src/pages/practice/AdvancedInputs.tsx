@@ -79,7 +79,7 @@ export default function AdvancedInputs() {
           }}
           done={standard === 'option2'}
         >
-          <select className={select} id="dropdown-standard" value={standard} onChange={(e) => setStandard(e.target.value)}>
+          <select className={select} id="dropdown-standard" aria-label="Standard HTML select" value={standard} onChange={(e) => setStandard(e.target.value)}>
             <option value="">Choose an option</option>
             <option value="option1">Option 1</option>
             <option value="option2">Option 2</option>
@@ -118,7 +118,7 @@ export default function AdvancedInputs() {
           }}
           done={fruit.length === 2 && fruit.includes('banana') && fruit.includes('grape')}
         >
-          <select multiple className={`${select} h-24`} id="dropdown-multiple" value={fruit}
+          <select multiple className={`${select} h-24`} id="dropdown-multiple" aria-label="Multi-select" value={fruit}
             onChange={(e) => setFruit([...e.target.selectedOptions].map((o) => o.value))}>
             {FRUIT.map((f) => <option key={f} value={f}>{f[0].toUpperCase() + f.slice(1)}</option>)}
           </select>
@@ -138,7 +138,7 @@ export default function AdvancedInputs() {
           }}
           answer={{ prompt: 'Locked code:', expected: lockCode }}
         >
-          <select disabled className={`${select} bg-slate-100`} id="dropdown-disabled">
+          <select disabled className={`${select} bg-slate-100`} id="dropdown-disabled" aria-label="Disabled dropdown">
             <option>{lockCode}</option>
           </select>
         </PracticeElement>
@@ -158,12 +158,12 @@ export default function AdvancedInputs() {
           done={region === 'ca' && state === 'bc'}
         >
           <div className="flex gap-2">
-            <select className={`${select} flex-1`} id="dropdown-country" value={region}
+            <select className={`${select} flex-1`} id="dropdown-country" aria-label="Country" value={region}
               onChange={(e) => { setRegion(e.target.value); setState(STATES[e.target.value][0].value); }}>
               <option value="us">United States</option>
               <option value="ca">Canada</option>
             </select>
-            <select className={`${select} flex-1`} id="dropdown-state" value={state} onChange={(e) => setState(e.target.value)}>
+            <select className={`${select} flex-1`} id="dropdown-state" aria-label="State or province" value={state} onChange={(e) => setState(e.target.value)}>
               {STATES[region].map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
             </select>
           </div>
@@ -185,7 +185,7 @@ export default function AdvancedInputs() {
           }}
           done={date === '2030-08-15'}
         >
-          <input type="date" className={select} id="date-picker" value={date} onChange={(e) => setDate(e.target.value)} />
+          <input type="date" className={select} id="date-picker" aria-label="Date picker" value={date} onChange={(e) => setDate(e.target.value)} />
         </PracticeElement>
 
         <PracticeElement
@@ -202,7 +202,7 @@ export default function AdvancedInputs() {
           }}
           done={time === '14:30'}
         >
-          <input type="time" className={select} id="time-picker" value={time} onChange={(e) => setTime(e.target.value)} />
+          <input type="time" className={select} id="time-picker" aria-label="Time picker" value={time} onChange={(e) => setTime(e.target.value)} />
         </PracticeElement>
 
         <PracticeElement
@@ -219,7 +219,7 @@ export default function AdvancedInputs() {
           }}
           done={dateTime === '2030-12-31T23:59'}
         >
-          <input type="datetime-local" className={select} id="datetime-picker" value={dateTime} onChange={(e) => setDateTime(e.target.value)} />
+          <input type="datetime-local" className={select} id="datetime-picker" aria-label="Date-time picker" value={dateTime} onChange={(e) => setDateTime(e.target.value)} />
         </PracticeElement>
       </Section>
 
@@ -238,7 +238,7 @@ export default function AdvancedInputs() {
           }}
           done={!!single?.ok}
         >
-          <input type="file" accept="image/*" className="w-full border border-border rounded-md p-2 text-sm" id="file-upload-single"
+          <input type="file" accept="image/*" className="w-full border border-border rounded-md p-2 text-sm" id="file-upload-single" aria-label="Single image upload"
             onChange={(e) => { const f = e.target.files?.[0]; setSingle(f ? { name: f.name, ok: IMAGE_TYPES.includes(f.type) } : null); }} />
           {single && (single.ok
             ? <p className="text-xs text-green-700 mt-2" data-testid="upload-single-result">Selected: {single.name}</p>
@@ -259,7 +259,7 @@ export default function AdvancedInputs() {
           }}
           done={multiple.length >= 2}
         >
-          <input type="file" multiple className="w-full border border-border rounded-md p-2 text-sm" id="file-upload-multiple"
+          <input type="file" multiple className="w-full border border-border rounded-md p-2 text-sm" id="file-upload-multiple" aria-label="Multiple file upload"
             onChange={(e) => setMultiple([...(e.target.files ?? [])].map((f) => f.name))} />
           {multiple.length > 0 && (
             <ul className="mt-2 text-xs text-slate-600 list-disc pl-5" data-testid="upload-multiple-list">{multiple.map((n) => <li key={n}>{n}</li>)}</ul>
@@ -306,7 +306,7 @@ export default function AdvancedInputs() {
           done={color.toLowerCase() === '#22c55e'}
         >
           <div className="flex items-center gap-3">
-            <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-16 h-10 cursor-pointer" id="color-picker" />
+            <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-16 h-10 cursor-pointer" id="color-picker" aria-label="Color picker" />
             <code className="text-sm text-slate-600" data-testid="color-value">{color}</code>
           </div>
         </PracticeElement>

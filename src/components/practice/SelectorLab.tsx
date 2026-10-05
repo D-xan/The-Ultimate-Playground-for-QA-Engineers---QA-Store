@@ -130,7 +130,7 @@ export default function SelectorLab() {
         type="button"
         aria-label={open ? 'Close Selector Lab' : 'Open Selector Lab'}
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-24 right-6 z-[60] h-12 w-12 rounded-full bg-primary text-white shadow-lg flex items-center justify-center hover:opacity-90"
+        className="fixed bottom-24 right-6 z-[60] h-12 w-12 rounded-full bg-primary text-stone-900 shadow-lg flex items-center justify-center hover:opacity-90"
       >
         {open ? <X className="h-5 w-5" /> : <Crosshair className="h-5 w-5" />}
       </button>
