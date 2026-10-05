@@ -64,11 +64,11 @@ Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/D-xan/The-Ultimate-Playground-for-QA-Engineers---QA-Store.git
+   git clone https://github.com/D-xan/qa-playground.git
    ```
 2. Navigate into the directory:
    ```bash
-   cd The-Ultimate-Playground-for-QA-Engineers---QA-Store
+   cd qa-playground
    ```
 3. Install dependencies:
    ```bash
