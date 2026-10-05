@@ -1,7 +1,7 @@
 // Runs after `vite build`: prerenders every SEO page to static HTML, draws a share image per page,
 // and writes sitemap.xml, robots.txt, llms.txt and the 404.html SPA fallback into dist/.
 import { createServer } from 'node:http';
-import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, stat, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { loadEnv } from 'vite';
 import { chromium } from '@playwright/test';
@@ -53,6 +53,15 @@ const server = createServer(async (req, res) => {
 await new Promise((r) => server.listen(0, '127.0.0.1', r));
 const origin = `http://127.0.0.1:${server.address().port}${base}`;
 
+// Vite injects a modulepreload for every chunk a page loads, and the prerender captures them. The 1 MB
+// fake-data chunk (api-*.js) then downloads at high priority next to the CSS and delays first paint on
+// mobile. Drop hints for chunks over 300 KB: the import chain still loads them, just after first paint.
+const heavyChunks = [];
+for (const f of await readdir(path.join(dist, 'assets'))) {
+  if (f.endsWith('.js') && (await stat(path.join(dist, 'assets', f))).size > 300_000) heavyChunks.push(f.replace(/[.$]/g, '\\$&'));
+}
+const heavyPreload = heavyChunks.length ? new RegExp(`<link rel="modulepreload"[^>]*href="[^"]*/assets/(?:${heavyChunks.join('|')})"[^>]*>`, 'g') : null;
+
 const browser = await chromium.launch();
 const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
 // Only the local copy of the site is needed to render; skip analytics, fonts and outbound calls.
@@ -69,7 +78,8 @@ for (const id of ids) {
   // Vite injects chunk preloads and CSS links with absolute URLs; point them at the real site path.
   const html = ('<!doctype html>\n' + (await page.evaluate(() => document.documentElement.outerHTML)).replaceAll(new URL(origin).origin, ''))
     // Cloudflare's email obfuscation rewrites mailto links to /cdn-cgi/l/email-protection, a 404 for crawlers.
-    .replace(/<a [^>]*href="mailto:[^"]*"[^>]*>[\s\S]*?<\/a>/g, (a) => `<!--email_off-->${a}<!--/email_off-->`);
+    .replace(/<a [^>]*href="mailto:[^"]*"[^>]*>[\s\S]*?<\/a>/g, (a) => `<!--email_off-->${a}<!--/email_off-->`)
+    .replace(heavyPreload ?? /$^/, '');
   await mkdir(path.dirname(fileForId(id)), { recursive: true });
   await writeFile(fileForId(id), html);
   console.log(`prerendered /${pathForId(id)}`);
