@@ -103,6 +103,11 @@
             font-size: 0.9em;
             border-radius: 16px;
         }
+
+        /* Light mode text contrast, WCAG AA 4.5:1 (the brand green, blue and slate-400 are too light on white). */
+        html:not(.dark) .text-duo-green { color: #3d7a00 !important; }
+        html:not(.dark) .text-duo-blue { color: #0369a1 !important; }
+        html:not(.dark) .text-slate-400 { color: #64748b !important; }
     </style>
 </head>
 <body class="bg-white dark:bg-slate-900 flex h-screen overflow-hidden text-duo-text dark:text-slate-200">
@@ -182,7 +187,7 @@
         <!-- Mobile Header -->
         <header class="md:hidden bg-white dark:bg-slate-800 border-b-2 border-duo-gray dark:border-slate-700 px-4 py-3 flex justify-between items-center sticky top-0 z-30">
             <div class="flex items-center gap-3">
-                <button onclick="toggleMobileMenu()" class="btn-3d w-10 h-10 rounded-xl border-2 border-b-4 border-duo-gray dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800">
+                <button onclick="toggleMobileMenu()" aria-label="Open menu" class="btn-3d w-10 h-10 rounded-xl border-2 border-b-4 border-duo-gray dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
                 <div class="text-xl font-black text-duo-green tracking-tight">qa docs.</div>
@@ -213,7 +218,7 @@
                     <div onclick="switchPage('page-1', document.querySelectorAll('.nav-btn')[1])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
                         <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-duo-green text-white flex items-center justify-center font-black text-2xl border-b-4 border-duo-greenDark shadow-sm mr-6 group-hover:scale-110 transition-transform">1</div>
                         <div class="flex-1">
-                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Introduction to the Stack</h3>
+                            <h2 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Introduction to the Stack</h2>
                             <p class="text-slate-500 dark:text-slate-400 font-bold">Maven (Builder), Selenium (Driver), TestNG (Brain).</p>
                         </div>
                     </div>
@@ -222,7 +227,7 @@
                     <div onclick="switchPage('page-2', document.querySelectorAll('.nav-btn')[2])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
                         <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-duo-blue text-white flex items-center justify-center font-black text-2xl border-b-4 border-duo-blueDark shadow-sm mr-6 group-hover:scale-110 transition-transform">2</div>
                         <div class="flex-1">
-                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Manual Project Setup</h3>
+                            <h2 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Manual Project Setup</h2>
                             <p class="text-slate-500 dark:text-slate-400 font-bold">Create the strict Maven directory structure.</p>
                         </div>
                     </div>
@@ -231,7 +236,7 @@
                     <div onclick="switchPage('page-3', document.querySelectorAll('.nav-btn')[3])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
                         <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-purple-500 text-white flex items-center justify-center font-black text-2xl border-b-4 border-purple-700 shadow-sm mr-6 group-hover:scale-110 transition-transform">3</div>
                         <div class="flex-1">
-                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">The POM.xml</h3>
+                            <h2 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">The POM.xml</h2>
                             <p class="text-slate-500 dark:text-slate-400 font-bold">Pull down required automation dependencies.</p>
                         </div>
                     </div>
@@ -240,7 +245,7 @@
                     <div onclick="switchPage('page-4', document.querySelectorAll('.nav-btn')[4])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
                         <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-orange-400 text-white flex items-center justify-center font-black text-2xl border-b-4 border-orange-600 shadow-sm mr-6 group-hover:scale-110 transition-transform">4</div>
                         <div class="flex-1">
-                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Writing the Java Code</h3>
+                            <h2 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Writing the Java Code</h2>
                             <p class="text-slate-500 dark:text-slate-400 font-bold">Write your first script using @BeforeMethod & @Test.</p>
                         </div>
                     </div>
@@ -249,7 +254,7 @@
                     <div onclick="switchPage('page-5', document.querySelectorAll('.nav-btn')[5])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
                         <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-pink-500 text-white flex items-center justify-center font-black text-2xl border-b-4 border-pink-700 shadow-sm mr-6 group-hover:scale-110 transition-transform">5</div>
                         <div class="flex-1">
-                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Compiling and Running</h3>
+                            <h2 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Compiling and Running</h2>
                             <p class="text-slate-500 dark:text-slate-400 font-bold">Execute via terminal and understand reports.</p>
                         </div>
                     </div>
@@ -258,7 +263,7 @@
                     <div onclick="switchPage('page-6', document.querySelectorAll('.nav-btn')[6])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
                         <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-teal-500 text-white flex items-center justify-center font-black text-2xl border-b-4 border-teal-700 shadow-sm mr-6 group-hover:scale-110 transition-transform">6</div>
                         <div class="flex-1">
-                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Q&A: mvn test vs clean test</h3>
+                            <h2 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Q&A: mvn test vs clean test</h2>
                             <p class="text-slate-500 dark:text-slate-400 font-bold">Understanding Maven lifecycles and the target cache.</p>
                         </div>
                     </div>
@@ -267,7 +272,7 @@
                     <div onclick="switchPage('page-7', document.querySelectorAll('.nav-btn')[7])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
                         <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-indigo-500 text-white flex items-center justify-center font-black text-2xl border-b-4 border-indigo-700 shadow-sm mr-6 group-hover:scale-110 transition-transform">7</div>
                         <div class="flex-1">
-                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Page Object Model (POM)</h3>
+                            <h2 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Page Object Model (POM)</h2>
                             <p class="text-slate-500 dark:text-slate-400 font-bold">Organizing code to represent pages instead of messy scripts.</p>
                         </div>
                     </div>
@@ -276,7 +281,7 @@
                     <div onclick="switchPage('page-8', document.querySelectorAll('.nav-btn')[8])" class="card-3d group flex items-center p-5 bg-white dark:bg-slate-800 border-2 border-b-8 border-duo-gray dark:border-slate-700 rounded-2xl hover:border-duo-blue dark:hover:border-duo-blue cursor-pointer">
                         <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-rose-500 text-white flex items-center justify-center font-black text-2xl border-b-4 border-rose-700 shadow-sm mr-6 group-hover:scale-110 transition-transform">8</div>
                         <div class="flex-1">
-                            <h3 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Step-by-Step E2E Test</h3>
+                            <h2 class="text-2xl font-black text-slate-700 dark:text-white group-hover:text-duo-blue transition-colors mb-1">Step-by-Step E2E Test</h2>
                             <p class="text-slate-500 dark:text-slate-400 font-bold">Write a complete end-to-end shopping cart checkout flow.</p>
                         </div>
                     </div>
