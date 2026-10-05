@@ -25,6 +25,18 @@ const ids = ['home', 'practice', ...Object.keys(seo).filter((id) => id !== 'home
 const shell = await readFile(path.join(dist, 'index.html'), 'utf8');
 await writeFile(path.join(dist, '404.html'), shell);
 
+// Store, login, admin and popup routes are client-rendered and kept out of search (SeoHead gives them
+// noindex at runtime). Without a file they got 404.html with status 404, so the homepage's product links
+// looked broken to crawlers. Serve them a shell with status 200 and noindex in the raw HTML instead.
+const STORE_ROUTES = ['/products', '/categories', '/deals', '/product/*', '/cart', '/checkout', '/profile', '/orders', '/settings', '/wishlist', '/login', '/popup/*', '/admin', '/admin/*'];
+await writeFile(path.join(dist, 'store-shell.html'), shell
+  .replace(/<title>[^<]*<\/title>/, '<title>QA Store demo | QA Playground</title>')
+  .replace('<meta name="robots" content="index, follow" />', '<meta name="robots" content="noindex, follow" />'));
+// Cloudflare Pages reads _redirects (public/_redirects is already copied in); GitHub Pages ignores it.
+// The target has no .html: Pages would 308 /store-shell.html to /store-shell.
+await writeFile(path.join(dist, '_redirects'), (await readFile(path.join(dist, '_redirects'), 'utf8').catch(() => '')) +
+  `\n# Client-rendered store routes: noindex shell, status 200 (added by scripts/postbuild.mjs)\n${STORE_ROUTES.map((r) => `${r} /store-shell 200`).join('\n')}\n`);
+
 const types = { '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.json': 'application/json', '.woff2': 'font/woff2' };
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x');
@@ -55,7 +67,9 @@ for (const id of ids) {
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(600); // let entrance animations settle so nothing is captured mid-fade
   // Vite injects chunk preloads and CSS links with absolute URLs; point them at the real site path.
-  const html = '<!doctype html>\n' + (await page.evaluate(() => document.documentElement.outerHTML)).replaceAll(new URL(origin).origin, '');
+  const html = ('<!doctype html>\n' + (await page.evaluate(() => document.documentElement.outerHTML)).replaceAll(new URL(origin).origin, ''))
+    // Cloudflare's email obfuscation rewrites mailto links to /cdn-cgi/l/email-protection, a 404 for crawlers.
+    .replace(/<a [^>]*href="mailto:[^"]*"[^>]*>[\s\S]*?<\/a>/g, (a) => `<!--email_off-->${a}<!--/email_off-->`);
   await mkdir(path.dirname(fileForId(id)), { recursive: true });
   await writeFile(fileForId(id), html);
   console.log(`prerendered /${pathForId(id)}`);
@@ -101,6 +115,7 @@ ${ids.map((id) => {
   const images = [shots[id] && `${SITE_URL}shots/${shots[id].file}`, `${SITE_URL}og/${id}.png`].filter(Boolean);
   return `  <url><loc>${url(id)}</loc><lastmod>${today}</lastmod>${images.map((i) => `<image:image><image:loc>${i}</image:loc></image:image>`).join('')}</url>`;
 }).join('\n')}
+  <url><loc>${SITE_URL}docs/</loc><lastmod>${today}</lastmod></url>
 </urlset>
 `);
 await writeFile(path.join(dist, 'robots.txt'), `User-agent: *

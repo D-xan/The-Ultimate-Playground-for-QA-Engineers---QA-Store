@@ -1,0 +1,9 @@
+# Cloudflare Pages response headers (GitHub Pages, the mirror, ignores this file).
+
+# Vite content-hashes everything in /assets, so a new build always gets new file names.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTTPS only for this host. No includeSubDomains: it would bind every *.qa.randomly.online host too.
+/*
+  Strict-Transport-Security: max-age=31536000

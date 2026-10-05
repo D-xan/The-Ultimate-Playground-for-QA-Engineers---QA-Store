@@ -58,6 +58,10 @@ html:not(.dark) .text-danger { color: #b91c1c; }
     -webkit-backdrop-filter: blur(24px);
   }
   
+  /* The practice bottom bar stays opaque: through the glass card the page heading showed behind its buttons. */
+  .action-bar { background-color: #ffffff; }
+  html.dark .action-bar { background-color: #0f172a; }
+
   html.dark [class*="bg-slate-50"], html.dark [class*="bg-slate-100"] {
     background-color: rgba(2, 6, 23, 0.4) !important;
   }

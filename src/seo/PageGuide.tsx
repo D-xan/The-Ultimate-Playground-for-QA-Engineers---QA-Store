@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
 import { challenges } from '@/data/challenges';
-import { SEO, seoIdForPath, screenshotFor, PARENT_SITE } from './seo';
+import { SEO, seoIdForPath, screenshotFor, PARENT_SITE, INFO_IDS } from './seo';
 
 const RANDOMLY_TOOLS: Record<string, { name: string; path: string }> = {
   json: { name: 'JSON Formatter', path: 'dev-tools/json-formatter' },
@@ -31,20 +31,20 @@ const DEFAULT_TOOLS = ['json', 'regex', 'diff'];
 
 const label = (id: string) => challenges.find((c) => c.id === id)?.label ?? id;
 
-/** Answer-first summary, FAQ and links at the foot of every indexed practice page. */
+/** Answer-first summary, FAQ and links at the foot of the store homepage and every indexed practice page. */
 export function PageGuide() {
   const { pathname } = useLocation();
   const id = seoIdForPath(pathname);
-  if (!id || id === 'home') return null;
+  if (!id || INFO_IDS.includes(id)) return null;
   const s = SEO[id];
-  const related = id === 'practice' ? s.relatedIds : s.relatedIds.filter((r) => r !== id);
+  const related = id === 'practice' || id === 'home' ? s.relatedIds : s.relatedIds.filter((r) => r !== id);
   const tools = (TOOLS_FOR[id] ?? DEFAULT_TOOLS).map((k) => RANDOMLY_TOOLS[k]);
   const shot = screenshotFor(id);
 
   return (
     <section data-testid="page-guide" aria-labelledby="page-guide-title" className="mt-12 bg-white p-6 rounded-2xl shadow-sm border border-border space-y-8">
       <div>
-        <h2 id="page-guide-title" className="text-xl font-bold mb-3">{id === 'practice' ? 'About QA Playground' : `About this ${label(id)} page`}</h2>
+        <h2 id="page-guide-title" className="text-xl font-bold mb-3">{id === 'practice' ? 'About QA Playground' : id === 'home' ? 'About QA Store' : `About this ${label(id)} page`}</h2>
         <p className="text-slate-700 leading-relaxed">{s.answer}</p>
         {shot && (
           <figure className="mt-6 max-w-3xl">

@@ -85,6 +85,9 @@ export interface Head {
 }
 
 const provider = { '@type': 'Organization', name: PARENT_SITE.name, url: PARENT_SITE.url };
+const author = { '@type': 'Person', name: 'Dhruba Singha Roy', url: 'https://randomly.online/dhruba-singha-roy' };
+/** Set by vite.config.ts at build time; the sitemap's lastmod uses the same date. */
+const dateModified = import.meta.env.VITE_BUILD_DATE as string | undefined;
 
 function breadcrumbs(id: string): JsonLd {
   const items = [{ name: SITE_NAME, url: SITE_URL }];
@@ -126,10 +129,12 @@ function mainEntity(id: string, s: PageSeo, url: string, image: string | string[
   }
   const c = byId.get(id);
   if (c?.kind === 'tool') {
-    return { ...base, '@type': 'WebApplication', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any (web browser)', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
+    return { ...base, author, ...(dateModified && { dateModified }), '@type': 'WebApplication', applicationCategory: 'DeveloperApplication', operatingSystem: 'Any (web browser)', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
   }
   return {
     ...base,
+    author,
+    ...(dateModified && { dateModified }),
     '@type': 'LearningResource',
     learningResourceType: 'Practice exercise',
     educationalLevel: c?.difficulty,
@@ -159,7 +164,7 @@ export function buildHead(pathname: string): Head {
   const image = `${SITE_URL}og/${id}.png`;
   const shot = screenshotFor(id);
   const jsonLd = [mainEntity(id, s, url, shot ? [image, shot.url] : image), breadcrumbs(id)];
-  if (id !== 'home' && s.faqs.length) jsonLd.push(faqPage(s));
+  if (s.faqs.length) jsonLd.push(faqPage(s));
   if (shot) jsonLd.push(imageObject(shot));
   const ogType = id === 'home' || INFO_IDS.includes(id) ? 'website' : 'article';
   return { title: s.title, description: s.metaDescription, canonical: url, robots: 'index, follow', image, imageAlt: s.imageAlt, ogType, jsonLd };

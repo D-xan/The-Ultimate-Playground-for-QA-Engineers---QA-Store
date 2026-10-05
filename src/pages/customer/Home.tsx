@@ -7,6 +7,7 @@ import { ArrowRight, Zap, ShieldCheck, Truck, Target, ShoppingBag } from 'lucide
 import { practiceChallenges, tools } from '@/data/challenges';
 import { PARENT_URL } from '@/config/brand';
 import { Button } from '@/components/ui/Button';
+import { PageGuide } from '@/seo/PageGuide';
 
 const features = [
   { icon: Truck, title: 'Free Fake Shipping', text: 'Orders process instantly with mock APIs.', tone: 'bg-primary/10 text-primary' },
@@ -142,6 +143,10 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      <div className="container mx-auto px-4 pb-16">
+        <PageGuide />
+      </div>
     </div>
   );
 }

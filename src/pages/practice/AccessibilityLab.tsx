@@ -8,7 +8,7 @@ import { PracticeSection as Section } from '@/components/practice/PracticeSectio
 import { PLANTED } from '@/data/a11yRules';
 
 const FIELD = 'w-full max-w-sm px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary';
-const IMAGE = `${import.meta.env.BASE_URL}og-image.jpg`;
+const IMAGE = `${import.meta.env.BASE_URL}img/a11y-banner.jpg`; // 480x252, ~2x the displayed size
 
 const CHECKLIST: { id: string; text: string }[] = [
   { id: 'label', text: 'Form field without a label' },

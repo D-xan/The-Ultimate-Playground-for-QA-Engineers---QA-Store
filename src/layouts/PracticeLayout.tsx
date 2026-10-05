@@ -233,7 +233,7 @@ export default function PracticeLayout() {
           
           {/* Bottom Action Bar */}
           {location.pathname !== '/practice' && !isToolPage && (
-            <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-border p-3 md:p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
+            <div className="action-bar absolute bottom-0 left-0 right-0 border-t border-border p-3 md:p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
               <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
                 <div className="flex items-center gap-2 md:gap-3 w-full sm:w-auto justify-center sm:justify-start">
                   <Button variant="outline" onClick={handleResetPage} size="sm" className="flex items-center gap-2 text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20 w-full sm:w-auto">
